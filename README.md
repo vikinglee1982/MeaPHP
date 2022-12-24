@@ -3,11 +3,52 @@
 基于前后端分离的开发模式，将php作为纯服务器语言，只提同api接口服务的服务器框架；重新构建一个全新的构架
 
 #### 配置及使用 ####
-1. 将MeaPHP放到服务器根目录下；linux系统的常规情况下的：var/www/html/
++ **单站点模式**
+1. 将本文件放置到服务器下直接使用
+2.  目录结构
+```
+webSite [域名解析根目录]
+   |--- Api [业务接口文件夹]
+   |     |---example.php [需要引入config.php]
+   |
+   |---Config
+   |     |---Config.php  [网站配置文件]
+   |
+   |---MeaPHP [框架核心文件]
+```
+
++ **多站点模式**
+
+1. 将MeaPHP放到服务器根目录下；linux系统的常规情况下的：var/www/html/;或者放到网站根目录下
 2. 在 var/www/html 下新建站点api服务 根目录 ；域名解析的根目录
 3. 将根目录下的Config文件复制到项目根目录中；
 4. 修改Config/Config.php的项目相关数据
 5. 建立api接口目录
+6. 目录结构
+```
+webSite1 [域名解析根目录]
+|   |--- Api [业务接口文件夹]
+|   |     |---example.php  [需要引入config.php]
+|   |---Config
+|   |     |---Config.php   [webSite1 配置文件]
+|   |---web
+|   |      |--index.html   [webSite1 网站页面文件]
+|   |---other              [根据业务需求拓展其他]
+|
+webSite2 [域名解析根目录]
+|   |--- Api [业务接口文件夹]
+|   |     |---example.php  [需要引入config.php]
+|   |---Config
+|   |     |---Config.php   [webSite2 配置文件]
+|   |---web
+|   |      |--index.html   [webSite2 网站页面文件]
+|   |---other              [根据业务需求拓展其他]
+|
+MeaPHP [框架核心文件]
+
+
+```
+
 6. api接口文件中 引入
 ````
 include_once $_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php';
