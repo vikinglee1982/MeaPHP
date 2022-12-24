@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\DataBase;
+namespace MeaPHP\Core\DataBase;
 
 /**
  * 数据库类公用工具 class
@@ -44,11 +44,11 @@ class DataBase
     private function connect()
     {
         // echo "数据库信息".$this->host;
-        // echo($this->host."+".$this->username."+".$this->password."+".$this->dbname);
+        // echo ($this->host . "+" . $this->username . "+" . $this->password . "+" . $this->dbname);
         $this->link = mysqli_connect($this->host, $this->username, $this->password, $this->dbname, $this->hostport);
         //检查连接
 
-        // $var_dump($this->link);
+        // var_dump($this->link);
 
         if (!$this->link) {
             if ($this->online) {
