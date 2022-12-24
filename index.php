@@ -24,7 +24,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/MeaPHP/AutoLoad/AutoLoad.php';
 
 $classify = $DB->selectAll("SELECT * FROM classify WHERE state='usable'");
 echo "<hr>";
-echo "获取数据数据";
+echo "获取数据数据1111111111111111111111111111111111111111111111";
 var_dump($classify);
 
 // $config = new Config();
