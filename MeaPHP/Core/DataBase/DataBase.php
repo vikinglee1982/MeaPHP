@@ -27,13 +27,25 @@ class DataBase
     //构造方法初始化，属性赋值，准备连接
     private function __construct($dbkey)
     {
+        // var_dump($dbkey);
+        echo "<hr>";
+        foreach ($dbkey as $key => $value) {
+            echo "<hr>";
+            echo 'key===>' . $key;
+            echo "<hr>";
+            echo 'value===>' . $value;
+            echo "<hr>";
+        }
 
-        $this->host     = $dbkey['host'];
-        $this->username = $dbkey['username'];
-        $this->password = $dbkey['password'];
-        $this->dbname   = $dbkey['dbname'];
-        $this->hostport = $dbkey['hostport'];
-        $this->online   = $dbkey['online'];
+        echo $dbkey->dbkey['host'];
+        echo "<hr>";
+
+        // $this->host     = $dbkey['host'];
+        // $this->username = $dbkey['username'];
+        // $this->password = $dbkey['password'];
+        // $this->dbname   = $dbkey['dbname'];
+        // $this->hostport = $dbkey['hostport'];
+        // $this->online   = $dbkey['online'];
 
         //调用类内连接数据库方法
         $this->connect();
@@ -44,7 +56,7 @@ class DataBase
     private function connect()
     {
         // echo "数据库信息".$this->host;
-        // echo ($this->host . "+" . $this->username . "+" . $this->password . "+" . $this->dbname);
+        echo ($this->host . "+" . $this->username . "+" . $this->password . "+" . $this->dbname);
         $this->link = mysqli_connect($this->host, $this->username, $this->password, $this->dbname, $this->hostport);
         //检查连接
 

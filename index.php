@@ -3,18 +3,6 @@
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/MeaPHP/AutoLoad/AutoLoad.php';
 
-// echo  $_SERVER['DOCUMENT_ROOT'] . '/MeaPHP/AutoLoad/AutoLoad.php';
-
-// if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/MeaPHP/AutoLoad/AutoLoad.php')) {
-//     echo "<br>";
-//     echo "加载了";
-//     include_once $_SERVER['DOCUMENT_ROOT'] . '/MeaPHP/AutoLoad/AutoLoad.php';
-// } else {
-//     echo "不存在";
-// }
-
-// echo rand(0, 10000);
-
 
 
 
@@ -23,8 +11,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/MeaPHP/AutoLoad/AutoLoad.php';
 
 
 $classify = $DB->selectAll("SELECT * FROM classify WHERE state='usable'");
-echo "<hr>";
-echo "获取数据数据1111111111111111111111111111111111111111111111";
+// echo "<hr>";
+// echo "获取数据数据1111111111111111111111111111111111111111111111";
 var_dump($classify);
 
 // $config = new Config();
