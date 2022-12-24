@@ -27,10 +27,12 @@ git push origin main
 ````
 git status
 ````
-5. 删除远程库文件，但本地保留该文件
+5. 删除远程库文件，但本地保留该文件    rm中多文件需要 -r
 
 ````
 git rm --cached xxx
+````
 git commit -m "remove file from remote"
+````
 git push -u origin master
 ````
