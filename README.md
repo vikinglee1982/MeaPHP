@@ -38,3 +38,9 @@ git commit -m "remove file from remote"
 ````
 git push -u origin master
 ````
+
+6. 拉取覆盖到本地
+
+````
+ git pull origin main
+````
