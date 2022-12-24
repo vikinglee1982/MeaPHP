@@ -28,24 +28,24 @@ class DataBase
     private function __construct($dbkey)
     {
         // var_dump($dbkey);
-        echo "<hr>";
-        foreach ($dbkey as $key => $value) {
-            echo "<hr>";
-            echo 'key===>' . $key;
-            echo "<hr>";
-            echo 'value===>' . $value;
-            echo "<hr>";
-        }
+        // echo "<hr>";
+        // foreach ($dbkey as $key => $value) {
+        //     echo "<hr>";
+        //     echo 'key===>' . $key;
+        //     echo "<hr>";
+        //     echo 'value===>' . $value;
+        //     echo "<hr>";
+        // }
 
-        echo $dbkey->dbkey['host'];
-        echo "<hr>";
+        // echo $dbkey->dbkey['host'];
+        // echo "<hr>";
 
-        // $this->host     = $dbkey['host'];
-        // $this->username = $dbkey['username'];
-        // $this->password = $dbkey['password'];
-        // $this->dbname   = $dbkey['dbname'];
-        // $this->hostport = $dbkey['hostport'];
-        // $this->online   = $dbkey['online'];
+        $this->host     = $dbkey['host'];
+        $this->username = $dbkey['username'];
+        $this->password = $dbkey['password'];
+        $this->dbname   = $dbkey['dbname'];
+        $this->hostport = $dbkey['hostport'];
+        $this->online   = $dbkey['online'];
 
         //调用类内连接数据库方法
         $this->connect();
@@ -56,7 +56,7 @@ class DataBase
     private function connect()
     {
         // echo "数据库信息".$this->host;
-        echo ($this->host . "+" . $this->username . "+" . $this->password . "+" . $this->dbname);
+        // echo ($this->host . "+" . $this->username . "+" . $this->password . "+" . $this->dbname);
         $this->link = mysqli_connect($this->host, $this->username, $this->password, $this->dbname, $this->hostport);
         //检查连接
 
@@ -74,7 +74,6 @@ class DataBase
         //如果连接成功，设置数据库字符集，非外部传入
         mysqli_set_charset($this->link, 'utf8mb4');
         // echo "连接数据库成功<br>";
-
     }
 
     //内部产生静态对象

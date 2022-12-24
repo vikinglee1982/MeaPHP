@@ -58,25 +58,23 @@ $Config = array(
     // 'UserBasicsPath' => $_SERVER['DOCUMENT_ROOT'] . '/Resource',
 );
 
-// use MeaPHP\Bootstrap\Bootstrap;
 
-// include_once  $_SERVER['DOCUMENT_ROOT'] . "/MeaPHP/Bootstrap/Bootstrap.php";
 
 $autoLoadFile = $_SERVER['DOCUMENT_ROOT']  . "/MeaPHP/Bootstrap/Bootstrap.php";
 
 if (file_exists($autoLoadFile)) {
-    echo "<hr>";
-    echo "config自动加载文件";
-    echo "<hr>";
+    // echo "<hr>";
+    // echo "config自动加载文件";
+    // echo "<hr>";
     // echo $_SERVER['DOCUMENT_ROOT'] . "/MeaPHP/Bootstrap/Bootstrap.php";
     // echo "<hr>";
     // echo  dirname($_SERVER['DOCUMENT_ROOT']) . "/MeaPHP/Bootstrap/Bootstrap.php";
     // echo "<hr>";
     include_once($autoLoadFile);
     // include_once  $_SERVER['DOCUMENT_ROOT'] . "/MeaPHP/Bootstrap/Bootstrap.php";
-
-    echo "<hr>";
-    echo "config自动加载文件加载完成";
+    // echo "<hr>";
+    // echo "config自动加载文件加载完成";
+    // echo "<hr>";
 } else {
     echo "<hr>";
     echo "error:自动加载失败";

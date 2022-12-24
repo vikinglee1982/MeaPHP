@@ -17,14 +17,13 @@ class Bootstrap
         $file =  $_SERVER['DOCUMENT_ROOT'] . '/' . $file;
 
         if (file_exists($file)) {
-            echo "<hr>";
+            // echo "<hr>";
             // echo $file;
-
-            echo "加载了：" . $file;
-            echo "<hr>";
+            // echo "加载了：" . $file;
+            // echo "<hr>";
             include_once $file;
         } else {
-            echo "不存在";
+            echo "error:自动加载{$file}文件失败";
         }
     }
 }
