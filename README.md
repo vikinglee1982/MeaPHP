@@ -32,7 +32,9 @@ git status
 ````
 git rm --cached xxx
 ````
+````
 git commit -m "remove file from remote"
+````
 ````
 git push -u origin master
 ````
