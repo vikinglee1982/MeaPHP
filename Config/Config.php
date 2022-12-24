@@ -11,13 +11,13 @@ $Config = array(
     'hostport'       => '3306',
 
     //规定 MySQL 用户名。
-    'username'       => 'taoa_api',
+    'username'       => 'vzone_api',
 
     //规定 MySQL 密码。
-    'password'       => 'Taoa_Api_051206',
+    'password'       => 'Vzone_Api_051206',
 
     //规定使用的数据库。
-    'dbname'         => 'TAOA',
+    'dbname'         => 'Vzone',
 
     //数据库编码默认采用utf8
     // 'charset'  => 'utf8mb4 ',
@@ -39,7 +39,7 @@ $Config = array(
     //用户访问续约
     'Continue'       => array(
         //访问控制数据库表名称
-        'tableName'           => 'taoa_admin',
+        'tableName'           => 'zebra_admin',
         //续约周期时间（秒）
         'expiration'          => 0,
         //过期时间列名称（字段名称）
