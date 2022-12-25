@@ -60,3 +60,7 @@ git branch
 ```
 git checkout main
 ```
+9. 合并分支：将指定分支合并到当前分支[将dev分支合并到当前分支]
+```
+git merge dev
+```
