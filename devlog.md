@@ -52,9 +52,9 @@ git push -u origin master
  git pull origin main
 ````
 
-7. 查看分支
+7. 查看分支 [尾部添加 -a；同时显示远程分支]
 ```
-git branch
+git branch -a
 ```
 8. 切换分支
 ```
@@ -63,4 +63,12 @@ git checkout main
 9. 合并分支：将指定分支合并到当前分支[将dev分支合并到当前分支]
 ```
 git merge dev
+```
+10. 删除本币分支
+```
+git branch -d name
+```
+11. 删除远程分支
+```
+git push origin --delete branch_name
 ```
