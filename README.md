@@ -101,3 +101,26 @@ $DB->rowNum("SELECT * FROM 表名 WHERE 字段 = 条件值");
 ```
 $DB->getInsertId()
 ```
+*  [MID类](#2)
+用于id的管理
+
+1. id生成;最多支持添加3个前缀；至少一个前缀;
+编号规则：前缀1+[前缀2]+[前缀3]+毫秒级时间戳;建议至少有2个前缀;
+使用建议 `$prefix1 = 订单类别`; `$prefix2 = uid`
+___注意：
+greate方法生成的并不是严格意义上不重复的id；
+目前业务中还没有这样的需求，如果有需求可以创建新的function使用`session_create_id()`生成___
+```
+$id = MID->create($prefix1, [$prefix2], [$prefix3])
+```
+* [Captcha类](#3)
+___注意：
+需要php开启gd2___
+`echo phpinfo();` 如果没有当前扩展，请安装php扩展 `yum install php-gd` 当前工具类只能生成图片验证码
+1. 生成4位包含数字大小写英文的图片验证码
+```
+$img = $Captcha->getImage();
+//如果测试需要查看输入的图片
+ header("content-type:image/png");
+ imagepng($img);
+```

@@ -1,5 +1,6 @@
 <?php
 
+
 // include_once $_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php';
 // echo $_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php';
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php')) {
@@ -9,9 +10,18 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php')) {
     echo "error:引入配置文件失败";
 }
 
-$id = $BuildID->getID();
+// $id = $MID->create('B');
 
-echo $id;
+// echo $id;
+
+
+
+
+// echo phpinfo();
+$img = $Captcha->getImage();
+// imagepng($img);
+header("content-type:image/png");
+imagepng($img);
 // $classify = $DB->selectAll("SELECT * FROM classify WHERE state='usable'");
 
 

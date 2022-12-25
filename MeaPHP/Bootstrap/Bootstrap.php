@@ -3,8 +3,9 @@
 namespace MeaPHP\Bootstrap;
 
 use MeaPHP\Core\DataBase\DataBase;
-use MeaPHP\Core\Tools\BuildID;
+use MeaPHP\Core\Tools\MID;
 
+use MeaPHP\Core\Tools\Captcha;
 
 class Bootstrap
 {
@@ -16,7 +17,7 @@ class Bootstrap
     {
         $file = str_replace('\\', '/', $class) . '.php';
         $file =  $_SERVER['DOCUMENT_ROOT'] . '/' . $file;
-
+        // echo '============' . $file . '=========';
         if (file_exists($file)) {
             // echo "<hr>";
             // echo $file;
@@ -35,4 +36,7 @@ Bootstrap::autoLoad();
 //生成基础类
 $DB = DataBase::start($Config);
 //
-$BuildID = BuildID::start();
+$MID = MID::start();
+
+//
+$Captcha = Captcha::start();
