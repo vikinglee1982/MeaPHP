@@ -64,12 +64,12 @@ $autoLoadFileRoot = dirname($_SERVER['DOCUMENT_ROOT'])   . "/MeaPHP/Bootstrap/Bo
 $autoLoadFile = $_SERVER['DOCUMENT_ROOT']  . "/MeaPHP/Bootstrap/Bootstrap.php";
 
 if (file_exists($autoLoadFileRoot)) {
-    echo "多站点模式";
+    // echo "多站点模式";
     include_once($autoLoadFileRoot);
 } elseif (file_exists($autoLoadFile)) {
-    echo "单站点模式";
+    // echo "单站点模式";
     include_once($autoLoadFile);
 } else {
     echo "<hr>";
-    echo "error:自动加载失败";
+    echo "error:Bootstrap加载失败；请检查MeaPHP文件存放位置[1:域名解析应用根目录；2服务器根目录（var/www/html/）]；errorfile:Confing.php";
 }

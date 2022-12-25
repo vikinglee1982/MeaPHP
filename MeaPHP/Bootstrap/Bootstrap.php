@@ -3,6 +3,7 @@
 namespace MeaPHP\Bootstrap;
 
 use MeaPHP\Core\DataBase\DataBase;
+use MeaPHP\Core\Tools\BuildID;
 
 
 class Bootstrap
@@ -23,10 +24,15 @@ class Bootstrap
             // echo "<hr>";
             include_once $file;
         } else {
-            echo "error:自动加载{$file}文件失败";
+            var_dump([
+                'errorfile' => 'Bootsrtap.php',
+                'errorMessage' => "自动加载:[{$file}] 文件失败",
+            ]);
         }
     }
 }
 Bootstrap::autoLoad();
 //生成基础类
 $DB = DataBase::start($Config);
+//
+$BuildID = BuildID::start();
