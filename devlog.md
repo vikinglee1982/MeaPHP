@@ -51,3 +51,12 @@ git push -u origin master
 ````
  git pull origin main
 ````
+
+7. 查看分支
+```
+git branch
+```
+8. 切换分支
+```
+git checkout main
+```
