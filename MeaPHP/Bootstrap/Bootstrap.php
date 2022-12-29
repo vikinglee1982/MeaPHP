@@ -3,9 +3,10 @@
 namespace MeaPHP\Bootstrap;
 
 use MeaPHP\Core\DataBase\DataBase;
-use MeaPHP\Core\Tools\MID;
 
+use MeaPHP\Core\Tools\MID;
 use MeaPHP\Core\Tools\Captcha;
+use MeaPHP\Core\Tools\Save;
 
 class Bootstrap
 {
@@ -19,10 +20,10 @@ class Bootstrap
         $file =  $_SERVER['DOCUMENT_ROOT'] . '/' . $file;
         // echo '============' . $file . '=========';
         if (file_exists($file)) {
-            // echo "<hr>";
+            echo "<hr>";
             // echo $file;
-            // echo "加载了：" . $file;
-            // echo "<hr>";
+            echo "加载了：" . $file;
+            echo "<hr>";
             include_once $file;
         } else {
             var_dump([
@@ -33,10 +34,11 @@ class Bootstrap
     }
 }
 Bootstrap::autoLoad();
-//生成基础类
-$DB = DataBase::start($Config);
-//
-$MID = MID::start();
-
-//
-$Captcha = Captcha::start();
+//生成数据库操作基础类
+$DB = DataBase::active($Config);
+//id管理
+$MID = MID::active();
+//图片验证码
+$Captcha = Captcha::active();
+//上传文件；保存到服务器
+$Save = Save::active();

@@ -25,7 +25,7 @@ class MID
         $this->timeUnixNum();
     }
     //内部产生静态对象
-    public static function start()
+    public static function active()
     {
         // var_dump($dbkey);
         if (!self::$obj instanceof self) {

@@ -39,7 +39,7 @@ class Captcha
         {
         }
         //内部产生静态对象
-        public static function start()
+        public static function active()
         {
                 // echo "<hr>";
                 // echo "建立了";

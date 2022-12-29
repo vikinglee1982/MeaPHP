@@ -77,7 +77,7 @@ class DataBase
     }
 
     //内部产生静态对象
-    public static function start($dbkey)
+    public static function active($dbkey)
     {
         // var_dump($dbkey);
         if (!self::$DBobj instanceof self) {

@@ -15,13 +15,15 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php')) {
 // echo $id;
 
 
+$res = $Save->image();
 
+echo $res;
 
 // echo phpinfo();
-$img = $Captcha->getImage();
+// $img = $Captcha->getImage();
 // imagepng($img);
-header("content-type:image/png");
-imagepng($img);
+// header("content-type:image/png");
+// imagepng($img);
 // $classify = $DB->selectAll("SELECT * FROM classify WHERE state='usable'");
 
 
