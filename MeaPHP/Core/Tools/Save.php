@@ -75,19 +75,24 @@ class Save
 
             $src = $userDir . '/' . $fileName;
 
-            if (move_uploaded_file($file['tmp_name'], $src)) {
-                //储存完成合成路径返回
 
-                //
-                // $url = str_replace($_SERVER['DOCUMENT_ROOT'], $_SERVER['HTTP_HOST'], $src);
-                $url = str_replace($_SERVER['DOCUMENT_ROOT'], '', $src);
-
-                return $url;
+            if (file_exists($src)) {
+                return "error:已经有这个文件了";
             } else {
-                //储存失败
-                $data['src'] = $src;
-                // return 3000;
-                return $src;
+                if (move_uploaded_file($file['tmp_name'], $src)) {
+                    //储存完成合成路径返回
+
+                    //
+                    // $url = str_replace($_SERVER['DOCUMENT_ROOT'], $_SERVER['HTTP_HOST'], $src);
+                    $url = str_replace($_SERVER['DOCUMENT_ROOT'], '', $src);
+
+                    return $url;
+                } else {
+                    //储存失败
+                    $data['src'] = $src;
+                    // return 3000;
+                    return $src;
+                }
             }
         }
     }

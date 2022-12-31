@@ -125,3 +125,19 @@ $img = $Captcha->getImage();
  header("content-type:image/png");
  imagepng($img);
 ```
+* [Save类](#3)
+用户保存用户上传的文件
+1. 保存上传的图片
+```
+$Save->image(resource $file,string $filePath,[string $fileName]);
+```
+```$file```:上传的图片资源；支持格式[gif/jpg/jpge/png//webp]
+```$filePath```:文件夹目录（项目根路径下的目录）;路径的合成：```$_SERVER['DOCUMENT_ROOT']  . $filePath;```
+```$fileName```:可选参数；文件名称；没有入参自动生成；
+return
+__考虑修改所有的类文件返回数据的格式或代码__
+      "error:请缺少入参image文件";
+      "error:文件类型支持[gif/jpg/jpge/png//webp]";
+      "error:缺少文件夹目录（项目根路径下的目录）";
+      "error:已经有这个文件了";
+      $path:已经文件的储存路径+文件名称
