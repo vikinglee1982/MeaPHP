@@ -1,14 +1,11 @@
 <?php
 
-namespace MeaPHP\Core\Tools;
+
+namespace  MeaPHP\Core\Tools;
 
 /**
  * 文件上传，接受保存到服务器
-@入参{
-$phone,
-$fileName,
-$basicsPath
-}
+
  */
 
 class Save
@@ -39,14 +36,19 @@ class Save
         return self::$obj;
     }
     //生成毫秒级时间戳
-    public function image($file, $folderName, $fileName = null)
+    public function image($file = null, $folderName = null, $fileName = null)
+
     {
-        //判断入参的文件类型，必须时图片格式
-        $this->fileType = exif_imagetype($file);
+        // return $file;
+        // return  'jianlile ';
+        // //判断入参的文件类型，必须时图片格式
+        $this->fileType = $file['type'];
         if (!$file) {
             return "error:请缺少入参image文件";
-        } elseif ($this->fileType != IMAGETYPE_GIF && $this->fileType != IMAGETYPE_JPEG && $this->fileType != IMAGETYPE_PNG && $this->fileType != IMAGETYPE_BMP) {
-            return "error:文件类型支持[gif/jpg/jpge/png/bmp]";
+        } elseif ($this->fileType != 'image/jpeg' && $this->fileType != 'image/png' && $this->fileType != 'image/webp' && $this->fileType != 'image/gif') {
+            return "error:文件类型支持[gif/jpg/jpge/png//webp]";
+            //image/jpeg;image/png;image/webp;image/gif
+            // return $file['type'];
         } elseif (!$folderName) {
             return "error:缺少文件夹目录（项目根路径下的目录）";
         } else {
@@ -62,7 +64,7 @@ class Save
             //合成需要存放文件的路径
             // $userDir = iconv('utf-8', 'gbk', $this->basicsPath . '/' . $folderName . '/' . $fileType);
 
-            $userDir = iconv('utf-8', 'gbk', $_SERVER['DOCUMENT_ROOT'] . '/' . $folderName);
+            $userDir = iconv('utf-8', 'gbk', $_SERVER['DOCUMENT_ROOT']  . $folderName);
 
 
             if (!is_dir($userDir)) {
