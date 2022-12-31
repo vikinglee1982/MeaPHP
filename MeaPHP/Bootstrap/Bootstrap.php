@@ -20,10 +20,10 @@ class Bootstrap
         $file =  $_SERVER['DOCUMENT_ROOT'] . '/' . $file;
         // echo '============' . $file . '=========';
         if (file_exists($file)) {
-            echo "<hr>";
+            // echo "<hr>";
             // echo $file;
-            echo "加载了：" . $file;
-            echo "<hr>";
+            // echo "加载了：" . $file;
+            // echo "<hr>";
             include_once $file;
         } else {
             var_dump([

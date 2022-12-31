@@ -12,16 +12,16 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php')) {
 
 // $id = $MID->create('B');
 
-// echo $id;
+// var_dump($id);
 
 
-$res = $Save->image();
+// $res = $Save->image();
 
-echo $res;
+// echo $res;
 
 // echo phpinfo();
 // $img = $Captcha->getImage();
-// imagepng($img);
+// imagepng($img['data']);
 // header("content-type:image/png");
 // imagepng($img);
 // $classify = $DB->selectAll("SELECT * FROM classify WHERE state='usable'");

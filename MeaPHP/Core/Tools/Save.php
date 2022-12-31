@@ -13,8 +13,17 @@ class Save
 
     private static $obj = null;
     private $folderName;
-
     private $fileType;
+    public $res = array(
+        // 'status' => 'error',
+        // //只有2种状态 ok/error
+        // 'data' => null,
+        // //正确：返回数据
+        // 'msg' => null,
+        //错误：返回错误原因
+    );
+
+
 
     //阻止外部克隆书库工具类
     private function __clone()
@@ -24,6 +33,7 @@ class Save
     //私有化构造方法初始化，禁止外部使用
     private function __construct()
     {
+        $this->res = array();
     }
     //内部产生静态对象
     public static function active()
@@ -44,13 +54,20 @@ class Save
         // //判断入参的文件类型，必须时图片格式
         $this->fileType = $file['type'];
         if (!$file) {
-            return "error:请缺少入参image文件";
+            $this->res['status'] = "error";
+            $this->res['msg'] = '请缺少入参image文件';
+            // return "error:请缺少入参image文件";
         } elseif ($this->fileType != 'image/jpeg' && $this->fileType != 'image/png' && $this->fileType != 'image/webp' && $this->fileType != 'image/gif') {
-            return "error:文件类型支持[gif/jpg/jpge/png//webp]";
+
+            $this->res['status'] = "error";
+            $this->res['msg'] = '文件类型支持[gif/jpg/jpge/png//webp]';
+            // return "error:文件类型支持[gif/jpg/jpge/png//webp]";
             //image/jpeg;image/png;image/webp;image/gif
             // return $file['type'];
         } elseif (!$folderName) {
-            return "error:缺少文件夹目录（项目根路径下的目录）";
+            $this->res['status'] = "error";
+            $this->res['msg'] = '缺少文件夹目录（从项目根路径下开始的目录）';
+            // return "error:缺少文件夹目录（项目根路径下的目录）";
         } else {
             $this->folderName = $folderName;
 
@@ -77,24 +94,30 @@ class Save
 
 
             if (file_exists($src)) {
-                return "error:已经有这个文件了";
+                $this->res['status'] = "error";
+                $this->res['msg'] = '文件名重复';
+                // return "error:已经有这个文件了";
             } else {
                 if (move_uploaded_file($file['tmp_name'], $src)) {
                     //储存完成合成路径返回
-
                     //
                     // $url = str_replace($_SERVER['DOCUMENT_ROOT'], $_SERVER['HTTP_HOST'], $src);
                     $url = str_replace($_SERVER['DOCUMENT_ROOT'], '', $src);
 
-                    return $url;
+                    $this->res['status'] = "ok";
+                    $this->res['data'] =  $url;
+                    // return $url;
                 } else {
                     //储存失败
-                    $data['src'] = $src;
+                    $this->res['status'] = "error";
+                    $this->res['msg'] = '储存失败：' . $src;
+                    // $data['src'] = $src;
                     // return 3000;
-                    return $src;
+                    // return $src;
                 }
             }
         }
+        return $this->res;
     }
 
     private function createFileName()

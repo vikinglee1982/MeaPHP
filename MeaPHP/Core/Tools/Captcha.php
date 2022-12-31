@@ -109,7 +109,10 @@ class Captcha
                 imagettftext($img, 14, 0, 20, 18, $color4, $fontfile, $str);
                 // //清除去除BMO头吗，某些情况可能因为bmo的原因生成失败
 
-                return $img;
+                return  array(
+                        'status' => 'ok',
+                        'data' => $img,
+                );
                 // ob_clean();
                 // header("content-type:image/png");
                 // imagepng($img);

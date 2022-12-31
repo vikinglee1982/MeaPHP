@@ -13,6 +13,17 @@ class MID
 
     private $unixTime;
 
+    public $res = array(
+        // 'status' => 'error',
+        // //只有2种状态 ok/error
+        // 'data' => null,
+        // //正确：返回数据
+        // 'msg' => null,
+        //错误：返回错误原因
+    );
+
+
+
     //阻止外部克隆书库工具类
     private function __clone()
     {
@@ -22,6 +33,7 @@ class MID
     private function __construct()
     {
 
+        $this->res = array();
         $this->timeUnixNum();
     }
     //内部产生静态对象
@@ -48,14 +60,23 @@ class MID
     public function create($prefix1 = null, $prefix2 = null, $prefix3 = null)
     {
         if (!$prefix1) {
-            return 'error:至少有一个编号前缀';
+            $this->res['status'] = 'error';
+            $this->res['msg'] = '至少有一个编号前缀';
+            // return 'error:至少有一个编号前缀';
         } elseif ($prefix1 && !$prefix2) {
-            return $prefix1  . $this->unixTime;
+            $this->res['status'] = 'ok';
+            $this->res['data'] = $prefix1  . $this->unixTime;
+            // return $prefix1  . $this->unixTime;
         } elseif ($prefix1 && $prefix2 && !$prefix3) {
-            return $prefix1 . $prefix2 . $this->unixTime;
+            $this->res['status'] = 'ok';
+            $this->res['data'] = $prefix1 . $prefix2 . $this->unixTime;
+            // return $prefix1 . $prefix2 . $this->unixTime;
         } elseif ($prefix1 && $prefix2 && $prefix3) {
-            return $prefix1 . $prefix2 . $prefix3 . $this->unixTime;
+            $this->res['status'] = 'ok';
+            $this->res['data'] = $prefix1 . $prefix2 . $prefix3 . $this->unixTime;
+            // return $prefix1 . $prefix2 . $prefix3 . $this->unixTime;
         }
+        return $this->res;
     }
 
     /**
