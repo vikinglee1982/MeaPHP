@@ -102,6 +102,21 @@ $DB->rowNum("SELECT * FROM 表名 WHERE 字段 = 条件值");
 ```
 $DB->getInsertId()
 ```
+###工具类返回数据格式
+#####成功返回：
+```
+return array(
+   'status'=>'ok',
+   'data'=>返回的数据
+);
+```
+#####失败返回
+```
+return array(
+   'status'=>'error',
+   'msg'=>错误原因
+);
+```
 *  [MID类](#2)
 用于id的管理
 
@@ -112,8 +127,10 @@ ___注意：
 greate方法生成的并不是严格意义上不重复的id；
 目前业务中还没有这样的需求，如果有需求可以创建新的function使用`session_create_id()`生成___
 ```
-$id = MID->create($prefix1, [$prefix2], [$prefix3])
+$res = MID->create($prefix1, [$prefix2], [$prefix3]);
 ```
+
+
 * [Captcha类](#3)
 ___注意：
 需要php开启gd2___
@@ -131,13 +148,15 @@ $img = $Captcha->getImage();
 ```
 $Save->image(resource $file,string $filePath,[string $fileName]);
 ```
-```$file```:上传的图片资源；支持格式[gif/jpg/jpge/png//webp]
-```$filePath```:文件夹目录（项目根路径下的目录）;路径的合成：```$_SERVER['DOCUMENT_ROOT']  . $filePath;```
-```$fileName```:可选参数；文件名称；没有入参自动生成；
+***param***
+`$file`:上传的图片资源；支持格式[gif/jpg/jpge/png//webp]
+`$filePath`:文件夹目录（项目根路径下的目录）;路径的合成：`$_SERVER['DOCUMENT_ROOT']  . $filePath;`
+`$fileName`:可选参数；文件名称；没有入参自动生成；
 ***return***
-__考虑修改所有的类文件返回数据的格式或代码__
++ 成功返回
+$path:已经文件的储存路径+文件名称
++ 失败返回
 "error:请缺少入参image文件";
 "error:文件类型支持[gif/jpg/jpge/png//webp]";
 "error:缺少文件夹目录（项目根路径下的目录）";
 "error:已经有这个文件了";
-$path:已经文件的储存路径+文件名称
