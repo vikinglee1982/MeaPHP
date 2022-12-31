@@ -72,3 +72,9 @@ git branch -d name
 ```
 git push origin --delete branch_name
 ```
+12. 忽略本地文件提交
+```
+文件夹内添加 .gitigmore 文件
+打开添加
+**/node_modules
+```
