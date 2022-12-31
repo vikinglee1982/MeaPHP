@@ -129,6 +129,15 @@ greate方法生成的并不是严格意义上不重复的id；
 ```
 $res = MID->create($prefix1, [$prefix2], [$prefix3]);
 ```
+***param***
+$prefix1 string
+***return***
+```
+return array(
+   'status'=>'ok',
+   'data'=>图片资源
+);
+```
 
 
 * [Captcha类](#3)
@@ -137,11 +146,22 @@ ___注意：
 `echo phpinfo();` 如果没有当前扩展，请安装php扩展 `yum install php-gd` 当前工具类只能生成图片验证码
 1. 生成4位包含数字大小写英文的图片验证码
 ```
-$img = $Captcha->getImage();
+$res = $Captcha->getImage();
 //如果测试需要查看输入的图片
  header("content-type:image/png");
- imagepng($img);
+ imagepng($res['data']);
 ```
+***return***
++ 成功状态
+```
+return array(
+   'status'=>'ok',
+   'data'=>图片资源
+);
+```
++ 失败状态
+当前类没有失败状态；如果失败报错；请检查是否开启了gd2
+
 * [Save类](#3)
 用户保存用户上传的文件
 1. 保存上传的图片
