@@ -83,7 +83,7 @@ $DB->execute(sql语句);
 ```
 $DB->execute("DELETE FROM 表名 WHERE 字段 = 条件");
 ```
-5. **修改数据**
+5. **修改单行数据**
 $DB->execute(sql语句);
 + 单字段
 ```
@@ -93,12 +93,38 @@ $DB->execute("UPDATE 表名 SET 字段 = '值'  WHERE  条件字段 = '条件值
 ```
 $DB->execute("UPDATE 表名 SET 字段 = '值' ,字段 = '值',字段 = '值' WHERE  条件字段 = '条件值'");
 ```
-6. **返回符合条件的数据条数**
+6. **修改多行数据**
++ 单字段
+```
+$DB->execute("UPDATE 表名 SET
+      字段 = CASE 条件字段
+         WHEN '条件值1' THEN '对应值1'
+         WHEN '条件值2' THEN '对应值2'
+         WHEN '条件值3' THEN '对应值3'
+WHERE  条件字段 IN ('条件值1','条件值2','条件值3') ");
+```
++ 多字段
+```
+$DB->execute("UPDATE 表名 SET
+      字段1 = CASE 条件字段
+         WHEN '条件值1' THEN '对应值1'
+         WHEN '条件值2' THEN '对应值2'
+         WHEN '条件值3' THEN '对应值3'
+      END,
+      字段2 = CASE 条件字段
+         WHEN '条件值1' THEN '对应值1'
+         WHEN '条件值2' THEN '对应值2'
+         WHEN '条件值3' THEN '对应值3'
+      END
+WHERE  条件字段 IN ('条件值1','条件值2','条件值3') ");
+```
+
+7. **返回符合条件的数据条数**
 $DB->rowNum(sql语句);
 ```
 $DB->rowNum("SELECT * FROM 表名 WHERE 字段 = 条件值");
 ```
-7. **返回上一次数据库插入的id**
+8. **返回上一次数据库插入的id**
 ```
 $DB->getInsertId()
 ```
