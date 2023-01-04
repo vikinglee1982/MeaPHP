@@ -78,3 +78,7 @@ git push origin --delete branch_name
 打开添加
 **/node_modules
 ```
+13. git区分大小写（默认忽略大小写）
+```
+git config core.ignorecase false
+```
