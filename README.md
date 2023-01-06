@@ -101,6 +101,7 @@ $DB->execute("UPDATE 表名 SET
          WHEN '条件值1' THEN '对应值1'
          WHEN '条件值2' THEN '对应值2'
          WHEN '条件值3' THEN '对应值3'
+      END
 WHERE  条件字段 IN ('条件值1','条件值2','条件值3') ");
 ```
 + 多字段
