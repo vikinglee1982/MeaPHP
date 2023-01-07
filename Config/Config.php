@@ -52,8 +52,8 @@ $Config = array(
     //     'clearColName'        => array('token', 'token_exptime', 'login_time', 'login_ip', 'device_id'),
     // ),
     //微信小程序登录所需要的
-    // 'wxAppid'        => 'wxc9caf5a386cef1ba',
-    // 'wxAppSecret'    => '985a512573ae76dafe282a78fe9d6c52',
+    // 'wxAppid'        => '',
+    // 'wxAppSecret'    => '',
     //用户储存文件的基础路径；用户储存的文件全部都在这个文件夹下面
     // 'UserBasicsPath' => $_SERVER['DOCUMENT_ROOT'] . '/Resource',
 );
