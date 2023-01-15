@@ -14,6 +14,7 @@ class Save
     private static $obj = null;
     private $folderName;
     private $fileType;
+    private $file;
     public $res = array(
         // 'status' => 'error',
         // //只有2种状态 ok/error

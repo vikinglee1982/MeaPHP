@@ -7,6 +7,7 @@ use MeaPHP\Core\DataBase\DataBase;
 use MeaPHP\Core\Tools\MID;
 use MeaPHP\Core\Tools\Captcha;
 use MeaPHP\Core\Tools\Save;
+use MeaPHP\Core\Tools\Verify;
 
 class Bootstrap
 {
@@ -42,3 +43,5 @@ $MID = MID::active();
 $Captcha = Captcha::active();
 //上传文件；保存到服务器
 $Save = Save::active();
+//安全验证
+$RV = Verify::active();
