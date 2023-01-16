@@ -79,6 +79,7 @@ class Verify
             exit();
         } else {
 
+            //需要修改的
             //这里将字符串中特殊字符改写成不会影响sql的安全字符
             $str = str_replace("_", "\_", $str); // 把 '_'过滤掉
             $str = str_replace("%", "\%", $str); // 把 '%'过滤掉
