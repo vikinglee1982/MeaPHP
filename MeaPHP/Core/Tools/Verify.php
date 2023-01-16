@@ -7,7 +7,7 @@
 }
 
 @实现思路{
-    框架主要用户服务器端；不用考虑页面安全问题；主要考虑是否有sql注入风险
+    框架只用于服务端；不用考虑页面安全问题；主要考虑接口入参的验证；是否有sql注入风险
     ->参数普通参数 返回原参数
     -》验证字符串
 
@@ -64,18 +64,21 @@ class Verify
         // var_dump($risk);
 
         if ($risk) {
-            return false;
+
+            $this->res['status'] = "error";
+            $this->res['msg'] = 'SQL注入风险；含有关键字';
+            return $this->res;
             // return "Warning SQL注入风险";
             exit();
         } elseif ($lowercase == 'undefined' || $lowercase == 'null') {
-            return false;
+            $this->res['status'] = "error";
+            $this->res['msg'] = '无意义数据';
+            return $this->res;
+            // return false;
             // 无意义数据;
             exit();
         } else {
 
-            // if (!get_magic_quotes_gpc()) { // 判断magic_quotes_gpc是否打开
-            //     $str = addslashes($str); // 进行过滤
-            // }
             //这里将字符串中特殊字符改写成不会影响sql的安全字符
             $str = str_replace("_", "\_", $str); // 把 '_'过滤掉
             $str = str_replace("%", "\%", $str); // 把 '%'过滤掉
