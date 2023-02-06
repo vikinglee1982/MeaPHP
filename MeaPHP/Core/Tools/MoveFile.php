@@ -51,7 +51,6 @@ class MoveFile
         // $oldName = '' 旧文件的完全路径
         // $newName = '' 移动的新位置；
         // $mkdir = false 新位置文件夹不存在的情况下是否新建文件夹
-        // $delOldFiles = true 移动成功后是否删除旧文件
 
         //这里需要做地址拼接
         if ( $oldName ) {
@@ -63,15 +62,14 @@ class MoveFile
 
         if ( !$oldName ) {
             $this->res[ 'status' ] = 'error';
-            $this->res[ 'msg' ] = '缺少oldName';
+            $this->res[ 'msg' ] = __CLASS__.'->'. __LINE__.'缺少oldName';
         } else if ( !$newName ) {
             $this->res[ 'status' ] = 'error';
-            $this->res[ 'msg' ] = '缺少newName';
+            $this->res[ 'msg' ] = __CLASS__.'->'. __LINE__.'缺少newName';
         } else if ( !is_file( $oldName ) ) {
             $this->res[ 'status' ] = 'error';
-            $this->res[ 'msg' ] = 'moveFile-72:未找到oldname的文件';
-            $this->res[ 'oldName' ] = $oldName;
-            // '/var/www/html/agrirus/Resource/goods/96/48b8e3d03ad4f35c55cbe9412248827f.png'
+            $this->res[ 'msg' ] = __CLASS__.'->'. __LINE__.':未找到oldname的文件';
+            // $this->res[ 'oldName' ] = $oldName;
         } else {
             //如果传入的新文件的路径不带‘/’, 添加一个‘/’
             if ( substr( $newName, 0, 1 ) !== '/' ) {
@@ -97,11 +95,11 @@ class MoveFile
                     $this->res[ 'data' ] = $newName;
                 } else {
                     $this->res[ 'status' ] = 'error';
-                    $this->res[ 'msg' ] = '移动文件失败';
+                    $this->res[ 'msg' ] = __CLASS__.'->'. __LINE__.':'.'移动文件失败';
                 }
             } else {
                 $this->res[ 'status' ] = 'error';
-                $this->res[ 'msg' ] = '新文件所在的目录不存在';
+                $this->res[ 'msg' ] = __CLASS__.'->'. __LINE__.':'.'新文件所在的目录不存在';
             }
 
         }
@@ -114,7 +112,7 @@ class MoveFile
  {
         if ( !is_array( $arr ) ) {
             $this->res[ 'status' ] = 'error';
-            $this->res[ 'msg' ] = '入参格式必须是array';
+            $this->res[ 'msg' ] = __CLASS__.'->'. __LINE__.'入参格式必须是array';
         } else {
             $pass = true;
             foreach ( $arr as $k=>$v ) {
@@ -133,7 +131,7 @@ class MoveFile
 
             } else {
                 $this->res[ 'status' ] = 'error';
-                $this->res[ 'msg' ] = '入参的数组格式： [
+                $this->res[ 'msg' ] = __CLASS__.'->'. __LINE__.':'.'入参的数组格式： [
                     0:{
                         oldName:当前文件包含文件名的完整目录,
                         newName:需要移动到的完整目录，且包含文件名,

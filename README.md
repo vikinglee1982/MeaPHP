@@ -158,7 +158,7 @@ return array(
 ```
 return array(
    'status'=>'error',
-   'msg'=>错误原因
+   'msg'=>className->lineNum:错误原因
 );
 ```
 *  [MID类](#2)
@@ -269,4 +269,31 @@ $res['msg'] = '入参的数组结构错误;
                      }
                ]';
 $res['msg'] = '其余错误和单张图片储存相同';
+```
+* [MoveFile类](#4)
+用于移动已储存服务端的文件；并删除旧文件
+1. 单文件移动
+```
+$MoveFile->monofile(String $oldName = '',String $newName = '',Boole $mkdir = false);
+```
+***param***
+
+`$oldName`:已保存到服务端旧文件的完全路径
+`$newName`:服务端的移动的新位置
+`$mkdir`:新位置文件夹不存在的情况下是否新建文件夹
+
++ 成功返回
+```
+$res['status'] = 'ok';
+$res['data']='已经文件的储存路径+文件名称',
+```
+
++ 失败返回
+```
+$res['status'] = 'error';
+$res['msg'] =  '缺少oldName';
+$res['msg'] = '缺少newName';
+ $res['msg'] = '未找到oldname的文件'; 
+ $res['msg'] = '移动文件失败';
+ $res['msg'] = '新文件所在的目录不存在';
 ```
