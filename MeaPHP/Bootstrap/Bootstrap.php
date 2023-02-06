@@ -8,6 +8,7 @@ use MeaPHP\Core\Tools\MID;
 use MeaPHP\Core\Tools\Captcha;
 use MeaPHP\Core\Tools\Save;
 use MeaPHP\Core\Tools\Verify;
+use MeaPHP\Core\Tools\MoveFile;
 
 class Bootstrap
 {
@@ -45,4 +46,5 @@ $Captcha = Captcha::active();
 $Save = Save::active();
 //安全验证
 $RV = Verify::active();
-//添加
+//文件移动工具
+$MoveFile = MoveFile::active();
