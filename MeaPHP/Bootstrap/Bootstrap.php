@@ -45,3 +45,4 @@ $Captcha = Captcha::active();
 $Save = Save::active();
 //安全验证
 $RV = Verify::active();
+//添加
