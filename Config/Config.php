@@ -1,4 +1,5 @@
 <?php
+// namespace MeaPHP\Config;
 
 date_default_timezone_set("PRC");
 

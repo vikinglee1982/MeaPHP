@@ -1,8 +1,8 @@
 <?php
 
 
-// include_once $_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php';
-// echo $_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php';
+// use MeaPHP\Config;
+
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php')) {
     // echo "test加载了";
     include_once $_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php';
@@ -10,9 +10,9 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php')) {
     echo "error:引入配置文件失败";
 }
 
-// $id = $MID->create('B');
+$id = $MID->create('B');
 
-// var_dump($id);
+var_dump($id);
 
 
 // $res = $Save->image();

@@ -91,8 +91,9 @@ class MoveFile
             if ( file_exists( $dirname ) ) {
                 $r = rename( $oldName, $newName );
                 if ( $r ) {
+                    $path = str_replace( $_SERVER[ 'DOCUMENT_ROOT' ], '', $newName );
                     $this->res[ 'status' ] = 'ok';
-                    $this->res[ 'data' ] = $newName;
+                    $this->res[ 'data' ] = $path;
                 } else {
                     $this->res[ 'status' ] = 'error';
                     $this->res[ 'msg' ] = __CLASS__.'->'. __LINE__.':'.'移动文件失败';
