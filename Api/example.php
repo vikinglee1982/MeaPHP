@@ -13,6 +13,7 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/Config/Config.php')) {
 $id = $MID->create('B');
 
 var_dump($id);
+echo "";
 
 
 // $res = $Save->image();
