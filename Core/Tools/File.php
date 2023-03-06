@@ -163,4 +163,50 @@ class File
             return $this->res;
         }
     }
+    //单文件复制到新的路径
+    public function CopyMonofile($oldFilePath, $folder)
+    {
+
+        if (!$oldFilePath) {
+            $this->res['status'] = 'error';
+            $this->res['msg'] = __CLASS__ . '->' . __LINE__ . '缺少需要拷贝的文件路径';
+            return $this->res;
+        }
+        if (!$folder) {
+            $this->res['status'] = 'error';
+            $this->res['msg'] = __CLASS__ . '->' . __LINE__ . '缺少存放路径';
+            return $this->res;
+        }
+
+        // //这里需要做地址拼接
+
+        if (substr($oldFilePath, 0, 1) !== '/') {
+            $oldFilePath = '/' . $oldFilePath;
+        }
+        $oldFilePath = iconv('utf-8', 'gbk', $_SERVER['DOCUMENT_ROOT']  . $oldFilePath);
+
+
+        if (substr($folder, 0, 1) !== '/') {
+            $folder = '/' . $folder;
+        }
+        $folder = iconv('utf-8', 'gbk', $_SERVER['DOCUMENT_ROOT']  . $folder);
+
+
+        if (!is_file($oldFilePath)) {
+            $this->res['status'] = 'error';
+            $this->res['msg'] = __CLASS__ . '->' . __LINE__ . '没有发现需要拷贝的文件';
+            return $this->res;
+        } else {
+            if (!is_dir($folder)) {
+                mkdir($folder, 0777, true);
+            }
+            if (!is_dir($folder)) {
+                $this->res['status'] = 'error';
+                $this->res['msg'] = __CLASS__ . '->' . __LINE__ . '创建存放新文件目录失败';
+                return $this->res;
+            }
+        }
+
+        // # code...
+    }
 }
