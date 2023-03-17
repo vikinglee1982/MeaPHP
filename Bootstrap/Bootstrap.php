@@ -21,16 +21,23 @@ class Bootstrap
     public function classPath(string $class)
     {
         $file = str_replace('\\', '/', $class) . '.php';
-        $SingleSiteFile =  $_SERVER['DOCUMENT_ROOT'] . '/' . $file;
+        // $SingleSiteFile =  $_SERVER['DOCUMENT_ROOT'] . '/' . $file;
+        $CoreClassFile = dirname($_SERVER['DOCUMENT_ROOT']) . '/' . $file;
 
-        $multiSiteFile = dirname($_SERVER['DOCUMENT_ROOT']) . '/' . $file;
+        $siteObjectClassFile = $_SERVER['DOCUMENT_ROOT'] . '/Api/ObjectClass/' . $class . '.php';
+        // echo "<br>";
+        // echo ($_SERVER['DOCUMENT_ROOT'] . '/Api/ObjectClass/' . $class . '.php');
+        // echo "<br>";
+        // echo $class;
+        // echo "-----------------------";
+        // echo "<br>";
 
-        if (file_exists($SingleSiteFile)) {
-            // echo "单站点";
-            include_once $SingleSiteFile;
-        } elseif (file_exists($multiSiteFile)) {
-            // echo "多站点";
-            include_once $multiSiteFile;
+        if (file_exists($siteObjectClassFile)) {
+            // echo "站点自己的对象类；面向对象";
+            require $siteObjectClassFile;
+        } elseif (file_exists($CoreClassFile)) {
+            // echo "框架自己的核心工具类";
+            require $CoreClassFile;
         } else {
             var_dump([
                 'errorfile' => 'Bootsrtap.php',
@@ -46,6 +53,7 @@ class Bootstrap
 Bootstrap::autoLoad();
 //生成数据库操作基础类
 $DB = DataBase::active($UserConfig);
+
 //id管理
 $MID = MID::active();
 //图片验证码
