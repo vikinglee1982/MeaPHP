@@ -49,7 +49,6 @@ class Bootstrap
 
 
 
-
 Bootstrap::autoLoad();
 //生成数据库操作基础类
 $DB = DataBase::active($UserConfig);
