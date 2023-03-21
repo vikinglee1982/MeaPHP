@@ -24,20 +24,27 @@ class Bootstrap
         // $SingleSiteFile =  $_SERVER['DOCUMENT_ROOT'] . '/' . $file;
         $CoreClassFile = dirname($_SERVER['DOCUMENT_ROOT']) . '/' . $file;
 
-        $siteObjectClassFile = $_SERVER['DOCUMENT_ROOT'] . '/Api/ObjectClass/' . $class . '.php';
-        // echo "<br>";
-        // echo ($_SERVER['DOCUMENT_ROOT'] . '/Api/ObjectClass/' . $class . '.php');
-        // echo "<br>";
-        // echo $class;
-        // echo "-----------------------";
-        // echo "<br>";
+        $siteBOFile = $_SERVER['DOCUMENT_ROOT'] . '/Api/BO/' . $class . '.php';
 
-        if (file_exists($siteObjectClassFile)) {
-            // echo "站点自己的对象类；面向对象";
-            require $siteObjectClassFile;
-        } elseif (file_exists($CoreClassFile)) {
-            // echo "框架自己的核心工具类";
+        // $data['file'] = $file;
+        // $data['class'] = $class;
+        //这里注册核心类的类名称；用户使用当前类名称时提示用户类名已被占用；不能使用
+        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'Verify', 'MoveFile'];
+
+        if (in_array($class, $coreClass)) {
+            var_dump([
+                'errorfile' => 'Bootsrtap.php',
+                'errorMessage' => "自动加载:[{$file}] 文件失败;当前类名称已经被MeaPHP占用；",
+            ]);
+            die;
+        }
+
+        if (file_exists($CoreClassFile)) {
+            // echo "框架自己的核心工具类,第一个加载";
             require $CoreClassFile;
+        } elseif (file_exists($siteBOFile)) {
+            // echo "站点自己的对象类；面向对象";
+            require $siteBOFile;
         } else {
             var_dump([
                 'errorfile' => 'Bootsrtap.php',
