@@ -5,15 +5,10 @@
  ****入参安全过滤
  ****用户提交数据合法性验证,主要针对字符串（是否存在sql注入风险）
 }
-
 @实现思路{
     框架只用于服务端；不用考虑页面安全问题；主要考虑接口入参的验证；是否有sql注入风险
     ->参数普通参数 返回原参数
     -》验证字符串
-
-}
-
-
 }
  */
 
@@ -51,22 +46,40 @@ class Verify
     }
 
     //验证字符串方法
-    public function sqlRisk($str)
+    public function Risk($str)
     {
-        // $risk = preg_match('~select|insert|and|or|update|delete|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile~', $str);
-        //上边过滤的过于严格，使用下面的过滤，标点符号很容易被过滤and和or，被过滤最多的词
 
         //将用户数据的字母转换成小写字符，仅用于验证，如果没有风险，返回依然时原数据
 
         $lowercase = strtolower($str);
-
-        $risk = preg_match('~select|insert|update|delete|union|into|load_file|outfile~', $lowercase);
-        // var_dump($risk);
+        //sql关键字
+        $sqlPreg = 'select|insert|update|delete|union|into|group by|extractvalue|mysql_query\(|mysql_connect\(|sprintf\(|is_numeric\(|';
+        //代码执行危险函数
+        $funPreg = 'eval\(|assert\(|preg_replace\(|create_function\(|array_map\(|call_user_func\(|call_user_func_array\(|';
+        //命令执行危险函数
+        $CommandPreg = 'updatexml|sleep|system\(|exec\(|shell_exec\(|passthru\(|';
+        //文件包含危险函数
+        $incluePreg = 'load_file|outfile|require\(|inclue\(|require_once\(|include_once\(|';
+        //SSRF的危险函数
+        $ssrfPreg = 'file_get_contents\(|fsockopen\(|curl_exec\(|readfile\(|';
+        //XXE的危险函数
+        $xxePreg = 'simplexml_load_string\(|asxml\(|simplexml_load_file\(|simplexml_import_dom\(|';
+        //文件操作危险函数
+        $filePreg = 'unlink\(|copy\(|highlight_file\(|show_source\(|fopen\(|parse_ini_file\(|fread\(|';
+        //敏感信息的危险函数
+        $infoPreg = 'echo|_server|phpinfo\(|getenv\(|get_current_user\(|getlastmod\(|ini_get\(|glob\(|';
+        // 反序列化危险函数
+        $serializationPreg = 'serialize\(|unserialize\(|__|';
+        $scriptPreg = 'script|/scrip|';
+        $preg = $sqlPreg . $funPreg . $CommandPreg . $incluePreg . $ssrfPreg . $xxePreg . $filePreg . $infoPreg . $serializationPreg . $scriptPreg;
+        $preg = trim($preg, '|');
+        // $risk = preg_match('~select|insert|update|delete|union|into|group by|extractvalue|updatexml|sleep|load_file|outfile|$_SERVER|script|/scrip|is_numeric\(|~', $lowercase);
+        $risk = preg_match('~' . $preg . '~', $lowercase);
 
         if ($risk) {
 
             $this->res['status'] = "error";
-            $this->res['msg'] = 'SQL注入风险；含有关键字';
+            $this->res['msg'] = '参数风险警告';
             return $this->res;
             // return "Warning SQL注入风险";
             exit();
@@ -82,10 +95,12 @@ class Verify
             //需要修改的
             //这里将字符串中特殊字符改写成不会影响sql的安全字符
             $str = str_replace("_", "\_", $str); // 把 '_'过滤掉
-            $str = str_replace("%", "\%", $str); // 把 '%'过滤掉
+            // $str = str_replace("%", "\%", $str); // 把 '%'过滤掉
 
-            $str = str_replace("\"", "", $str);
+
             $str = str_replace("&", "", $str);
+
+            // $str = str_replace("\"", "", $str);
             $str = str_replace("<", "《", $str);
             $str = str_replace(">", "》", $str);
 
@@ -95,7 +110,7 @@ class Verify
             // $str = str_replace(">", "&gt", $str);
 
             $str = str_replace("'", "’", $str); // 把一个’改成一个中文’（这个非常重要）
-            $str = str_replace(";", "；", $str);
+            $str = str_replace(";", "；", $str); //堆叠查询;在SQL中，分号（;）是用来表示一条sql语句的结束。
             $str = str_replace("(", "（", $str);
             $str = str_replace(")", "）", $str);
             $str = str_replace(",", "，", $str);
