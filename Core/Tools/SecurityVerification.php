@@ -14,7 +14,7 @@
 
 namespace MeaPHP\Core\Tools;
 
-class Verify
+class SecurityVerification
 {
     private static $obj = null;
     public $res = array(

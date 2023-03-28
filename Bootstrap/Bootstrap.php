@@ -7,7 +7,8 @@ use MeaPHP\Core\DataBase\DataBase;
 use MeaPHP\Core\Tools\MID;
 use MeaPHP\Core\Tools\Captcha;
 use MeaPHP\Core\Tools\Save;
-use MeaPHP\Core\Tools\Verify;
+use MeaPHP\Core\Tools\SecurityVerification;
+use MeaPHP\Core\Tools\FormatValidation;
 use MeaPHP\Core\Tools\MoveFile;
 
 
@@ -26,10 +27,8 @@ class Bootstrap
 
         $siteBOFile = $_SERVER['DOCUMENT_ROOT'] . '/Api/BO/' . $class . '.php';
 
-        // $data['file'] = $file;
-        // $data['class'] = $class;
         //这里注册核心类的类名称；用户使用当前类名称时提示用户类名已被占用；不能使用
-        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'Verify', 'MoveFile'];
+        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation'];
 
         if (in_array($class, $coreClass)) {
             var_dump([
@@ -41,9 +40,11 @@ class Bootstrap
 
         if (file_exists($CoreClassFile)) {
             // echo "框架自己的核心工具类,第一个加载";
+            // echo $CoreClassFile;
             require $CoreClassFile;
         } elseif (file_exists($siteBOFile)) {
             // echo "站点自己的对象类；面向对象";
+            // echo $siteBOFile . '<br>';
             require $siteBOFile;
         } else {
             var_dump([
@@ -67,6 +68,8 @@ $Captcha = Captcha::active();
 //上传文件；保存到服务器
 $Save = Save::active();
 //安全验证
-$RV = Verify::active();
+$SV = SecurityVerification::active();
+//格式验证
+$FV = FormatValidation::active();
 //文件移动工具
 $MoveFile = MoveFile::active();
