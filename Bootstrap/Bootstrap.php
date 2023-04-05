@@ -28,7 +28,7 @@ class Bootstrap
         // echo $CoreClassFile . '<br>';
 
         //这里注册核心类的类名称；用户使用当前类名称时提示用户类名已被占用；不能使用
-        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation'];
+        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea'];
 
         if (in_array($class, $coreClass)) {
             var_dump([
