@@ -10,6 +10,7 @@ use MeaPHP\Core\Tools\Save;
 use MeaPHP\Core\Tools\SecurityVerification;
 use MeaPHP\Core\Tools\FormatValidation;
 use MeaPHP\Core\Tools\MoveFile;
+use MeaPHP\Mea;
 
 
 class Bootstrap
@@ -24,8 +25,7 @@ class Bootstrap
         $file = str_replace('\\', '/', $class) . '.php';
         // $SingleSiteFile =  $_SERVER['DOCUMENT_ROOT'] . '/' . $file;
         $CoreClassFile = dirname($_SERVER['DOCUMENT_ROOT']) . '/' . $file;
-
-        $siteBOFile = $_SERVER['DOCUMENT_ROOT'] . '/Api/BO/' . $class . '.php';
+        // echo $CoreClassFile . '<br>';
 
         //这里注册核心类的类名称；用户使用当前类名称时提示用户类名已被占用；不能使用
         $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation'];
@@ -40,12 +40,8 @@ class Bootstrap
 
         if (file_exists($CoreClassFile)) {
             // echo "框架自己的核心工具类,第一个加载";
-            // echo $CoreClassFile;
+            // echo $CoreClassFile . "<br>";
             require $CoreClassFile;
-        } elseif (file_exists($siteBOFile)) {
-            // echo "站点自己的对象类；面向对象";
-            // echo $siteBOFile . '<br>';
-            require $siteBOFile;
         } else {
             var_dump([
                 'errorfile' => 'Bootsrtap.php',
@@ -58,6 +54,8 @@ class Bootstrap
 
 
 Bootstrap::autoLoad();
+
+
 //生成数据库操作基础类
 $DB = DataBase::active($UserConfig);
 
