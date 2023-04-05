@@ -76,19 +76,19 @@
 
    $DB->execute(sql语句);
 
-+ 单行
-  
-   ```php
-   $DB->execute("INSERT INTO 表名(字段1,字段2) VALUES ('值1','值2')");
-   ```
+   + 单行
 
-+ 多行
-  
-   ```php
-   $DB->execute("INSERT INTO 表名(字段1,字段2) VALUES ('值1','值2')，('值1','值2')，('值1','值2')，('值1','值2')");
-   ```
+      ```php
+      $DB->execute("INSERT INTO 表名(字段1,字段2) VALUES ('值1','值2')");
+      ```
 
-1. **删除数据**
+   + 多行
+
+      ```php
+      $DB->execute("INSERT INTO 表名(字段1,字段2) VALUES ('值1','值2')，('值1','值2')，('值1','值2')，('值1','值2')");
+      ```
+
+4. **删除数据**
 
    $DB->execute(sql语句);
 
@@ -96,53 +96,53 @@
    $DB->execute("DELETE FROM 表名 WHERE 字段 = 条件");
    ```
 
-2. **修改单行数据**
+5. **修改单行数据**
 
    $DB->execute(sql语句);
 
-+ 单字段
-  
-   ```php
-   $DB->execute("UPDATE 表名 SET 字段 = '值'  WHERE  条件字段 = '条件值'");
-   ```
+   + 单字段
 
-+ 多字段
+      ```php
+      $DB->execute("UPDATE 表名 SET 字段 = '值'  WHERE  条件字段 = '条件值'");
+      ```
 
-   ```php
-   $DB->execute("UPDATE 表名 SET 字段 = '值' ,字段 = '值',字段 = '值' WHERE  条件字段 = '条件值'");
-   ```
+   + 多字段
 
-1. **修改多行数据**
+      ```php
+      $DB->execute("UPDATE 表名 SET 字段 = '值' ,字段 = '值',字段 = '值' WHERE  条件字段 = '条件值'");
+      ```
 
-+ 单字段
+6. **修改多行数据**
 
-   ```php
-   $DB->execute("UPDATE 表名 SET
-         字段 = CASE 条件字段
-            WHEN '条件值1' THEN '对应值1'
-            WHEN '条件值2' THEN '对应值2'
-            WHEN '条件值3' THEN '对应值3'
-         END
-   WHERE  条件字段 IN ('条件值1','条件值2','条件值3') ");
+   + 单字段
 
-   ```
+      ```php
+      $DB->execute("UPDATE 表名 SET
+            字段 = CASE 条件字段
+               WHEN '条件值1' THEN '对应值1'
+               WHEN '条件值2' THEN '对应值2'
+               WHEN '条件值3' THEN '对应值3'
+            END
+      WHERE  条件字段 IN ('条件值1','条件值2','条件值3') ");
 
-+ 多字段
+      ```
 
-   ```php
-   $DB->execute("UPDATE 表名 SET
-         字段1 = CASE 条件字段
-            WHEN '条件值1' THEN '对应值1'
-            WHEN '条件值2' THEN '对应值2'
-            WHEN '条件值3' THEN '对应值3'
-         END,
-         字段2 = CASE 条件字段
-            WHEN '条件值1' THEN '对应值1'
-            WHEN '条件值2' THEN '对应值2'
-            WHEN '条件值3' THEN '对应值3'
-         END
-   WHERE  条件字段 IN ('条件值1','条件值2','条件值3') ");
-   ```
+   + 多字段
+
+      ```php
+      $DB->execute("UPDATE 表名 SET
+            字段1 = CASE 条件字段
+               WHEN '条件值1' THEN '对应值1'
+               WHEN '条件值2' THEN '对应值2'
+               WHEN '条件值3' THEN '对应值3'
+            END,
+            字段2 = CASE 条件字段
+               WHEN '条件值1' THEN '对应值1'
+               WHEN '条件值2' THEN '对应值2'
+               WHEN '条件值3' THEN '对应值3'
+            END
+      WHERE  条件字段 IN ('条件值1','条件值2','条件值3') ");
+      ```
 
 + 混合使用
   
@@ -170,7 +170,7 @@
    $DB->rowNum("SELECT * FROM 表名 WHERE 字段 = 条件值");
    ```
 
-1. **返回上一次数据库插入的id**
+2. **返回上一次数据库插入的id**
 
    ```php
    $DB->getInsertId()
