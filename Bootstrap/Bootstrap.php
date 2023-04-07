@@ -10,7 +10,7 @@ use MeaPHP\Core\Tools\Save;
 use MeaPHP\Core\Tools\SecurityVerification;
 use MeaPHP\Core\Tools\FormatValidation;
 use MeaPHP\Core\Tools\MoveFile;
-use MeaPHP\Mea;
+// use MeaPHP\Mea;
 
 
 class Bootstrap
@@ -55,7 +55,7 @@ class Bootstrap
 
 Bootstrap::autoLoad();
 
-
+// $data['bootstrapConfig'] = $UserConfig;
 //生成数据库操作基础类
 $DB = DataBase::active($UserConfig);
 

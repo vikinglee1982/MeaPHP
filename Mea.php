@@ -12,18 +12,20 @@ use MeaPHP\Core\Tools\MoveFile;
 
 class Mea
 {
-    public $DB;
+    protected $DB;
     protected $MID;
     protected $Captcha;
     protected $Save;
     protected $SV;
     public $FV;
     protected $MoveFile;
+    protected $UserConfig;
 
-    public final function __construct($config)
+    public final function __construct($UserConfig)
     {
+        $this->UserConfig = $UserConfig;
 
-        $this->DB = DataBase::active($config);
+        $this->DB = DataBase::active($UserConfig);
         //id管理
         $this->MID = MID::active();
         //图片验证码
