@@ -16,6 +16,7 @@ class DataBase
     private $password;
     private $dbname;
     private $hostport;
+    private $charset;
     private $online;
     private $link;
 
@@ -27,28 +28,20 @@ class DataBase
     //构造方法初始化，属性赋值，准备连接
     private function __construct($dbkey)
     {
-        // var_dump($dbkey);
-        // echo "<hr>";
-        // foreach ($dbkey as $key => $value) {
-        //     echo "<hr>";
-        //     echo 'key===>' . $key;
-        //     echo "<hr>";
-        //     echo 'value===>' . $value;
-        //     echo "<hr>";
-        // }
+        if ($dbkey) {
+            $this->host     = $dbkey['MySQL']['host'];
+            $this->username = $dbkey['MySQL']['username'];
+            $this->password = $dbkey['MySQL']['password'];
+            $this->dbname   = $dbkey['MySQL']['dbname'];
+            $this->hostport = $dbkey['MySQL']['hostport'];
+            $this->charset =  $dbkey['MySQL']['charset'];
+            $this->online   = $dbkey['online'];
 
-        // echo $dbkey->dbkey['host'];
-        // echo "<hr>";
-
-        $this->host     = $dbkey['host'];
-        $this->username = $dbkey['username'];
-        $this->password = $dbkey['password'];
-        $this->dbname   = $dbkey['dbname'];
-        $this->hostport = $dbkey['hostport'];
-        $this->online   = $dbkey['online'];
-
-        //调用类内连接数据库方法
-        $this->connect();
+            //调用类内连接数据库方法
+            $this->connect();
+        } else {
+            return false;
+        }
     }
 
     //连接数据库
@@ -72,7 +65,7 @@ class DataBase
             }
         }
         //如果连接成功，设置数据库字符集，非外部传入
-        mysqli_set_charset($this->link, 'utf8mb4');
+        mysqli_set_charset($this->link, $this->charset);
         // echo "连接数据库成功<br>";
     }
 
