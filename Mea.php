@@ -9,6 +9,7 @@ use MeaPHP\Core\Tools\Save;
 use MeaPHP\Core\Tools\SecurityVerification;
 use MeaPHP\Core\Tools\FormatValidation;
 use MeaPHP\Core\Tools\MoveFile;
+use MeaPHP\Core\Tools\Token;
 
 class Mea
 {
@@ -20,12 +21,16 @@ class Mea
     public $FV;
     protected $MoveFile;
     protected $UserConfig;
+    protected $Token;
 
     public final function __construct($UserConfig)
     {
         $this->UserConfig = $UserConfig;
 
         $this->DB = DataBase::active($UserConfig);
+
+        //Token的管理
+        $this->Token = Token::active($UserConfig);
         //id管理
         $this->MID = MID::active();
         //图片验证码

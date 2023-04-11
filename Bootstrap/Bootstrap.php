@@ -10,6 +10,8 @@ use MeaPHP\Core\Tools\Save;
 use MeaPHP\Core\Tools\SecurityVerification;
 use MeaPHP\Core\Tools\FormatValidation;
 use MeaPHP\Core\Tools\MoveFile;
+use MeaPHP\Core\Tools\Token;
+
 // use MeaPHP\Mea;
 
 
@@ -33,7 +35,7 @@ class Bootstrap
         if (in_array($class, $coreClass)) {
             var_dump([
                 'errorfile' => 'Bootsrtap.php',
-                'errorMessage' => "自动加载:[{$file}] 文件失败;当前类名称已经被MeaPHP占用；",
+                'errorMessage' => "自动加载:[{$file}] 文件失败;当前类名称已经被MeaPHP占用;",
             ]);
             die;
         }
@@ -58,6 +60,12 @@ Bootstrap::autoLoad();
 // $data['bootstrapConfig'] = $UserConfig;
 //生成数据库操作基础类
 $DB = DataBase::active($UserConfig);
+
+//token管理【验证，生成，续约，剔除】
+
+$Token = Token::active($UserConfig);
+
+// var_dump($cc);
 
 //id管理
 $MID = MID::active();
