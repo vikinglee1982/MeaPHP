@@ -1,18 +1,22 @@
 <?php
-
-/**
- * 2023年4月修订
- * token验证；
- * token 生成
- * 续约
- * 清除
+/*
+ * @描述: 
+ * @Author: Viking
+ * @version: 1.0
+ * @Date: 2023-04-09 17:31:20
+ * @LastEditors: Viking
+ * @LastEditTime: 2023-04-13 00:29:23
  */
+
+
 
 namespace MeaPHP\Core\Tools;
 
-// use MeaPHP\Mea;
 
-class Token
+
+
+
+class Token 
 {
     private $res = array(
         //考虑是否更改使用recode码表示返回不同的状态
@@ -65,40 +69,50 @@ class Token
             return false;
         }
     }
-
+    /**
+     * @描述: 生成一个token
+     * @param {string} $username
+     * @param {string} $psw
+     * @return {*}
+     * @Date: 2023-04-12 23:48:20
+     */
     public function make(string $username = null, string $psw = null)
     {
+
         if (!$username || !$psw) {
             $this->res['status']  =  'error';
             $this->res['msg']   = '请入参:[ string $username = null, string $psw = null ]';
         } else {
 
-            $ip = $this->getIp();
+
+            // $ip = $this->Client->getIp();
             $time = date("Y-m-d H:i:s");
 
             //这里如果需要加强安全程度；可以引入AES加密
             $this->res['status'] = 'ok';
-            $this->res['data'] = md5($username . $psw . $time . $ip);
+            // $this->res['data'] = md5($username . $psw . $time . $ip);
+            $this->res['data'] = md5($username . $psw . $time);
+
             // return ;
         }
         return $this->res;
     }
 
     //获取用户当前ip地址
-    public function getIp()
-    {
+    // public function getIp()
+    // {
 
-        if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
-            $ip = getenv('HTTP_CLIENT_IP');
-        } elseif (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
-            $ip = getenv('HTTP_X_FORWARDED_FOR');
-        } elseif (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
-            $ip = getenv('REMOTE_ADDR');
-        } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        $userIp = preg_match('/[\d\.]{7,15}/', $ip, $matches) ? $matches[0] : '';
+    //     if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
+    //         $ip = getenv('HTTP_CLIENT_IP');
+    //     } elseif (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
+    //         $ip = getenv('HTTP_X_FORWARDED_FOR');
+    //     } elseif (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
+    //         $ip = getenv('REMOTE_ADDR');
+    //     } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+    //         $ip = $_SERVER['REMOTE_ADDR'];
+    //     }
+    //     $userIp = preg_match('/[\d\.]{7,15}/', $ip, $matches) ? $matches[0] : '';
 
-        return $userIp;
-    }
+    //     return $userIp;
+    // }
 }

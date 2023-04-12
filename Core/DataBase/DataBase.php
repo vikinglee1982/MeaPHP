@@ -1,13 +1,17 @@
 <?php
+/*
+ * @描述: 
+ * @Author: Viking
+ * @version: 1.0
+ * @Date: 2023-03-05 17:53:22
+ * @LastEditors: Viking
+ * @LastEditTime: 2023-04-12 23:50:40
+ */
 
 
 namespace MeaPHP\Core\DataBase;
 
-/**
- * 数据库类公用工具 class
- *
- * @authar Viking <750820181@qq.com>
- */
+
 class DataBase
 {
     private static $DBobj = null;
@@ -48,13 +52,10 @@ class DataBase
 
     private function connect()
     {
-        // echo "数据库信息".$this->host;
+
         // echo ($this->host . "+" . $this->username . "+" . $this->password . "+" . $this->dbname);
         $this->link = mysqli_connect($this->host, $this->username, $this->password, $this->dbname, $this->hostport);
         //检查连接
-
-        // var_dump($this->link);
-
         if (!$this->link) {
             if ($this->online) {
                 //上线运营模式：阻断执行，不返回任何数据

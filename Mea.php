@@ -10,6 +10,7 @@ use MeaPHP\Core\Tools\SecurityVerification;
 use MeaPHP\Core\Tools\FormatValidation;
 use MeaPHP\Core\Tools\MoveFile;
 use MeaPHP\Core\Tools\Token;
+use MeaPHP\Core\Tools\Client;
 
 class Mea
 {
@@ -22,6 +23,7 @@ class Mea
     protected $MoveFile;
     protected $UserConfig;
     protected $Token;
+    protected $Client;
 
     public final function __construct($UserConfig)
     {
@@ -31,6 +33,8 @@ class Mea
 
         //Token的管理
         $this->Token = Token::active($UserConfig);
+        //客户端相关信息
+        $this->Client = Client::active();
         //id管理
         $this->MID = MID::active();
         //图片验证码

@@ -1,4 +1,12 @@
 <?php
+/*
+ * @描述: 
+ * @Author: Viking
+ * @version: 1.0
+ * @Date: 2023-03-05 17:53:22
+ * @LastEditors: Viking
+ * @LastEditTime: 2023-04-13 00:15:25
+ */
 
 namespace MeaPHP\Bootstrap;
 
@@ -11,6 +19,8 @@ use MeaPHP\Core\Tools\SecurityVerification;
 use MeaPHP\Core\Tools\FormatValidation;
 use MeaPHP\Core\Tools\MoveFile;
 use MeaPHP\Core\Tools\Token;
+use MeaPHP\Core\Tools\Client;
+// use MeaPHP\Mea;
 
 // use MeaPHP\Mea;
 
@@ -30,7 +40,7 @@ class Bootstrap
         // echo $CoreClassFile . '<br>';
 
         //这里注册核心类的类名称；用户使用当前类名称时提示用户类名已被占用；不能使用
-        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea', 'Token'];
+        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea', 'Token', 'Client'];
 
         if (in_array($class, $coreClass)) {
             var_dump([
@@ -57,6 +67,7 @@ class Bootstrap
 
 Bootstrap::autoLoad();
 
+// $Mea = new Mea($UserConfig);
 // $data['bootstrapConfig'] = $UserConfig;
 //生成数据库操作基础类
 $DB = DataBase::active($UserConfig);
@@ -65,7 +76,8 @@ $DB = DataBase::active($UserConfig);
 
 $Token = Token::active($UserConfig);
 
-// var_dump($cc);
+//客户端信息
+$Client = Client::active();
 
 //id管理
 $MID = MID::active();
