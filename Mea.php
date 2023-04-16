@@ -1,4 +1,12 @@
 <?php
+/*
+ * @描述: 
+ * @Author: Viking
+ * @version: 1.0
+ * @Date: 2023-03-29 00:02:52
+ * @LastEditors: Viking
+ * @LastEditTime: 2023-04-16 13:54:02
+ */
 
 namespace MeaPHP;
 
@@ -12,6 +20,7 @@ use MeaPHP\Core\Tools\MoveFile;
 use MeaPHP\Core\Tools\Token;
 use MeaPHP\Core\Tools\Client;
 
+// trait Mea
 class Mea
 {
     protected $DB;
@@ -24,7 +33,12 @@ class Mea
     protected $UserConfig;
     protected $Token;
     protected $Client;
-
+    /**
+     * @描述: final当前方法不能重写
+     * @param {*} $UserConfig
+     * @return {*}
+     * @Date: 2023-04-16 10:48:50
+     */
     public final function __construct($UserConfig)
     {
         $this->UserConfig = $UserConfig;
