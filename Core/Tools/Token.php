@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-04-09 17:31:20
  * @LastEditors: Viking
- * @LastEditTime: 2023-04-16 14:11:05
+ * @LastEditTime: 2023-04-16 15:13:10
  */
 
 
@@ -22,15 +22,7 @@ class Token
     private $Client;
     // use Mea;
     // private $M;
-    private $res = array(
-        //考虑是否更改使用recode码表示返回不同的状态
-        // 'recode' => 'error',
-        // //只有2种状态 ok/error
-        // 'data' => null,
-        // //正确：返回数据
-        // 'msg' => null,
-        //错误：返回错误原因
-    );
+
     public static $TokenObj;
     protected  $ContinueRenew =  [
 
@@ -87,19 +79,19 @@ class Token
     {
 
         if (!$username || !$psw) {
-            $this->res['status']  =  'error';
-            $this->res['msg']   = '请入参:[ string $username = null, string $psw = null ]';
+            return false;
         } else {
-
             //使用工具类获取用户的ip地址
             $ip = $this->Client->getIp();
-            $time = date("Y-m-d H:i:s");
-
-            //这里如果需要加强安全程度；可以引入AES加密
-            $this->res['status'] = 'ok';
-            $this->res['data'] = md5($username . $psw . $time . $ip);
-            // $this->res['tokenDB'] = $this->DB->selectOne("SELECT * FROM lzb_user_keeper ");
+            if ($ip) {
+                $time = date("Y-m-d H:i:s");
+                //这里如果需要加强安全程度；可以引入AES加密
+                return md5($username . $psw . $time . $ip);
+            } else {
+                return false;
+            }
         }
-        return $this->res;
     }
+
+    // $this->res['tokenDB'] = $this->DB->selectOne("SELECT * FROM lzb_user_keeper ");
 }

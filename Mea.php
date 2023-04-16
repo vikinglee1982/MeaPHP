@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
  * @LastEditors: Viking
- * @LastEditTime: 2023-04-16 13:54:02
+ * @LastEditTime: 2023-04-16 17:59:19
  */
 
 namespace MeaPHP;
@@ -23,6 +23,7 @@ use MeaPHP\Core\Tools\Client;
 // trait Mea
 class Mea
 {
+    protected $UserConfig;
     protected $DB;
     protected $MID;
     protected $Captcha;
@@ -30,7 +31,6 @@ class Mea
     protected $SV;
     public $FV;
     protected $MoveFile;
-    protected $UserConfig;
     protected $Token;
     protected $Client;
     /**

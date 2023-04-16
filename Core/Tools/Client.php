@@ -5,22 +5,14 @@
  * @version: 1.0
  * @Date: 2023-04-12 23:18:43
  * @LastEditors: Viking
- * @LastEditTime: 2023-04-13 00:08:15
+ * @LastEditTime: 2023-04-16 15:10:51
  */
 
 namespace MeaPHP\Core\Tools;
 
 class Client
 {
-    private $res = array(
-        //考虑是否更改使用recode码表示返回不同的状态
-        // 'recode' => 'error',
-        // //只有2种状态 ok/error
-        // 'data' => null,
-        // //正确：返回数据
-        // 'msg' => null,
-        //错误：返回错误原因
-    );
+  
     protected static $Obj = null;
 
     //内部产生静态对象
