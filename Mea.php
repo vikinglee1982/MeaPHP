@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
  * @LastEditors: Viking
- * @LastEditTime: 2023-04-16 17:59:19
+ * @LastEditTime: 2023-05-04 23:33:14
  */
 
 namespace MeaPHP;
@@ -19,6 +19,7 @@ use MeaPHP\Core\Tools\FormatValidation;
 use MeaPHP\Core\Tools\MoveFile;
 use MeaPHP\Core\Tools\Token;
 use MeaPHP\Core\Tools\Client;
+use MeaPHP\Core\Tools\Encryption;
 
 // trait Mea
 class Mea
@@ -33,6 +34,7 @@ class Mea
     protected $MoveFile;
     protected $Token;
     protected $Client;
+    protected $Encryption;
     /**
      * @描述: final当前方法不能重写
      * @param {*} $UserConfig
@@ -61,5 +63,7 @@ class Mea
         $this->FV = FormatValidation::active();
         //文件移动工具
         $this->MoveFile = MoveFile::active();
+        //加密解密
+        $this->Encryption = Encryption::active();
     }
 }

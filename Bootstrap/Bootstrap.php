@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: Viking
- * @LastEditTime: 2023-04-16 15:27:39
+ * @LastEditTime: 2023-05-04 23:32:12
  */
 
 namespace MeaPHP\Bootstrap;
@@ -20,6 +20,7 @@ use MeaPHP\Core\Tools\FormatValidation;
 use MeaPHP\Core\Tools\MoveFile;
 use MeaPHP\Core\Tools\Token;
 use MeaPHP\Core\Tools\Client;
+use MeaPHP\Core\Tools\Encryption;
 // use MeaPHP\Mea;
 
 // use MeaPHP\Mea;
@@ -40,7 +41,7 @@ class Bootstrap
         // echo $CoreClassFile . '<br>';
 
         //这里注册核心类的类名称；用户使用当前类名称时提示用户类名已被占用；不能使用(名称加上一个Mea前缀，减小对用户定义类的影响)
-        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea', 'Token', 'Client'];
+        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea', 'Token', 'Client', 'Encryption'];
 
         if (in_array($class, $coreClass)) {
             var_dump([
@@ -92,3 +93,5 @@ $SV = SecurityVerification::active();
 $FV = FormatValidation::active();
 //文件移动工具
 $MoveFile = MoveFile::active();
+//加密解密
+$Encryption = Encryption::active();

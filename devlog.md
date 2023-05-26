@@ -8,7 +8,7 @@
 
 ## 工作计划 ##
 
-1. 数据库操作由mysqli转为PDO（多数据库支持）
+1.
 2. 参数接受验证Verify类文件的修改（考虑安全验证和手机号；身份证号码等的验证是否还在同一-个文件里面；和原来的一致）
 3. 生成缩略图Fotophire类文件的修改
 4. 新建格式化类文件；用于各类数据的格式化：比如时间日期；保留小数点的价格（考虑是否独立创建类文件）
@@ -105,3 +105,11 @@ git push origin --delete branch_name
 ``
 git config core.ignorecase false
 ``
+\
+14. .gitignore 文件中，存在 /dist这样被忽略的文件，但是每次git push 时还会被push，这时需要停止跟踪，您必须将其从 Git 索引中删除;它会将文件夹保留在您的本地，但不会再被跟踪。
+
+``
+git rm -r --cached <folder> // git rm -r --cached dist
+``
+\
+15.
