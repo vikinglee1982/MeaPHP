@@ -4,8 +4,8 @@
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
- * @LastEditors: Viking
- * @LastEditTime: 2023-05-04 23:33:14
+ * @LastEditors: vikinglee1982 750820181@qq.com
+ * @LastEditTime: 2023-07-02 16:34:30
  */
 
 namespace MeaPHP;
@@ -21,6 +21,8 @@ use MeaPHP\Core\Tools\Token;
 use MeaPHP\Core\Tools\Client;
 use MeaPHP\Core\Tools\Encryption;
 
+use MeaPHP\Core\Tools\File;
+
 // trait Mea
 class Mea
 {
@@ -30,11 +32,16 @@ class Mea
     protected $Captcha;
     protected $Save;
     protected $SV;
-    public $FV;
+
     protected $MoveFile;
     protected $Token;
-    public $Client;
+
     protected $Encryption;
+    protected $File;
+
+    //便于再统一入口处使用
+    protected $Client;
+    protected $FV;
     /**
      * @描述: final当前方法不能重写
      * @param {*} $UserConfig
@@ -55,14 +62,16 @@ class Mea
         $this->MID = MID::active();
         //图片验证码
         $this->Captcha = Captcha::active();
+        //上传保存文件，移动文件等统一
+        $this->File = File::active();
         //上传文件；保存到服务器
-        $this->Save = Save::active();
+        // $this->Save = Save::active();
         //安全验证
         $this->SV = SecurityVerification::active();
         //格式验证
         $this->FV = FormatValidation::active();
         //文件移动工具
-        $this->MoveFile = MoveFile::active();
+        // $this->MoveFile = MoveFile::active();
         //加密解密
         $this->Encryption = Encryption::active();
     }
