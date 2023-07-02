@@ -1,6 +1,6 @@
 <?php
 /*
- * @描述: 
+ * @描述:
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
@@ -33,7 +33,7 @@ class Mea
     public $FV;
     protected $MoveFile;
     protected $Token;
-    protected $Client;
+    public $Client;
     protected $Encryption;
     /**
      * @描述: final当前方法不能重写

@@ -1,6 +1,6 @@
 <?php
 /*
- * @描述: 
+ * @描述: ASE加密解密
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-05-04 23:18:04
@@ -14,8 +14,8 @@ class Encryption
 {
 
     public static $Obj;
-      //设置AES秘钥
-      private static $aes_key = 'viking'; //此处填写前后端共同约定的秘钥
+    //设置AES秘钥
+    private static $aes_key = 'viking'; //此处填写前后端共同约定的秘钥
     //内部产生静态对象
     public static function active()
     {
@@ -37,7 +37,7 @@ class Encryption
     private function __construct()
     {
     }
-  
+
 
     /**
      * 加密

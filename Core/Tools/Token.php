@@ -1,11 +1,11 @@
 <?php
 /*
- * @描述: 
+ * @描述: token管理
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-04-09 17:31:20
- * @LastEditors: Viking
- * @LastEditTime: 2023-04-16 15:13:10
+ * @LastEditors: vikinglee1982 750820181@qq.com
+ * @LastEditTime: 2023-07-02 10:59:50
  */
 
 
@@ -91,6 +91,20 @@ class Token
                 return false;
             }
         }
+    }
+    /**
+     * @description: 用户登陆以后更新token
+     * @return {$newToken}
+     */
+    public function renewal(
+        string $username = null,
+        string $ip = null,
+        string $agent = null
+    ): string {
+        $time = date("Y-m-d H:i:s");
+        $newToken = md5($username . $agent . $time . $ip);
+
+        return $newToken;
     }
 
     // $this->res['tokenDB'] = $this->DB->selectOne("SELECT * FROM lzb_user_keeper ");
