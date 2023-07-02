@@ -44,9 +44,14 @@ class File
         }
         return self::$obj;
     }
-    //单文件移动
 
-    public function MoveMonofile($oldName = '', $newName = '', $mkdir = false)
+
+    /**
+     * @description: 单文件移动
+     * @return {*}
+     */
+
+    public function MoveMonofile(string $oldName = null, string $newName = null, $mkdir = false)
     {
         // $oldName = '' 旧文件的完全路径
         // $newName = '' 移动的新位置；

@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-04-09 17:31:20
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-07-02 10:59:50
+ * @LastEditTime: 2023-07-02 16:09:27
  */
 
 
@@ -22,6 +22,15 @@ class Token
     private $Client;
     // use Mea;
     // private $M;
+    public $res = array(
+        // 'status' => 'error',
+        // //只有2种状态 ok/error
+        // 'data' => null,
+        // //正确：返回数据
+        // 'msg' => null,
+        //错误：返回错误原因
+    );
+
 
     public static $TokenObj;
     protected  $ContinueRenew =  [
@@ -78,19 +87,28 @@ class Token
     public function make(string $username = null, string $psw = null)
     {
 
-        if (!$username || !$psw) {
-            return false;
+        if (!$username) {
+
+            $this->res['status'] = 'error';
+            $this->res['msg'] = "缺少用户名";
+        } elseif (!$psw) {
+            $this->res['status'] = 'error';
+            $this->res['msg'] = "缺少密码";
         } else {
             //使用工具类获取用户的ip地址
-            $ip = $this->Client->getIp();
-            if ($ip) {
+            $getip = $this->Client->getIp();
+            if ($getip['status'] == 'ok') {
+                $ip = $getip['data'];
                 $time = date("Y-m-d H:i:s");
                 //这里如果需要加强安全程度；可以引入AES加密
-                return md5($username . $psw . $time . $ip);
+                $this->res['status'] = 'ok';
+                $this->res['data'] =  md5($username . $psw . $time . $ip);
             } else {
-                return false;
+                $this->res['status'] = 'error';
+                $this->res['msg'] = "不能获取到用户ip";
             }
         }
+        return $this->res;
     }
     /**
      * @description: 用户登陆以后更新token
@@ -100,11 +118,29 @@ class Token
         string $username = null,
         string $ip = null,
         string $agent = null
-    ): string {
-        $time = date("Y-m-d H:i:s");
-        $newToken = md5($username . $agent . $time . $ip);
+    ): array {
 
-        return $newToken;
+        if (!$username) {
+            $this->res['status'] = 'error';
+            $this->res['msg'] = '缺少参数1:$username';
+        } elseif (!$ip) {
+
+            $this->res['status'] = 'error';
+            $this->res['msg'] = '缺少参数2:$ip';
+        } elseif (!$agent) {
+            $this->res['status'] = 'error';
+            $this->res['msg'] = '缺少参数3:$agent';
+        } else {
+
+            $time = date("Y-m-d H:i:s");
+            $newToken = md5($username . $agent . $time . $ip);
+
+            $this->res['status'] = 'ok';
+            $this->res['data'] =  $newToken;
+        }
+
+
+        return $this->res;
     }
 
     // $this->res['tokenDB'] = $this->DB->selectOne("SELECT * FROM lzb_user_keeper ");

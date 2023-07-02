@@ -4,15 +4,23 @@
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-04-12 23:18:43
- * @LastEditors: Viking
- * @LastEditTime: 2023-04-16 15:10:51
+ * @LastEditors: vikinglee1982 750820181@qq.com
+ * @LastEditTime: 2023-07-02 16:06:49
  */
 
 namespace MeaPHP\Core\Tools;
 
 class Client
 {
-  
+    public $res = array(
+        // 'status' => 'error',
+        // //只有2种状态 ok/error
+        // 'data' => null,
+        // //正确：返回数据
+        // 'msg' => null,
+        //错误：返回错误原因
+    );
+
     protected static $Obj = null;
 
     //内部产生静态对象
@@ -37,7 +45,7 @@ class Client
     {
     }
     /**
-     * @描述: 
+     * @描述:
      * @return {*}
      * @Date: 2023-04-12 23:48:37
      */
@@ -53,7 +61,11 @@ class Client
             $ip = $_SERVER['REMOTE_ADDR'];
         }
         $userIp = preg_match('/[\d\.]{7,15}/', $ip, $matches) ? $matches[0] : '';
-        return $userIp;
+
+        $this->res['status'] = 'ok';
+        $this->res['data'] = $userIp;
+        // return $userIp;
+        return $this->res;
     }
     /**
      * @描述: 获取用户的代理信息
@@ -65,10 +77,14 @@ class Client
     {
         if (!empty($_SERVER['HTTP_USER_AGENT'])) {
             $OS = $_SERVER['HTTP_USER_AGENT'];
-            return $OS;
+
+            $this->res['status'] = 'ok';
+            $this->res['data'] = $OS;
         } else {
-            return "获取访客代理信息失败！";
+            $this->res['status'] = 'error';
+            $this->res['msg'] = "获取访客代理信息失败！";
         }
+        return $this->res;
     }
     //这里可以根据代理信息解析出用户的操作系统；浏览器版本；用户语言等相关信息
 }
