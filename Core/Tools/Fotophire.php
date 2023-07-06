@@ -17,7 +17,7 @@ $model:
 
 $vh:
 v=横向标准
-h=总想标准
+h=纵向标准
 $fillColor:填充颜色
 
 $res_t:文件类型

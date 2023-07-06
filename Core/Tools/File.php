@@ -111,9 +111,13 @@ class File
         return $this->res;
     }
 
-    //数组式多文件移动
+    //
+    /**
+     * @description: 数组式多文件移动
+     * @return {*}
+     */
 
-    public function MoveMultifile($arr, $mkdir = false)
+    public function MoveMultifile(array $arr = [], $mkdir = false)
     {
         if (!is_array($arr)) {
             $this->res['status'] = 'error';
@@ -131,7 +135,7 @@ class File
                 }
             }
             if ($pass) {
-                $this->recursion($arr, $mkdir);
+                $this->moveRecursion($arr, $mkdir);
             } else {
                 $this->res['status'] = 'error';
                 $this->res['msg'] = __CLASS__ . '->' . __LINE__ . ':' . '入参的数组格式： [
@@ -148,9 +152,13 @@ class File
         }
         return $this->res;
     }
-    //递归循环调用储存
 
-    private function recursion($arr, $mkdir, $i = 0)
+    /**
+     * @description: 私有方法：//递归循环调用储存
+     * @return {*}
+     */
+
+    private function moveRecursion($arr, $mkdir, $i = 0)
     {
         $res = $this->MoveMonofile($arr[$i]['oldName'], $arr[$i]['newName'], $mkdir);
         if ($res['status'] == 'ok') {
@@ -158,7 +166,7 @@ class File
             array_push($this->tempRes, $this->res['data']);
             $i++;
             if ($arr[$i]) {
-                $this->recursion($arr, $mkdir, $i);
+                $this->moveRecursion($arr, $mkdir, $i);
             } else {
                 $this->res['status'] = 'ok';
                 $this->res['data'] = $this->tempRes;
@@ -168,7 +176,11 @@ class File
             return $this->res;
         }
     }
-    //单文件复制到新的路径
+    /**
+     * @description: //单文件复制到新的路径
+     * @return {*}
+     */
+
     public function CopyMonofile($oldFilePath, $folder)
     {
 
@@ -213,5 +225,193 @@ class File
         }
 
         // # code...
+    }
+
+    /**
+     * @description: 保存文件，单张图片
+     * @return {*}
+     */
+
+    public function saveImage($file = null, $folderName = null, $fileName = null)
+
+    {
+        // return $file;
+        // return  'jianlile ';
+        //将路径全部转为小写
+        // $folderName = strtolower($folderName);
+        // //判断入参的文件类型，必须时图片格式
+        $fileType = $file['type'];
+        if (!$file) {
+            $this->res['status'] = "error";
+            $this->res['msg'] = '请缺少入参image文件';
+            // return "error:请缺少入参image文件";
+        } elseif ($fileType != 'image/jpeg' && $fileType != 'image/png' && $fileType != 'image/webp' && $fileType != 'image/gif') {
+
+            $this->res['status'] = "error";
+            $this->res['msg'] = '文件类型支持[gif/jpg/jpge/png//webp]';
+            $this->res['type'] = $fileType;
+            $this->res['file'] = $file;
+            // return "error:文件类型支持[gif/jpg/jpge/png//webp]";
+            //image/jpeg;image/png;image/webp;image/gif
+            // return $file['type'];
+        } elseif (!$folderName) {
+            $this->res['status'] = "error";
+            $this->res['msg'] = '缺少文件夹目录（从项目根路径下开始的目录）';
+            // return "error:缺少文件夹目录（项目根路径下的目录）";
+        } elseif (strpos($folderName, 'undefined') || strpos($folderName, 'null')) {
+            $this->res['status'] = "error";
+            $this->res['msg'] = '文件夹目录中不能存在undefined或者null等字段';
+            // return "error:缺少文件夹目录（项目根路径下的目录）";
+        } else {
+
+
+            if (!$fileName) {
+                //如果用户没有传进文件名，就生成一个，不重复的文件名
+                $fileName = $this->createFileName($file);
+            }
+
+            //合成需要存放文件的路径
+            // $userDir = iconv('utf-8', 'gbk', $this->basicsPath . '/' . $folderName . '/' . $fileType);
+            if (substr($folderName, 0, 1) !== '/') {
+                $folderName = '/' . $folderName;
+            }
+
+            $userDir = iconv('utf-8', 'gbk', $_SERVER['DOCUMENT_ROOT']  . $folderName);
+
+
+            if (!is_dir($userDir)) {
+
+                mkdir(iconv("UTF-8", "GBK", $userDir), 0777, true);
+            }
+
+            //如果路径最后一位写了 / ,拼接时就不加入 / ，否则加入
+            if (substr($userDir, -1) == '/') {
+                $src = $userDir . $fileName;
+            } else {
+                $src = $userDir . '/' . $fileName;
+            }
+
+            //开始储存
+
+
+
+            if (file_exists($src)) {
+                $this->res['status'] = "error";
+                $this->res['msg'] = '文件名重复';
+                // $this->res['msg'] = $src;
+                // return "error:已经有这个文件了";
+            } else {
+                if (move_uploaded_file($file['tmp_name'], $src)) {
+                    //储存完成合成路径返回
+                    //
+                    // $url = str_replace($_SERVER['DOCUMENT_ROOT'], $_SERVER['HTTP_HOST'], $src);
+                    $url = str_replace($_SERVER['DOCUMENT_ROOT'], '', $src);
+
+                    $this->res['status'] = "ok";
+                    $this->res['data'] =  $url;
+                    // return $url;
+                } else {
+                    //储存失败
+                    $this->res['status'] = "error";
+                    $this->res['msg'] = '储存失败：' . $src;
+                    // $data['src'] = $src;
+                    // return 3000;
+                    // return $src;
+                }
+            }
+        }
+        return $this->res;
+    }
+
+    /**
+     * @description: 私有方法：创建文件名
+     * @return {*}
+     */
+    private function createFileName($file)
+    {
+
+        //获取文件后缀名
+        $extension = substr(strrchr($file['name'], '.'), 1);
+        // md5(uniqid(md5(microtime(true)), true));
+        // return md5($this->folderName . md5(uniqid(md5(microtime(true)), true)) . $fileType) . '.' . $extension;
+        return md5(md5(uniqid(md5(microtime(true)), true)) . $file['type']) . '.' . $extension;
+    }
+
+
+    /**
+     * @description: 私有方法：递归循环调用储存
+     * @param {*} $arr
+     * @param {*} $i
+     * @return {*}
+     */
+    // private function saveRecursion($arr, $i = 0)
+    // {
+    //     $res = $this->image($arr[$i]['resource'], $arr[$i]['path']);
+    //     if ($res['status'] == 'ok') {
+    //         //临时储存已经储存的图片路径
+    //         array_push($this->tempRes, $this->res['data']);
+    //         $i++;
+    //         if ($arr[$i]) {
+    //             $this->recursion($arr, $i);
+    //         } else {
+    //             $this->res['status'] = 'ok';
+    //             $this->res['data'] = $this->tempRes;
+    //             return $this->$res;
+    //         }
+    //     } else {
+    //         return $this->res;
+    //     }
+    // }
+
+    /**
+     * @description:删除单、多文件
+     * @param {array} $arr
+     * @return {*}
+     */
+    public function delFile(array $arr = []): array
+    {
+
+        if (count($arr) < 1) {
+            $this->res['status'] = 'error';
+            $this->res['msg'] = '参数1:$arr为空';
+        } else {
+            $len = strlen($_SERVER['DOCUMENT_ROOT']);
+
+            $arr =   array_values($arr);
+            foreach ($arr as $k => $v) {
+                if (substr($v, 0, $len) != $_SERVER['DOCUMENT_ROOT']) {
+                    $arr[$k] = $_SERVER['DOCUMENT_ROOT'] . $v;
+                }
+            }
+
+            $del = true;
+            foreach ($arr as $k => $v) {
+                if (!file_exists($v)) {
+                    $this->res['status'] = 'error';
+                    $this->res['msg'] = '第' . $k . '项（' . $v . '),文件不存在';
+                    $del = false;
+                    break;
+                }
+            }
+
+            if ($del) {
+
+                foreach ($arr as $k => $v) {
+                    if (unlink($v)) {
+                        if ((count($arr) - 1) == $k) {
+                            $this->res['status'] = 'ok';
+                            $this->res['msg'] = $k + 1;
+                        }
+                    } else {
+                        $this->res['status'] = 'error';
+                        $this->res['msg'] = '第' . $k . '项删除失败';
+                    }
+                }
+            }
+        }
+
+
+
+        return $this->res;
     }
 }
