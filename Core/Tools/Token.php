@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-04-09 17:31:20
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-07-02 16:09:27
+ * @LastEditTime: 2023-09-10 16:45:49
  */
 
 
@@ -115,14 +115,14 @@ class Token
      * @return {$newToken}
      */
     public function renewal(
-        string $username = null,
+        string $eUser = null,
         string $ip = null,
         string $agent = null
     ): array {
 
-        if (!$username) {
+        if (!$eUser) {
             $this->res['status'] = 'error';
-            $this->res['msg'] = '缺少参数1:$username';
+            $this->res['msg'] = '缺少参数1:$eUser';
         } elseif (!$ip) {
 
             $this->res['status'] = 'error';
@@ -133,7 +133,7 @@ class Token
         } else {
 
             $time = date("Y-m-d H:i:s");
-            $newToken = md5($username . $agent . $time . $ip);
+            $newToken = md5($eUser . $agent . $time . $ip);
 
             $this->res['status'] = 'ok';
             $this->res['data'] =  $newToken;
