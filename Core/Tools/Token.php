@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-04-09 17:31:20
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-09-10 16:45:49
+ * @LastEditTime: 2023-09-10 16:54:12
  */
 
 
@@ -79,18 +79,18 @@ class Token
     }
     /**
      * @描述: 生成一个token
-     * @param {string} $username
+     * @param {string} $eUser
      * @param {string} $psw
      * @return {string} $token
      * @Date: 2023-04-12 23:48:20
      */
-    public function make(string $username = null, string $psw = null)
+    public function make(string $eUser = null, string $psw = null)
     {
 
-        if (!$username) {
+        if (!$eUser) {
 
             $this->res['status'] = 'error';
-            $this->res['msg'] = "缺少用户名";
+            $this->res['msg'] = "缺少用户id或用户名";
         } elseif (!$psw) {
             $this->res['status'] = 'error';
             $this->res['msg'] = "缺少密码";
@@ -102,7 +102,7 @@ class Token
                 $time = date("Y-m-d H:i:s");
                 //这里如果需要加强安全程度；可以引入AES加密
                 $this->res['status'] = 'ok';
-                $this->res['data'] =  md5($username . $psw . $time . $ip);
+                $this->res['data'] =  md5($eUser . $psw . $time . $ip);
             } else {
                 $this->res['status'] = 'error';
                 $this->res['msg'] = "不能获取到用户ip";
