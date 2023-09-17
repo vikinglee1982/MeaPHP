@@ -1,11 +1,11 @@
 <?php
 /*
- * @描述: 
+ * @描述:
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
- * @LastEditors: Viking
- * @LastEditTime: 2023-04-16 10:18:54
+ * @LastEditors: vikinglee1982 750820181@qq.com
+ * @LastEditTime: 2023-09-17 11:11:51
  */
 
 
@@ -91,10 +91,7 @@ class DataBase
         //判断用户使用的是查询语句
         if (substr($sql, 0, 6) != 'select' && substr($sql, 0, 6) != 'SELECT') {
 
-            if (!$this->online) {
-                //调试模式返回错误信息
-                echo "该方法，只能执行select语句";
-            }
+
 
             //阻断执行
             die();
@@ -165,23 +162,25 @@ class DataBase
             $rowNum = mysqli_affected_rows($this->link);
             if ($rowNum > 0) {
                 return $rowNum;
-            } else {
-                if (!$this->online) {
-                    //调试模式返回错误信息
-                    return ($rowNum . '执行失败，请检查执行条件SQL语句。');
-                }
-                //在线模式不返回任何数据
             }
         };
     }
 
     //获取记录行数
-    public function rowNum($sql)
+    public function rowNum(string $tableName, string $condition = '')
     {
         //执行sql语句，并返回结果集
-        $res = $this->select($sql);
+        // SELECT COUNT(*) FROM tablename WHERE condition
+        if ($condition) {
+            $whereSql = "WHERE $condition";
+        } else {
+            $whereSql = "";
+        }
+
+        $res = $this->select("SELECT COUNT(*) AS total FROM $tableName $whereSql");
         //在结果集中或的记录数，并返回
-        return mysqli_num_rows($res);
+        // return mysqli_num_rows($res);
+        return mysqli_fetch_array($res, MYSQLI_NUM)[0];
     }
 
     //返回刚刚插入的行的id
