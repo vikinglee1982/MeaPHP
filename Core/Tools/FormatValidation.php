@@ -108,9 +108,11 @@ class FormatValidation
             // return $idcard;
             $this->res['status'] = 'ok';
             $this->res['data'] = $idcard;
+            $this->res['msg'] = '正确的身份证号码';
         } else {
             $this->res['status'] = 'error';
             $this->res['msg'] = '错误的身份证号码验证码';
+            $this->res['data'] = $idcard;
             // return false;
         }
         return $this->res;
