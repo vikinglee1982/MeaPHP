@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-09-06 21:54:09
+ * @LastEditTime: 2023-10-18 17:10:22
  */
 
 namespace MeaPHP\Bootstrap;
@@ -67,7 +67,7 @@ class Bootstrap
 
 
 
-Bootstrap::autoLoad();
+Bootstrap::autoLoad($UserConfig);
 
 // $Mea = new Mea($UserConfig);
 // $data['bootstrapConfig'] = $UserConfig;
