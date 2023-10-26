@@ -227,6 +227,69 @@ class File
         // # code...
     }
 
+
+    /**
+     * @description: 数组式拷贝文件
+     * @param {array} $arr
+     * @param {*} $mkdir
+     * @return {*}
+     */
+    public function copyMultifile(array $arr = [], $mkdir = false): array
+    {
+
+        if (!is_array($arr)) {
+            $this->res['status'] = 'error';
+            $this->res['msg'] = __CLASS__ . '->' . __LINE__ . '入参格式必须是array';
+        } else {
+            $pass = true;
+            foreach ($arr as $k => $v) {
+                if (!$v['oldName']) {
+                    $pass = false;
+                    break;
+                }
+                if (!$v['newName']) {
+                    $pass = false;
+                    break;
+                }
+            }
+            if ($pass) {
+                $this->copyRecursion($arr, $mkdir);
+            } else {
+                $this->res['status'] = 'error';
+                $this->res['msg'] = __CLASS__ . '->' . __LINE__ . ':' . '入参的数组格式： [
+                    0:{
+                        oldName:当前文件包含文件名的完整目录,
+                        newName:需要拷贝到的完整目录，且包含文件名,
+                    }
+                    1:{
+                        oldName:当前文件包含文件名的完整目录,
+                        newName:需要拷贝到的完整目录，且包含文件名,
+                    }
+                ]';
+            }
+        }
+        return $this->res;
+    }
+
+    private function copyRecursion($arr, $mkdir, $i = 0): array
+    {
+        $res = $this->CopyMonofile($arr[$i]['oldName'], $arr[$i]['newName'], $mkdir);
+        if ($res['status'] == 'ok') {
+            //临时储存已经储存的图片路径
+            array_push($this->tempRes, $this->res['data']);
+            $i++;
+            if ($arr[$i]) {
+                $this->CopyMonofile($arr, $mkdir, $i);
+            } else {
+                $this->res['status'] = 'ok';
+                $this->res['data'] = $this->tempRes;
+                return $this->$res;
+            }
+        } else {
+            return $this->res;
+        }
+    }
+
     /**
      * @description: 保存文件，单张图片
      * @return {*}
