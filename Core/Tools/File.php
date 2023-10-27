@@ -223,16 +223,20 @@ class File
             if (file_exists(dirname($folder))) {
                 //如果没有这个文件,就保存这个文件
                 if (!is_dir($folder)) {
-                    mkdir(iconv('UTF-8', 'GBK', $folder), 0777, true);
+                    // mkdir($folder, 0777, true);
+                    copy($oldFilePath, $folder);
                 }
                 // //这个文件存在了,就返回成功
-                if (is_dir($folder)) {
+                if (file_exists($folder)) {
                     $path = str_replace($_SERVER['DOCUMENT_ROOT'], '', $folder);
                     $this->res['status'] = 'ok';
                     $this->res['data'] = $path;
+                    return $this->res;
                 } else {
                     $this->res['status'] = 'error';
                     $this->res['msg'] = __CLASS__ . '->' . __LINE__ . '复制保存文件失败';
+                    $this->res['msg1'] = is_dir($folder);
+                    $this->res['msg2'] = $folder;
                 }
             } else {
                 //不存在，就是创建失败
