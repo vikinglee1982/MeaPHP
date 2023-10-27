@@ -51,7 +51,7 @@ class File
      * @return {*}
      */
 
-    public function MoveMonofile(string $oldName = null, string $newName = null, $mkdir = false)
+    public function MoveMonofile(string $oldName = null, string $newName = null, bool $mkdir = false)
     {
         // $oldName = '' 旧文件的完全路径
         // $newName = '' 移动的新位置；
@@ -181,7 +181,7 @@ class File
      * @return {*}
      */
 
-    public function CopyMonofile($oldFilePath, $folder)
+    public function CopyMonofile(string $oldFilePath, string $folder, bool $mkdir = false)
     {
 
         if (!$oldFilePath) {
@@ -212,19 +212,35 @@ class File
         if (!is_file($oldFilePath)) {
             $this->res['status'] = 'error';
             $this->res['msg'] = __CLASS__ . '->' . __LINE__ . '没有发现需要拷贝的文件';
-            return $this->res;
         } else {
-            if (!is_dir($folder)) {
-                mkdir($folder, 0777, true);
+
+            //如果当前文件夹不存在，并且用户允许新创建
+            if (!file_exists(dirname($folder)) && $mkdir) {
+                mkdir(iconv('UTF-8', 'GBK', dirname($folder)), 0777, true);
             }
-            if (!is_dir($folder)) {
+
+            //如果存在当前文件夹
+            if (file_exists(dirname($folder))) {
+                //如果没有这个文件,就保存这个文件
+                if (!is_dir($folder)) {
+                    mkdir(iconv('UTF-8', 'GBK', $folder), 0777, true);
+                }
+                // //这个文件存在了,就返回成功
+                if (is_dir($folder)) {
+                    $path = str_replace($_SERVER['DOCUMENT_ROOT'], '', $folder);
+                    $this->res['status'] = 'ok';
+                    $this->res['data'] = $path;
+                } else {
+                    $this->res['status'] = 'error';
+                    $this->res['msg'] = __CLASS__ . '->' . __LINE__ . '复制保存文件失败';
+                }
+            } else {
+                //不存在，就是创建失败
                 $this->res['status'] = 'error';
-                $this->res['msg'] = __CLASS__ . '->' . __LINE__ . '创建存放新文件目录失败';
-                return $this->res;
+                $this->res['msg'] = __CLASS__ . '->' . __LINE__ . '不存在需要拷贝的文件夹，或者入参创建不存在的文件夹';
             }
         }
-
-        // # code...
+        return $this->res;
     }
 
 
@@ -271,15 +287,24 @@ class File
         return $this->res;
     }
 
-    private function copyRecursion($arr, $mkdir, $i = 0): array
+    /**
+     * @description: 递归拷贝文件
+     * @param {*} $arr
+     * @param {*} $mkdir
+     * @param {*} $i
+     * @return {*}
+     */
+    private function copyRecursion($arr, $mkdir, $i = 0)
     {
         $res = $this->CopyMonofile($arr[$i]['oldName'], $arr[$i]['newName'], $mkdir);
         if ($res['status'] == 'ok') {
             //临时储存已经储存的图片路径
             array_push($this->tempRes, $this->res['data']);
+
             $i++;
+
             if ($arr[$i]) {
-                $this->CopyMonofile($arr, $mkdir, $i);
+                $this->copyRecursion($arr, $mkdir, $i);
             } else {
                 $this->res['status'] = 'ok';
                 $this->res['data'] = $this->tempRes;
