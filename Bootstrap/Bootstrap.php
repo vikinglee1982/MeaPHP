@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-10-18 17:10:22
+ * @LastEditTime: 2023-11-03 10:47:27
  */
 
 namespace MeaPHP\Bootstrap;
@@ -68,6 +68,19 @@ class Bootstrap
 
 
 Bootstrap::autoLoad($UserConfig);
+
+if ($UserConfig['errLog']['enabled']) {
+    $err = [
+        'time' => date('Y-m-d H:i:s'),
+        'fileName' => $_SERVER['SCRIPT_NAME'],
+        'lineNum' => __LINE__,
+        'errCode' => '',
+        'type' => '',
+        'msg' => '',
+    ];
+}
+
+
 
 // $Mea = new Mea($UserConfig);
 // $data['bootstrapConfig'] = $UserConfig;

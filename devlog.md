@@ -112,4 +112,3 @@ git config core.ignorecase false
 git rm -r --cached <folder> // git rm -r --cached dist
 ``
 \
-15.
