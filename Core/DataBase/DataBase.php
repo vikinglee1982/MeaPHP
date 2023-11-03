@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-09-17 11:11:51
+ * @LastEditTime: 2023-11-03 15:42:10
  */
 
 
@@ -39,7 +39,7 @@ class DataBase
             $this->dbname   = $dbkey['MySQL']['dbname'];
             $this->hostport = $dbkey['MySQL']['hostport'];
             $this->charset =  $dbkey['MySQL']['charset'];
-            $this->online   = $dbkey['online'];
+            $this->online   = $dbkey['Online'];
 
             //调用类内连接数据库方法
             $this->connect();

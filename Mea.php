@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-07-04 09:57:38
+ * @LastEditTime: 2023-11-03 15:05:29
  */
 
 namespace MeaPHP;
@@ -22,6 +22,7 @@ use MeaPHP\Core\Tools\Client;
 use MeaPHP\Core\Tools\Encryption;
 
 use MeaPHP\Core\Tools\File;
+use MeaPHP\Core\Tools\Error;
 
 // trait Mea
 class Mea
@@ -42,6 +43,7 @@ class Mea
 
     protected $Client;
     protected $FV;
+    protected $Error;
     /**
      * @描述: final当前方法不能重写
      * @param {*} $UserConfig
@@ -74,5 +76,7 @@ class Mea
         // $this->MoveFile = MoveFile::active();
         //加密解密
         $this->Encryption = Encryption::active();
+        //错误日志
+        $this->Error = Error::active($UserConfig);
     }
 }
