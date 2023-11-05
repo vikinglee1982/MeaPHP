@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-11-03 15:42:10
+ * @LastEditTime: 2023-11-05 15:40:55
  */
 
 
@@ -21,7 +21,7 @@ class DataBase
     private $dbname;
     private $hostport;
     private $charset;
-    private $online;
+    private $Debug;
     private $link;
 
     //阻止外部克隆书库工具类
@@ -39,7 +39,7 @@ class DataBase
             $this->dbname   = $dbkey['MySQL']['dbname'];
             $this->hostport = $dbkey['MySQL']['hostport'];
             $this->charset =  $dbkey['MySQL']['charset'];
-            $this->online   = $dbkey['Online'];
+            $this->Debug   = $dbkey['Debug'];
 
             //调用类内连接数据库方法
             $this->connect();
@@ -57,12 +57,18 @@ class DataBase
         $this->link = mysqli_connect($this->host, $this->username, $this->password, $this->dbname, $this->hostport);
         //检查连接
         if (!$this->link) {
-            if ($this->online) {
-                //上线运营模式：阻断执行，不返回任何数据
-                die();
-            } else {
-                //调试模式：阻断执行，返回失败原因
+            // if ($this->online) {
+            //     //上线运营模式：阻断执行，不返回任何数据
+            //     die();
+            // } else {
+            //     //调试模式：阻断执行，返回失败原因
+            //     die("Connection failed(连接失败):" . mysqli_connect_error());
+            // }
+
+            if ($this->Debug) {
                 die("Connection failed(连接失败):" . mysqli_connect_error());
+            } else {
+                die();
             }
         }
         //如果连接成功，设置数据库字符集，非外部传入
@@ -144,13 +150,13 @@ class DataBase
         //判断用户使用的不是查询语句
 
         if (substr($sql, 0, 6) == 'select' || substr($sql, 0, 6) == 'SELECT') {
-            if (!$this->online) {
+            if ($this->Debug) {
                 //调试模式返回错误信息
                 echo "该方法不能执行select，只能执行增删改语句";
+            } else {
+                //阻断执行
+                die();
             }
-
-            //阻断执行
-            die();
         } else {
             //可以执行
             // echo "<hr>";
@@ -202,7 +208,7 @@ class DataBase
             //连接成功时，关闭数据库，如果关闭失败屏蔽错误，防止暴露文件地址
             @mysqli_close($this->link);
         } else {
-            if (!$this->online) {
+            if ($this->Debug) {
                 //如果是调试模式：返回失败原因
                 return mysqli_close($this->link);
             }
