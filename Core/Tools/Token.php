@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-04-09 17:31:20
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-09-10 16:54:12
+ * @LastEditTime: 2023-11-08 14:35:23
  */
 
 
@@ -18,7 +18,7 @@ use MeaPHP\Core\DataBase\DataBase;
 class Token
 {
 
-    private $DB;
+
     private $Client;
     // use Mea;
     // private $M;
@@ -33,30 +33,17 @@ class Token
 
 
     public static $TokenObj;
-    protected  $ContinueRenew =  [
-
-        //续约周期时间（秒）,如果是0表示永远不过期
-        'expiration'          => 0,
-        //涉及需要修改数据库的字段key="表名称"；value=“对应表中的字段名”
-        //多个用户表；添加多个同样数据格式的同级数组
-        'lzb_user_keeper' => [
-            'token' => 'token',
-            'indate' => 'token_indate',
-            'ip' => 'user_ip',
-            'loginTime' => 'login_time',
-        ],
-    ];
 
 
     //内部产生静态对象
-    public static function active($config)
+    public static function active()
     {
         // var_dump($config);
         // echo "开始创建<hr>";
         if (!self::$TokenObj instanceof self) {
             // echo "不存在，创建了<hr>";
             //如果不存在，创建保存
-            self::$TokenObj = new self($config);
+            self::$TokenObj = new self();
         }
         return self::$TokenObj;
     }
@@ -66,16 +53,10 @@ class Token
     }
 
     //构造方法初始化，属性赋值，准备连接
-    private function __construct($config)
+    private function __construct()
     {
-        if ($config) {
-            //加载所需要使用的工具类对象
-            $this->DB =  DataBase::active($config);
-            $this->Client =  Client::active();
-            $this->ContinueRenew     = $config['ContinueRenew'];
-        } else {
-            return false;
-        }
+
+        $this->Client =  Client::active();
     }
     /**
      * @描述: 生成一个token

@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-11-03 15:05:29
+ * @LastEditTime: 2023-11-08 14:42:27
  */
 
 namespace MeaPHP;
@@ -57,7 +57,7 @@ class Mea
         $this->DB = DataBase::active($UserConfig);
 
         //Token的管理
-        $this->Token = Token::active($UserConfig);
+        $this->Token = Token::active();
         //客户端相关信息
         $this->Client = Client::active();
         //id管理
