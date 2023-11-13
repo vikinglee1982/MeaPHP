@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 750820181@qq.com
  * @Date: 2023-11-03 14:53:13
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-11-03 17:51:12
+ * @LastEditTime: 2023-11-13 15:26:11
  * @FilePath: \工作台\Servers\lzkj_server\MeaPHP\Core\Tools\Error.php
  * @Description: 错误日志记录工具类
  */
@@ -79,15 +79,15 @@ class Error
      * @param {string} $errData
      * @return {array}
      */
-    public function write(string $errData)
+    public function write(array $errData)
     {
-        $data =   json_decode($errData, true);
-        if (is_array($data) && in_array($data['type'], [0, 1, 2])  && $data['fileName'] && $data['line'] && $data['msg'] && $data['errCode']) {
 
-            $ecode = json_decode($data['errCode']);
+        if (is_array($errData) && in_array($errData['type'], [0, 1, 2])  && $errData['fileName'] && $errData['line'] && $errData['msg'] && $errData['errCode']) {
+
+            $ecode = json_decode($errData['errCode']);
 
 
-            $res = $this->DB->execute("INSERT INTO $this->table($this->time,$this->type,$this->fileName,$this->line,`uid`,$this->msg,$this->errCode) VALUES (NOW(),$data[type],'$data[fileName]',$data[line],'$data[uid]','$data[msg]','$ecode')");
+            $res = $this->DB->execute("INSERT INTO $this->table($this->time,$this->type,$this->fileName,$this->line,`uid`,$this->msg,$this->errCode) VALUES (NOW(),$errData[type],'$errData[fileName]',$errData[line],'$errData[uid]','$errData[msg]','$ecode')");
 
             if ($res == 1) {
                 return [
@@ -112,7 +112,7 @@ class Error
                     'errCode' => 'json_encode(错误的返回数据信息)',
                     'uid' => ' guest | uid | keeper_uid | admin_uid ',
                 ],
-                'data' => $data,
+                'data' => $errData,
             ];
         }
     }
