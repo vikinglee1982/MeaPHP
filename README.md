@@ -52,10 +52,10 @@
 
 8. 可以正常使用框架所提供的工具类处理业务了
 
-### 框架提供工具 ###  
+### 框架提供工具 ###
 
 ### $\color{#409EFF}[DataBase类]$ ###
-  
+
 1. **查询单行**
 
    $DB->selectOne(sql语句,数据返回格式)
@@ -146,9 +146,9 @@
 
    + 混合使用
 
-      当有些字段需要设置统一的值，可以这样混合使用  
-      END后面需要添加逗号  
-      这样对应条件值多行的【字段a】和【字段b】都会修改成对应值a和对应值b  
+      当有些字段需要设置统一的值，可以这样混合使用
+      END后面需要添加逗号
+      这样对应条件值多行的【字段a】和【字段b】都会修改成对应值a和对应值b
 
       ```php
       $DB->execute("UPDATE 表名 SET
@@ -164,10 +164,23 @@
 
 7. **返回符合条件的数据条数**
 
-   $DB->rowNum(sql语句);
+   $DB->rowNum("SELECT * FROM 后的Sql语句");
 
    ```php
-   $DB->rowNum("SELECT * FROM 表名 WHERE 字段 = 条件值");
+   $DB->rowNum("$tableAndCondition");
+   ```
+
+   例如：
+   1:查询单表的所有条数
+
+   ```php
+   $DB->rowNum("SELECT * FROM $table");
+   ```
+
+   2:多表或连表等查询数量
+
+   ```php
+   $DB->rowNum("SELECT * FROM tableName1 LEFT JOIN tableName2 ON tableName1.id = tableName2.id WHERE ....");
    ```
 
 8. **返回上一次数据库插入的id**
@@ -188,7 +201,7 @@
    ```
 
 + 失败返回
-  
+
    ```php
    return array(
       'status'=>'error',
@@ -200,13 +213,13 @@
 
 用于id的管理
 
-1. id生成;最多支持添加3个前缀；至少一个前缀;  
-编号规则：前缀1+[前缀2]+[前缀3]+毫秒级时间戳;建议至少有2个前缀;  
-使用建议 `$prefix1 = 订单类别`; `$prefix2 = uid`  
+1. id生成;最多支持添加3个前缀；至少一个前缀;
+编号规则：前缀1+[前缀2]+[前缀3]+毫秒级时间戳;建议至少有2个前缀;
+使用建议 `$prefix1 = 订单类别`; `$prefix2 = uid`
 
 ___
-注意：  
-   greate方法生成的并不是严格意义上不重复的id；  
+注意：
+   greate方法生成的并不是严格意义上不重复的id；
    目前业务中还没有这样的需求，如果有需求可以创建新的function使用`session_create_id()`生成
 ___
 
@@ -267,12 +280,12 @@ return array(
    $Save->image(resource $file,string $filePath,[string $fileName]);
    ```
 
-   ***param***  
-   `$file`:上传的图片资源；支持格式[gif/jpg/jpge/png//webp]  
-   `$filePath`:文件夹目录（项目根路径下的目录）;路径的合成：`$_SERVER['DOCUMENT_ROOT']  . $filePath;`  
-   `$fileName`:可选参数；文件名称；没有入参自动生成；  
+   ***param***
+   `$file`:上传的图片资源；支持格式[gif/jpg/jpge/png//webp]
+   `$filePath`:文件夹目录（项目根路径下的目录）;路径的合成：`$_SERVER['DOCUMENT_ROOT']  . $filePath;`
+   `$fileName`:可选参数；文件名称；没有入参自动生成；
 
-   ***return***  
+   ***return***
 
    + 成功返回
 
@@ -310,7 +323,7 @@ return array(
    路径的合成：`$_SERVER['DOCUMENT_ROOT']  . $arr[i][Path];`
 
 + 成功返回
-  
+
    ```php
    $res['status'] = 'ok';
    $res['data']=[
@@ -350,24 +363,24 @@ return array(
 
    ***param***
 
-      `$oldName`:已保存到服务端旧文件的完全路径  
-      `$newName`:服务端的移动的新位置  
-      `$mkdir`:新位置文件夹不存在的情况下是否新建文件夹  
+      `$oldName`:已保存到服务端旧文件的完全路径
+      `$newName`:服务端的移动的新位置
+      `$mkdir`:新位置文件夹不存在的情况下是否新建文件夹
 
    + 成功返回
-  
+
       ```php
       $res['status'] = 'ok';
       $res['data']='已经文件的储存路径+文件名称',
       ```
 
    + 失败返回
-  
+
       ```php
       $res['status'] = 'error';
       $res['msg'] =  '缺少oldName';
       $res['msg'] = '缺少newName';
-      $res['msg'] = '未找到oldname的文件'; 
+      $res['msg'] = '未找到oldname的文件';
       $res['msg'] = '移动文件失败';
       $res['msg'] = '新文件所在的目录不存在';
       ```
@@ -383,7 +396,7 @@ return array(
    `$arr`:参数数组:数组类型要求如下：
 
    ```php
-   [ 
+   [
       0:{
          oldName:当前文件包含文件名的完整目录,
          newName:需要移动到的完整目录，且包含文件名,
@@ -412,7 +425,7 @@ return array(
    ```php
    $res['status'] = 'error';
    $res['msg'] =  '入参格式必须是array';
-   $res['msg'] = '入参的数组格式： 
+   $res['msg'] = '入参的数组格式：
    [
    0:{
       oldName:当前文件包含文件名的完整目录,

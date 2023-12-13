@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-11-05 15:40:55
+ * @LastEditTime: 2023-12-13 21:58:08
  */
 
 
@@ -172,18 +172,18 @@ class DataBase
         };
     }
 
-    //获取记录行数
-    public function rowNum(string $tableName, string $condition = '')
+    /**
+     * @description: 获取数据表中的数据条数
+     * @param {string}  $tableAndCondition
+     * @hint 格式说明(SELECT * FROM $tableAndCondition)
+     * @return {int}
+     */
+    public function rowNum(string $tableAndCondition)
     {
         //执行sql语句，并返回结果集
         // SELECT COUNT(*) FROM tablename WHERE condition
-        if ($condition) {
-            $whereSql = "WHERE $condition";
-        } else {
-            $whereSql = "";
-        }
 
-        $res = $this->select("SELECT COUNT(*) AS total FROM $tableName $whereSql");
+        $res = $this->select("SELECT COUNT(*) AS total FROM $tableAndCondition");
         //在结果集中或的记录数，并返回
         // return mysqli_num_rows($res);
         return mysqli_fetch_array($res, MYSQLI_NUM)[0];
