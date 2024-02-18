@@ -178,12 +178,12 @@ class DataBase
      * @hint 格式说明(SELECT * FROM $tableAndCondition)
      * @return {int}
      */
-    public function rowNum(string $tableAndCondition)
+    public function rowNum(string $table, string $condition)
     {
         //执行sql语句，并返回结果集
         // SELECT COUNT(*) FROM tablename WHERE condition
 
-        $res = $this->select("SELECT COUNT(*) AS total FROM $tableAndCondition");
+        $res = $this->select("SELECT COUNT(*) AS total FROM $table WHERE $condition");
         //在结果集中或的记录数，并返回
         // return mysqli_num_rows($res);
         return mysqli_fetch_array($res, MYSQLI_NUM)[0];

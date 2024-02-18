@@ -4,8 +4,8 @@
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
- * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-11-03 15:04:07
+ * @LastEditors: vikinglee1982 87834084@qq.com
+ * @LastEditTime: 2024-02-06 15:46:47
  */
 
 namespace MeaPHP\Bootstrap;
@@ -22,6 +22,7 @@ use MeaPHP\Core\Tools\Token;
 use MeaPHP\Core\Tools\Client;
 use MeaPHP\Core\Tools\Encryption;
 use MeaPHP\Core\Tools\Error;
+use MeaPHP\Core\Tools\ImageFactory;
 // use MeaPHP\Mea;
 
 // use MeaPHP\Mea;
@@ -42,7 +43,7 @@ class Bootstrap
         // echo $CoreClassFile . '<br>';
 
         //这里注册核心类的类名称；用户使用当前类名称时提示用户类名已被占用；不能使用(名称加上一个Mea前缀，减小对用户定义类的影响)
-        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea', 'Token', 'Client', 'Encryption', 'Error'];
+        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea', 'Token', 'Client', 'Encryption', 'Error','ImageFactory'];
 
         if (in_array($class, $coreClass)) {
             var_dump([
@@ -111,4 +112,5 @@ $MoveFile = MoveFile::active();
 //加密解密
 $Encryption = Encryption::active();
 
-//
+//图片工厂处理
+$ImageFactory = ImageFactory::active();

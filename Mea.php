@@ -4,8 +4,8 @@
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
- * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-11-08 14:42:27
+ * @LastEditors: vikinglee1982 87834084@qq.com
+ * @LastEditTime: 2024-02-06 15:52:43
  */
 
 namespace MeaPHP;
@@ -23,6 +23,7 @@ use MeaPHP\Core\Tools\Encryption;
 
 use MeaPHP\Core\Tools\File;
 use MeaPHP\Core\Tools\Error;
+use MeaPHP\Core\Tools\ImageFactory;
 
 // trait Mea
 class Mea
@@ -44,6 +45,7 @@ class Mea
     protected $Client;
     protected $FV;
     protected $Error;
+    protected $ImageFactory;
     /**
      * @描述: final当前方法不能重写
      * @param {*} $UserConfig
@@ -78,5 +80,7 @@ class Mea
         $this->Encryption = Encryption::active();
         //错误日志
         $this->Error = Error::active($UserConfig);
+        //图片处理工厂
+        $this->ImageFactory = ImageFactory::active();
     }
 }
