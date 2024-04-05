@@ -2,6 +2,8 @@
 
 namespace  MeaPHP\Core\Tools;
 
+use MeaPHP\Core\Reply\Reply;
+
 /**
  * 文件的上传保存，移动，复制等关于文件的操作都整理到这一个
 
@@ -399,6 +401,8 @@ class File
                     // $url = str_replace($_SERVER['DOCUMENT_ROOT'], $_SERVER['HTTP_HOST'], $src);
                     $url = str_replace($_SERVER['DOCUMENT_ROOT'], '', $src);
 
+                 
+
                     $this->res['status'] = "ok";
                     $this->res['data'] =  $url;
                     // return $url;
@@ -501,16 +505,28 @@ class File
                 }
             }
         } elseif (is_string($pathData)) {
+
+            $path = $_SERVER['DOCUMENT_ROOT'] . $pathData;
+            if (!is_file($path)) {
+                $this->res['status'] = 'err';
+                $this->res['msg'] = '未找到当前文件';
+            }
             // 处理字符串的情况
-            if (unlink($pathData)) {
-                $this->res['status'] = 'ok';
-                $this->res['msg'] = '删除单文件成功';
+            $res = unlink($path);
+            if ($res) {
+                return  Reply::To('ok', '删除单文件成功');
+                // $this->res['status'] = 'ok';
+                // $this->res['msg'] = '删除单文件成功';
             } else {
                 $this->res['status'] = 'error';
                 $this->res['msg'] = '删除单文件失败';
+                $this->res['msg1'] = $res;
+                $this->res['path'] = $path;
             }
         } else {
-            throw new InvalidArgumentException('Invalid argument type, expected an array or string');
+            $this->res['status'] = 'error';
+            $this->res['msg'] = '参数格式错误：string|array';
+            // throw new InvalidArgumentException('Invalid argument type, expected an array or string');
         }
 
 
