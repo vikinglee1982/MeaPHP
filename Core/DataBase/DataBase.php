@@ -4,8 +4,8 @@
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
- * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-12-13 21:58:08
+ * @LastEditors: vikinglee1982 87834084@qq.com
+ * @LastEditTime: 2024-04-05 15:11:07
  */
 
 
@@ -124,6 +124,7 @@ class DataBase
             return mysqli_fetch_array($res, $types[$type]);
         } else {
             return 0;
+            // return $sql;
         }
     }
 

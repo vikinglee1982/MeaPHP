@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-03-12 09:20:56
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-03-13 14:47:34
+ * @LastEditTime: 2024-04-05 16:42:36
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Bootstrap\CheckUserConifg.php
  * @Description: 检查用户配置并添加默认配置
  */
@@ -20,13 +20,18 @@ class CheckUserConfig
     public static function check($UserConfig)
     {
 
+        //配置中需要检查的配置需要在这里注册
+        $ConfigKeys = ['Debug', 'MySQL', 'Error', 'Request'];
         $ErrorKeys = ['errCode', 'fileName', 'line', 'msg', 'tableName', 'time', 'type'];
         $MySQLKeys = ['charset', 'dbname', 'host', 'hostport', 'password', 'username'];
         $requestKeys = ['activate', 'blackList', 'whiteList'];
 
-        self::validateConfigSection($UserConfig, 'Error', $ErrorKeys, 8000);
-        self::validateConfigSection($UserConfig, 'MySQL', $MySQLKeys, 8001);
-        self::validateConfigSection($UserConfig, 'Request', $requestKeys, 8002);
+        self::validateConfigKeys($UserConfig, 'ConfigKeys', $ConfigKeys, 8000);
+        self::validateConfigDebug($UserConfig, 'Debug',  8001);
+        self::validateConfigSection($UserConfig, 'MySQL', $MySQLKeys, 8002);
+        self::validateConfigSection($UserConfig, 'Request', $requestKeys, 8003);
+        self::validateConfigSection($UserConfig, 'Error', $ErrorKeys, 8004);
+
 
 
         // $CF = self::defaultGlobalVariable($UserConfig);
@@ -56,8 +61,27 @@ class CheckUserConfig
      */
     function validateConfigSection($UserConfig, $section, $requiredKeys, $errorCode)
     {
+
         if (!is_array($UserConfig[$section]) || array_diff_key(array_flip($requiredKeys), $UserConfig[$section])) {
-            $data['msg'] = "UserConfig的{$section}配置错误";
+            $data['msg'] = "UserConfig配置错误-{$section}";
+            $data['userconfig'] = $UserConfig;
+            self::endScript($errorCode, $data);
+        }
+    }
+    private static function validateConfigDebug($UserConfig, $section, $errorCode)
+    {
+        if (!is_bool($UserConfig[$section])) {
+            $data['msg'] = "UserConfig配置错误-{$section}";
+            $data['userconfig'] = $UserConfig;
+            self::endScript($errorCode, $data);
+        }
+    }
+    private static function validateConfigKeys($UserConfig, $section, $requiredKeys, $errorCode)
+    {
+
+
+        if (!is_array($UserConfig) || array_diff_key(array_flip($requiredKeys), $UserConfig)) {
+            $data['msg'] = "UserConfig配置参数不完整";
             $data['userconfig'] = $UserConfig;
             self::endScript($errorCode, $data);
         }
@@ -71,6 +95,7 @@ class CheckUserConfig
         $Export = Export::active();
 
         $Export::send([], $recode, $data);
+
         exit;
     }
 }

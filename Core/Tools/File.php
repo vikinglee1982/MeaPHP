@@ -457,50 +457,62 @@ class File
 
     /**
      * @description:删除单、多文件
-     * @param {array} $arr
+     * @param {array|pathStr} $arr
      * @return {*}
+    
      */
-    public function delFile(array $arr = []): array
+    public function delFile($pathData): array
     {
-
-        if (count($arr) < 1) {
-            $this->res['status'] = 'error';
-            $this->res['msg'] = '参数1:$arr为空';
-        } else {
-            $len = strlen($_SERVER['DOCUMENT_ROOT']);
-
-            $arr =   array_values($arr);
-            foreach ($arr as $k => $v) {
-                if (substr($v, 0, $len) != $_SERVER['DOCUMENT_ROOT']) {
-                    $arr[$k] = $_SERVER['DOCUMENT_ROOT'] . $v;
-                }
-            }
-
-            $del = true;
-            foreach ($arr as $k => $v) {
-                if (!file_exists($v)) {
-                    $this->res['status'] = 'error';
-                    $this->res['msg'] = '第' . $k . '项（' . $v . '),文件不存在';
-                    $del = false;
-                    break;
-                }
-            }
-
-            if ($del) {
-
+        if (is_array($pathData)) {
+            // 处理数组的情况
+            $arr = $pathData;
+            if (count($arr) < 1) {
+                $this->res['status'] = 'error';
+                $this->res['msg'] = '参数1:$arr为空';
+            } else {
+                $len = strlen($_SERVER['DOCUMENT_ROOT']);
+                $arr =   array_values($arr);
                 foreach ($arr as $k => $v) {
-                    if (unlink($v)) {
-                        if ((count($arr) - 1) == $k) {
-                            $this->res['status'] = 'ok';
-                            $this->res['msg'] = $k + 1;
-                        }
-                    } else {
+                    if (substr($v, 0, $len) != $_SERVER['DOCUMENT_ROOT']) {
+                        $arr[$k] = $_SERVER['DOCUMENT_ROOT'] . $v;
+                    }
+                }
+                $del = true;
+                foreach ($arr as $k => $v) {
+                    if (!file_exists($v)) {
                         $this->res['status'] = 'error';
-                        $this->res['msg'] = '第' . $k . '项删除失败';
+                        $this->res['msg'] = '第' . $k . '项（' . $v . '),文件不存在';
+                        $del = false;
+                        break;
+                    }
+                }
+                if ($del) {
+                    foreach ($arr as $k => $v) {
+                        if (unlink($v)) {
+                            if ((count($arr) - 1) == $k) {
+                                $this->res['status'] = 'ok';
+                                $this->res['msg'] = $k + 1;
+                            }
+                        } else {
+                            $this->res['status'] = 'error';
+                            $this->res['msg'] = '第' . $k . '项删除失败';
+                        }
                     }
                 }
             }
+        } elseif (is_string($pathData)) {
+            // 处理字符串的情况
+            if (unlink($pathData)) {
+                $this->res['status'] = 'ok';
+                $this->res['msg'] = '删除单文件成功';
+            } else {
+                $this->res['status'] = 'error';
+                $this->res['msg'] = '删除单文件失败';
+            }
+        } else {
+            throw new InvalidArgumentException('Invalid argument type, expected an array or string');
         }
+
 
 
 

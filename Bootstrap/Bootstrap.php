@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-03-13 14:56:52
+ * @LastEditTime: 2024-04-05 16:00:02
  */
 
 namespace MeaPHP\Bootstrap;
@@ -93,6 +93,7 @@ Header::set();
 $Export = Export::active();
 CheckUserConfig::check($UserConfig);
 RequestControl::check($UserConfig);
+
 
 //安全验证
 $SV = SecurityVerification::active();

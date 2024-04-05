@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-02-06 15:52:43
+ * @LastEditTime: 2024-04-05 16:07:17
  */
 
 namespace MeaPHP;
@@ -24,6 +24,8 @@ use MeaPHP\Core\Tools\Encryption;
 use MeaPHP\Core\Tools\File;
 use MeaPHP\Core\Tools\Error;
 use MeaPHP\Core\Tools\ImageFactory;
+
+use MeaPHP\Bootstrap\CheckUserConfig;
 
 // trait Mea
 class Mea
@@ -54,6 +56,8 @@ class Mea
      */
     public final function __construct($UserConfig)
     {
+        // 检查用户配置；当脚本继承Mea类时，检查用户配置
+        CheckUserConfig::check($UserConfig);
         $this->UserConfig = $UserConfig;
 
         $this->DB = DataBase::active($UserConfig);
@@ -84,3 +88,5 @@ class Mea
         $this->ImageFactory = ImageFactory::active();
     }
 }
+
+// new Mea($UserConfig);
