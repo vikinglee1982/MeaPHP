@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-04-05 16:00:02
+ * @LastEditTime: 2024-04-07 16:14:41
  */
 
 namespace MeaPHP\Bootstrap;
@@ -89,10 +89,11 @@ if ($UserConfig['errLog']['enabled']) {
 
 
 Bootstrap::autoLoad($UserConfig);
+RequestControl::check($UserConfig);
 Header::set();
 $Export = Export::active();
 CheckUserConfig::check($UserConfig);
-RequestControl::check($UserConfig);
+
 
 
 //安全验证

@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-03-12 10:14:58
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-03-13 15:33:12
+ * @LastEditTime: 2024-04-07 15:40:00
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Bootstrap\SetHeader.php
  * @Description: 解决跨域问题设置报头
  */
@@ -17,9 +17,7 @@ class Header
 
         $origin = $_SERVER['HTTP_ORIGIN'];
 
-
         header("Access-Control-Allow-Origin: {$origin}");
-
 
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, euid,token");

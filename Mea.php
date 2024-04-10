@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-04-05 16:07:17
+ * @LastEditTime: 2024-04-08 15:39:10
  */
 
 namespace MeaPHP;
@@ -26,6 +26,8 @@ use MeaPHP\Core\Tools\Error;
 use MeaPHP\Core\Tools\ImageFactory;
 
 use MeaPHP\Bootstrap\CheckUserConfig;
+
+use MeaPHP\Core\Reply\Reply;
 
 // trait Mea
 class Mea
@@ -48,6 +50,8 @@ class Mea
     protected $FV;
     protected $Error;
     protected $ImageFactory;
+
+    protected $Reply;
     /**
      * @描述: final当前方法不能重写
      * @param {*} $UserConfig
@@ -62,6 +66,8 @@ class Mea
 
         $this->DB = DataBase::active($UserConfig);
 
+        //返回数据管理
+        // $this->Reply = Reply::active();
         //Token的管理
         $this->Token = Token::active();
         //客户端相关信息

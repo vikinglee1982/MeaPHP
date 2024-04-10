@@ -401,7 +401,7 @@ class File
                     // $url = str_replace($_SERVER['DOCUMENT_ROOT'], $_SERVER['HTTP_HOST'], $src);
                     $url = str_replace($_SERVER['DOCUMENT_ROOT'], '', $src);
 
-                 
+
 
                     $this->res['status'] = "ok";
                     $this->res['data'] =  $url;
@@ -471,8 +471,9 @@ class File
             // 处理数组的情况
             $arr = $pathData;
             if (count($arr) < 1) {
-                $this->res['status'] = 'error';
-                $this->res['msg'] = '参数1:$arr为空';
+                return  Reply::To('err', '参数1:$arr为空');
+                // $this->res['status'] = 'error';
+                // $this->res['msg'] = '参数1:$arr为空';
             } else {
                 $len = strlen($_SERVER['DOCUMENT_ROOT']);
                 $arr =   array_values($arr);
@@ -484,8 +485,10 @@ class File
                 $del = true;
                 foreach ($arr as $k => $v) {
                     if (!file_exists($v)) {
-                        $this->res['status'] = 'error';
-                        $this->res['msg'] = '第' . $k . '项（' . $v . '),文件不存在';
+
+                        return  Reply::To('err', '第' . $k . '项（' . $v . '),文件不存在');
+                        // $this->res['status'] = 'error';
+                        // $this->res['msg'] = '第' . $k . '项（' . $v . '),文件不存在';
                         $del = false;
                         break;
                     }
@@ -494,12 +497,15 @@ class File
                     foreach ($arr as $k => $v) {
                         if (unlink($v)) {
                             if ((count($arr) - 1) == $k) {
-                                $this->res['status'] = 'ok';
-                                $this->res['msg'] = $k + 1;
+                                // $this->res['status'] = 'ok';
+                                // $this->res['msg'] = $k + 1;
+
+                                return  Reply::To('ok', $k + 1);
                             }
                         } else {
-                            $this->res['status'] = 'error';
-                            $this->res['msg'] = '第' . $k . '项删除失败';
+                            return  Reply::To('err', '第' . $k . '项删除失败');
+                            // $this->res['status'] = 'error';
+                            // $this->res['msg'] = '第' . $k . '项删除失败';
                         }
                     }
                 }
@@ -508,8 +514,9 @@ class File
 
             $path = $_SERVER['DOCUMENT_ROOT'] . $pathData;
             if (!is_file($path)) {
-                $this->res['status'] = 'err';
-                $this->res['msg'] = '未找到当前文件';
+                return  Reply::To('err', '未找到当前文件');
+                // $this->res['status'] = 'err';
+                // $this->res['msg'] = '';
             }
             // 处理字符串的情况
             $res = unlink($path);
@@ -518,20 +525,22 @@ class File
                 // $this->res['status'] = 'ok';
                 // $this->res['msg'] = '删除单文件成功';
             } else {
-                $this->res['status'] = 'error';
-                $this->res['msg'] = '删除单文件失败';
-                $this->res['msg1'] = $res;
-                $this->res['path'] = $path;
+                return  Reply::To('err', '删除单文件失败');
+                // $this->res['status'] = 'error';
+                // $this->res['msg'] = '';
+                // $this->res['msg1'] = $res;
+                // $this->res['path'] = $path;
             }
         } else {
-            $this->res['status'] = 'error';
-            $this->res['msg'] = '参数格式错误：string|array';
+            return  Reply::To('err', '参数格式错误：string|array');
+            // $this->res['status'] = 'error';
+            // $this->res['msg'] = '参数格式错误：string|array';
             // throw new InvalidArgumentException('Invalid argument type, expected an array or string');
         }
 
 
 
 
-        return $this->res;
+        // return $this->res;
     }
 }
