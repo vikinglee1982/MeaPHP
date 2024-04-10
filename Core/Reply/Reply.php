@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-04-05 17:34:18
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-04-05 18:16:37
+ * @LastEditTime: 2024-04-10 16:38:40
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Core\Reply\Reply.php
  * @Description: tools工具类的返回类；这里定义了返回类的方法及返回内容；统一管理
  */
@@ -14,7 +14,30 @@ namespace MeaPHP\Core\Reply;
 
 class Reply
 {
+    private static $obj = null;
 
+
+    //阻止外部克隆书库工具类
+    private function __clone()
+    {
+    }
+
+    //私有化构造方法初始化，禁止外部使用
+    private function __construct()
+    {
+    }
+    //内部产生静态对象
+    public static function active()
+    {
+        // echo "<hr>";
+        // echo "建立了";
+        // var_dump($dbkey);
+        if (!self::$obj instanceof self) {
+            //如果不存在，创建保存
+            self::$obj = new self();
+        }
+        return self::$obj;
+    }
     public static function To(string $state, string $msg = '', array $data = []): array
     {
 
