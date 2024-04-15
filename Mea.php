@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-04-10 16:42:38
+ * @LastEditTime: 2024-04-12 16:16:06
  */
 
 namespace MeaPHP;
@@ -29,6 +29,8 @@ use MeaPHP\Bootstrap\CheckUserConfig;
 
 use MeaPHP\Core\Reply\Reply;
 
+use MeaPHP\Core\Tools\Fotophire;
+
 // trait Mea
 class Mea
 {
@@ -44,6 +46,9 @@ class Mea
 
     protected $Encryption;
     protected $File;
+
+
+    protected $Fotophire;
 
 
     protected $Client;
@@ -92,6 +97,8 @@ class Mea
         $this->Error = Error::active($UserConfig);
         //图片处理工厂
         $this->ImageFactory = ImageFactory::active();
+        //
+        $this->Fotophire = Fotophire::active();
     }
 }
 
