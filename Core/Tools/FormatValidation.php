@@ -12,6 +12,8 @@
 
 namespace MeaPHP\Core\Tools;
 
+use MeaPHP\Core\Reply\Reply;
+
 class FormatValidation
 {
     private static $obj = null;
@@ -132,15 +134,19 @@ class FormatValidation
         $g3 = "/^166\d{8}$/";
         if (preg_match($g, $telnum) || preg_match($g2, $telnum) || preg_match($g3, $telnum)) {
             // return $telnum;
-            $this->res['status'] = 'ok';
-            $this->res['data'] = $telnum;
+
+            return Reply::To('ok', '正确的手机号码', ['phone' => $telnum]);
+            // $this->res['sc'] = 'ok';
+            // $this->res['status'] = 'ok';
+            // $this->res['data'] = $telnum;
         } else {
             // return false;
-            $this->res['status'] = 'error';
-            $this->res['msg'] = '错误的手机号码';
+            return Reply::To('err', '错误的手机号码');
+            // $this->res['status'] = 'error';
+            // $this->res['msg'] = '错误的手机号码';
         }
 
-        return $this->res;
+        // return $this->res;
 
         // $telRegex = "(^((13[0-9])|(14[5,7,9])|(15[^4])|(18[0-9])|(17[0,1,3,5,6,7,8]))\\d{8}$)";
         // // "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
