@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-03-12 09:20:56
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-04-05 16:42:36
+ * @LastEditTime: 2024-04-23 15:47:54
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Bootstrap\CheckUserConifg.php
  * @Description: 检查用户配置并添加默认配置
  */
@@ -26,7 +26,7 @@ class CheckUserConfig
         $MySQLKeys = ['charset', 'dbname', 'host', 'hostport', 'password', 'username'];
         $requestKeys = ['activate', 'blackList', 'whiteList'];
 
-        self::validateConfigKeys($UserConfig, 'ConfigKeys', $ConfigKeys, 8000);
+        self::validateConfigKeys($UserConfig, $ConfigKeys, 8000);
         self::validateConfigDebug($UserConfig, 'Debug',  8001);
         self::validateConfigSection($UserConfig, 'MySQL', $MySQLKeys, 8002);
         self::validateConfigSection($UserConfig, 'Request', $requestKeys, 8003);
@@ -64,7 +64,7 @@ class CheckUserConfig
 
         if (!is_array($UserConfig[$section]) || array_diff_key(array_flip($requiredKeys), $UserConfig[$section])) {
             $data['msg'] = "UserConfig配置错误-{$section}";
-            $data['userconfig'] = $UserConfig;
+            $data['UserConfig'] = $UserConfig;
             self::endScript($errorCode, $data);
         }
     }
@@ -72,17 +72,19 @@ class CheckUserConfig
     {
         if (!is_bool($UserConfig[$section])) {
             $data['msg'] = "UserConfig配置错误-{$section}";
-            $data['userconfig'] = $UserConfig;
+            $data['UserConfig'] = $UserConfig;
             self::endScript($errorCode, $data);
         }
     }
-    private static function validateConfigKeys($UserConfig, $section, $requiredKeys, $errorCode)
+    // private static function validateConfigKeys($UserConfig, $section, $requiredKeys, $errorCode)
+    // {
+    private static function validateConfigKeys($UserConfig,  $requiredKeys, $errorCode)
     {
 
 
         if (!is_array($UserConfig) || array_diff_key(array_flip($requiredKeys), $UserConfig)) {
             $data['msg'] = "UserConfig配置参数不完整";
-            $data['userconfig'] = $UserConfig;
+            $data['UserConfig'] = $UserConfig;
             self::endScript($errorCode, $data);
         }
     }
