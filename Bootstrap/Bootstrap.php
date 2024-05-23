@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-04-07 16:14:41
+ * @LastEditTime: 2024-05-23 15:32:38
  */
 
 namespace MeaPHP\Bootstrap;
@@ -52,7 +52,7 @@ class Bootstrap
         // echo $CoreClassFile . '<br>';
 
         //这里注册核心类的类名称；用户使用当前类名称时提示用户类名已被占用；不能使用(名称加上一个Mea前缀，减小对用户定义类的影响)
-        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea', 'Token', 'Client', 'Encryption', 'Error', 'ImageFactory', 'RequestControl', 'Export', 'CheckUserConfig', 'Header'];
+        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea', 'Token', 'Client', 'Encryption', 'Error', 'Fotophire', 'RequestControl', 'Export', 'CheckUserConfig', 'Header'];
 
         if (in_array($class, $coreClass)) {
             var_dump([

@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-04-18 10:12:11
+ * @LastEditTime: 2024-05-23 15:32:57
  */
 
 namespace MeaPHP;
@@ -23,7 +23,7 @@ use MeaPHP\Core\Tools\Encryption;
 
 use MeaPHP\Core\Tools\File;
 use MeaPHP\Core\Tools\Error;
-use MeaPHP\Core\Tools\ImageFactory;
+
 
 use MeaPHP\Bootstrap\CheckUserConfig;
 
@@ -54,7 +54,7 @@ class Mea
     protected $Client;
     protected $FV;
     protected $Error;
-    protected $ImageFactory;
+
 
     protected $Reply;
     /**
@@ -95,9 +95,7 @@ class Mea
         $this->Encryption = Encryption::active();
         //错误日志
         $this->Error = Error::active($UserConfig);
-        //图片处理工厂
-        $this->ImageFactory = ImageFactory::active();
-        //
+        //图片处理工厂：生成缩率图；手机海报
         $this->Fotophire = Fotophire::active();
     }
 }
