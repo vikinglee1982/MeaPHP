@@ -337,10 +337,11 @@ class File
         $fileType = $file['type'];
         if (!$file) {
             $this->res['status'] = "error";
+            $this->res['sc'] = 'error';
             $this->res['msg'] = '请缺少入参image文件';
             // return "error:请缺少入参image文件";
         } elseif ($fileType != 'image/jpeg' && $fileType != 'image/png' && $fileType != 'image/webp' && $fileType != 'image/gif') {
-
+            $this->res['sc'] = 'error';
             $this->res['status'] = "error";
             $this->res['msg'] = '文件类型支持[gif/jpg/jpge/png//webp]';
             $this->res['type'] = $fileType;
@@ -349,10 +350,12 @@ class File
             //image/jpeg;image/png;image/webp;image/gif
             // return $file['type'];
         } elseif (!$folderName) {
+            $this->res['sc'] = 'error';
             $this->res['status'] = "error";
             $this->res['msg'] = '缺少文件夹目录（从项目根路径下开始的目录）';
             // return "error:缺少文件夹目录（项目根路径下的目录）";
         } elseif (strpos($folderName, 'undefined') || strpos($folderName, 'null')) {
+            $this->res['sc'] = 'error';
             $this->res['status'] = "error";
             $this->res['msg'] = '文件夹目录中不能存在undefined或者null等字段';
             // return "error:缺少文件夹目录（项目根路径下的目录）";
@@ -390,6 +393,7 @@ class File
 
 
             if (file_exists($src)) {
+                $this->res['sc'] = 'error';
                 $this->res['status'] = "error";
                 $this->res['msg'] = '文件名重复';
                 // $this->res['msg'] = $src;
@@ -402,12 +406,13 @@ class File
                     $url = str_replace($_SERVER['DOCUMENT_ROOT'], '', $src);
 
 
-
+                    $this->res['sc'] = 'ok';
                     $this->res['status'] = "ok";
                     $this->res['data'] =  $url;
                     // return $url;
                 } else {
                     //储存失败
+                    $this->res['sc'] = 'error';
                     $this->res['status'] = "error";
                     $this->res['msg'] = '储存失败：' . $src;
                     // $data['src'] = $src;

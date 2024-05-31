@@ -211,6 +211,13 @@ class Fotophire
     public function localFileToUrl(string $localPath): array
 
     {
+
+        $localPathRes = $this->parsePath($localPath);
+        if ($localPathRes['sc'] == 'ok') {
+            $localPath = $localPathRes['data']['localPath'];
+        } else {
+            return Reply::To('err', $localPathRes['msg']);
+        }
         // 判断当前请求是否为HTTPS
         $isHttps = (
             (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
@@ -229,7 +236,7 @@ class Fotophire
             ]);
         } else {
             // 返回文件不存在时的数组（假设Reply::To是一个自定义类/结构，保持原样）
-            return Reply::To('err', '文件不存在');
+            return Reply::To('err', '文件不存在', ['$localPathRes' => $localPathRes]);
         }
     }
     /**
