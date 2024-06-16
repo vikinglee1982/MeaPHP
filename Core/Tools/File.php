@@ -343,7 +343,7 @@ class File
         } elseif ($fileType != 'image/jpeg' && $fileType != 'image/png' && $fileType != 'image/webp' && $fileType != 'image/gif') {
             $this->res['sc'] = 'error';
             $this->res['status'] = "error";
-            $this->res['msg'] = '文件类型支持[gif/jpg/jpge/png//webp]';
+            $this->res['msg'] = '文件类型支持[gif/jpg/jpge/png/webp],或者文件数据不完整';
             $this->res['type'] = $fileType;
             $this->res['file'] = $file;
             // return "error:文件类型支持[gif/jpg/jpge/png//webp]";
@@ -505,7 +505,7 @@ class File
                                 // $this->res['status'] = 'ok';
                                 // $this->res['msg'] = $k + 1;
 
-                                return  Reply::To('ok', $k + 1);
+                                return  Reply::To('ok', '删除了' . $k . '个文件', ['total' => $k + 1]);
                             }
                         } else {
                             return  Reply::To('err', '第' . $k . '项删除失败');
