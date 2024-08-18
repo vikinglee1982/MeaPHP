@@ -4,14 +4,18 @@
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-04-12 23:18:43
- * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-07-02 16:06:49
+ * @LastEditors: vikinglee1982 87834084@qq.com
+ * @LastEditTime: 2024-08-10 17:34:50
  */
 
 namespace MeaPHP\Core\Tools;
 
+use MeaPHP\Core\Reply\Reply;
+use MeaPHP\TspApi\TspApi;
+
 class Client
 {
+
     public $res = array(
         // 'status' => 'error',
         // //只有2种状态 ok/error
@@ -63,6 +67,7 @@ class Client
         $userIp = preg_match('/[\d\.]{7,15}/', $ip, $matches) ? $matches[0] : '';
 
         $this->res['status'] = 'ok';
+        $this->res['sc'] = 'ok';
         $this->res['data'] = $userIp;
         // return $userIp;
         return $this->res;
@@ -72,12 +77,12 @@ class Client
      * @return {*}
      * @Date: 2023-04-12 23:56:21
      */
-
+    //这里可以根据代理信息解析出用户的操作系统；浏览器版本；用户语言等相关信息;用户使用的是什么设备
     public function getAgent()
     {
         if (!empty($_SERVER['HTTP_USER_AGENT'])) {
             $OS = $_SERVER['HTTP_USER_AGENT'];
-
+            $this->res['sc'] = 'ok';
             $this->res['status'] = 'ok';
             $this->res['data'] = $OS;
         } else {
@@ -86,5 +91,46 @@ class Client
         }
         return $this->res;
     }
-    //这里可以根据代理信息解析出用户的操作系统；浏览器版本；用户语言等相关信息
+
+
+    /**
+     * @描述: 获取用户的地址信息
+     * @param {string} $ip
+     * @return {*}
+     * @Date: 2023-04-12 23:57:04
+     */
+    public function getLocation(string $ip, bool $showDoc = false): array
+    {
+
+
+        $TspApi = TspApi::active();
+        $locApi = $TspApi->ipToLoc($ip, $showDoc);
+
+        if ($showDoc) {
+            return Reply::To('ok', '获取访客地址信息成功', ['locApi' => json_decode($locApi, true)]);
+        }
+
+
+        // 发起HTTP GET请求
+        $response = file_get_contents($locApi);
+
+        if ($response === false) {
+            return Reply::To('error', '获取访客地址信息失败', ['response' => $response]);
+        }
+
+        // 解析JSON响应
+        $data = json_decode($response, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return Reply::To('error', 'Failed to decode JSON response');
+        }
+
+        if (!isset($data['ipdata'])) {
+            return Reply::To('error', 'Invalid response format');
+        }
+
+        // 返回位置信息
+
+        return Reply::To('ok', '获取访客地址信息成功', $data);
+    }
 }

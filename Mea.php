@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-29 00:02:52
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-05-23 15:32:57
+ * @LastEditTime: 2024-08-10 16:30:30
  */
 
 namespace MeaPHP;
@@ -31,6 +31,8 @@ use MeaPHP\Core\Reply\Reply;
 
 use MeaPHP\Core\Tools\Fotophire;
 
+use MeaPHP\TspApi\TspApi;
+
 // trait Mea
 class Mea
 {
@@ -52,6 +54,8 @@ class Mea
 
 
     protected $Client;
+    protected $TspApi;
+
     protected $FV;
     protected $Error;
 
@@ -97,6 +101,8 @@ class Mea
         $this->Error = Error::active($UserConfig);
         //图片处理工厂：生成缩率图；手机海报
         $this->Fotophire = Fotophire::active();
+        //第三方接口
+        $this->TspApi = TspApi::active();
     }
 }
 
