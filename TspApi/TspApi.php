@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-08-10 16:17:01
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-08-10 17:02:12
+ * @LastEditTime: 2024-08-18 11:50:46
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\TspApi\Free.php
  * @Description:第三方接口
  */
@@ -40,7 +40,7 @@ class TspApi
     /**
      * @描述: 获取ip地址信息
      * @param {string} $ip
-     * @param {bool} $doc 是否返回文档
+     * @param {bool} $doc 是否返回文档 
      * @return {*}
      * @Date: 2024-08-10 16:18:06
      */
