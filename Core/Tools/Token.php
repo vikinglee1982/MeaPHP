@@ -4,8 +4,8 @@
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-04-09 17:31:20
- * @LastEditors: vikinglee1982 750820181@qq.com
- * @LastEditTime: 2023-11-08 14:35:23
+ * @LastEditors: vikinglee1982 87834084@qq.com
+ * @LastEditTime: 2024-08-26 15:23:21
  */
 
 
@@ -71,9 +71,11 @@ class Token
         if (!$eUser) {
 
             $this->res['status'] = 'error';
+            $this->res['sc'] = 'error';
             $this->res['msg'] = "缺少用户id或用户名";
         } elseif (!$psw) {
             $this->res['status'] = 'error';
+            $this->res['sc'] = 'error';
             $this->res['msg'] = "缺少密码";
         } else {
             //使用工具类获取用户的ip地址
@@ -83,9 +85,11 @@ class Token
                 $time = date("Y-m-d H:i:s");
                 //这里如果需要加强安全程度；可以引入AES加密
                 $this->res['status'] = 'ok';
+                $this->res['sc'] = 'ok';
                 $this->res['data'] =  md5($eUser . $psw . $time . $ip);
             } else {
                 $this->res['status'] = 'error';
+                $this->res['sc'] = 'error';
                 $this->res['msg'] = "不能获取到用户ip";
             }
         }

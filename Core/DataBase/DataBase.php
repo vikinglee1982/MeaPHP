@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-04-05 15:11:07
+ * @LastEditTime: 2024-08-28 16:08:29
  */
 
 
@@ -25,9 +25,7 @@ class DataBase
     private $link;
 
     //阻止外部克隆书库工具类
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     //构造方法初始化，属性赋值，准备连接
     private function __construct($dbkey)
@@ -192,13 +190,10 @@ class DataBase
 
     //返回刚刚插入的行的id
     //mysql_insert_id() 函数返回上一步 INSERT 操作产生的 ID。如果上一查询没有产生 AUTO_INCREMENT 的 ID，则 mysql_insert_id() 返回 0
-    public function getInsertId()
+    public function getInsertId(): int
     {
         $pid = mysqli_insert_id($this->link);
-        if ($pid == 0) {
-            return false;
-            die();
-        }
+
         return $pid;
     }
 
