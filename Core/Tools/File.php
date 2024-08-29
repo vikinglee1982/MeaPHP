@@ -26,9 +26,7 @@ class File
 
     //阻止外部克隆书库工具类
 
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     //私有化构造方法初始化，禁止外部使用
 
@@ -47,6 +45,73 @@ class File
         return self::$obj;
     }
 
+    /**
+     * @description:解析路径
+     * @param {*} $path
+     * @return {*}
+     */
+    private function parsePath(string $path): array
+    {
+        //判断入参是绝对路径还是相对路径；输出绝对路径
+
+        if (strpos($path, $_SERVER['DOCUMENT_ROOT']) === false) {
+            //入参是没有根目录的相对路径（不包含根目录）
+            $localPath =  $_SERVER['DOCUMENT_ROOT'] . $path;
+        } else {
+            $localPath =  $path;
+            // return '有根目录';
+        }
+
+        if (file_exists($localPath)) {
+            return Reply::To('ok', '返回参数', [
+                'localPath' => $localPath,
+                'fileFullName' => basename($localPath),
+                'fileName' => pathinfo($localPath, PATHINFO_FILENAME),
+                'fileType' => pathinfo($localPath, PATHINFO_EXTENSION),
+                'fileSize' => filesize($localPath),
+                'fileMd5' => md5_file($localPath),
+                'fileMime' => mime_content_type($localPath),
+            ]);
+        } else {
+            return Reply::To('err', '文件不存在');
+        }
+    }
+    /**
+     * @description:将本地文件转换为网络Url
+     * @param {*} $localPath
+     * @return {*}
+     */
+    public function localFileToUrl(string $localPath): array
+
+    {
+
+        $localPathRes = $this->parsePath($localPath);
+        if ($localPathRes['sc'] == 'ok') {
+            $localPath = $localPathRes['data']['localPath'];
+        } else {
+            return Reply::To('err', $localPathRes['msg']);
+        }
+        // 判断当前请求是否为HTTPS
+        $isHttps = (
+            (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+        );
+
+        // 使用当前域名拼接本地地址
+        $protocol = $isHttps ? 'https://' : 'http://';
+        $url = $protocol . $_SERVER['SERVER_NAME'] . str_replace($_SERVER['DOCUMENT_ROOT'], '', $localPath);
+
+        if (file_exists($localPath)) {
+
+            // 返回文件存在时的数组（假设Reply::To是一个自定义类/结构，保持原样）
+            return Reply::To('ok', '文件已经存在', [
+                'url' => $url,
+            ]);
+        } else {
+            // 返回文件不存在时的数组（假设Reply::To是一个自定义类/结构，保持原样）
+            return Reply::To('err', '文件不存在', ['$localPathRes' => $localPathRes]);
+        }
+    }
 
     /**
      * @description: 单文件移动
@@ -519,7 +584,10 @@ class File
 
             $path = $_SERVER['DOCUMENT_ROOT'] . $pathData;
             if (!is_file($path)) {
-                return  Reply::To('err', '未找到当前文件');
+                return  Reply::To('err', '未找到当前文件', [
+                    'pathData' => $pathData,
+                    '$path' => $path
+                ]);
                 // $this->res['status'] = 'err';
                 // $this->res['msg'] = '';
             }
@@ -547,5 +615,83 @@ class File
 
 
         // return $this->res;
+    }
+    /**
+     * 删除文件夹及以下所有的文件
+     *
+     * @param string $path 文件夹路径
+     * @return array 返回操作结果
+     */
+    public function delFolder(string $path): array
+    {
+        // 检查 $path 是否以 http 或 https 开头
+        if (strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) {
+            // 提取路径部分
+            $parsedUrl = parse_url($path);
+            $path = isset($parsedUrl['path']) ? $parsedUrl['path'] : '';
+            if ($path === '') {
+                return Reply::To('error', '有是有效的路径');
+            }
+
+            // 拼接完整的路径
+            $fullPath = $_SERVER['DOCUMENT_ROOT']  . $path;
+        } else {
+
+            if (strpos($path, '/') === 0) {
+                // 已经是绝对路径，但需要确认是否是从 /var 开始
+                if (strpos($path, '/var') !== 0) {
+                    $fullPath = $_SERVER['DOCUMENT_ROOT'] . $path;
+                } else {
+                    $fullPath = $path;
+                }
+            } else {
+                // 相对路径
+                $fullPath = dirname(__FILE__) . '/' . $path;
+            }
+        }
+
+        // 检查目录是否存在
+        if (file_exists($fullPath) && is_dir($fullPath)) {
+            // 删除目录
+            if ($this->deleteDirectory($fullPath)) {
+                return Reply::To('ok', '文件夹删除成功', [
+                    'path' => $fullPath
+                ]);
+            } else {
+                return Reply::To('error', '文件夹删除失败', [
+                    'path' => $fullPath
+                ]);
+            }
+        } else {
+            // 如果目录不存在
+            return Reply::To('error', '文件夹不存在', [
+                'fullPath' => $fullPath
+            ]);
+        }
+    }
+
+    /**
+     * 递归删除目录及其内容
+     *
+     * @param string $dir 要删除的目录路径
+     * @return bool 返回是否成功删除
+     */
+    private function deleteDirectory(string $dir): bool
+    {
+        if (!is_dir($dir)) {
+            return false;
+        }
+        if (substr($dir, strlen($dir) - 1, 1) != '/') {
+            $dir .= '/';
+        }
+        $files = glob($dir . '*', GLOB_MARK);
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                $this->deleteDirectory($file);
+            } else {
+                unlink($file);
+            }
+        }
+        return rmdir($dir);
     }
 }

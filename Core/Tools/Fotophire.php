@@ -49,9 +49,7 @@ class Fotophire
     }
 
     //阻止外部克隆书库工具类
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     //私有化构造方法初始化，禁止外部使用
     private function __construct()
@@ -68,6 +66,11 @@ class Fotophire
         string $destPath = null,
         string $type = 'extend'
     ) {
+        // 确保路径以 '/' 开始
+        if (substr($destPath, 0, 1) !== '/') {
+            $destPath = '/' . $destPath;
+        }
+
         //检查$imgPath是否存在；
         try {
             $filePathRes = $this->parsePath($originalImgPath);
@@ -124,12 +127,21 @@ class Fotophire
                     if ($UrlRes['sc'] == 'ok') {
                         return Reply::To('ok', '图片保存成功', [
                             'url' => $UrlRes['data']['url'],
+                            'destFileRes' => $destFileRes
                         ]);
                     } else {
-                        return Reply::To('error', $UrlRes['msg']);
+                        return Reply::To('error', '图片保存成功', [
+                            'makeRes' => $makeRes,
+                            '$UrlRes' => $UrlRes,
+                            'destFileRes' => $destFileRes
+                        ]);
                     }
                 } else {
-                    return Reply::To('error', '图片保存失败', ['err' => $makeRes['msg']]);
+                    return Reply::To('error', '图片保存失败', [
+                        'makeRes' => $makeRes,
+                        'destFileRes' => $destFileRes,
+                        'filePathInfo' => $filePathInfo
+                    ]);
                 }
             }
         } catch (\Exception $e) {
@@ -146,6 +158,8 @@ class Fotophire
      */
     public function parsePath(string $path): array
     {
+        // 移除字符串末尾的斜杠
+        $path = rtrim($path, '/');
         //判断入参是绝对路径还是相对路径；输出绝对路径
 
         if (strpos($path, $_SERVER['DOCUMENT_ROOT']) === false) {
@@ -167,7 +181,7 @@ class Fotophire
                 'fileMime' => mime_content_type($localPath),
             ]);
         } else {
-            return Reply::To('err', '文件不存在');
+            return Reply::To('err', '文件不存在123', ['path' => $path]);
         }
     }
 
@@ -188,9 +202,12 @@ class Fotophire
         string $type
     ): array {
 
+        $extension = $type == 'extend' ? $filePathInfo['fileType'] : $type;
         if (!$destPath) {
-            $extension = $type == 'extend' ? $filePathInfo['fileType'] : $type;
+
             $destPath =  dirname($filePathInfo['localPath']) . '/' . $filePathInfo['fileName'] . '-' .  $destW . '_' . $destH  . '.' . $extension;
+        } else {
+            $destPath = $_SERVER['DOCUMENT_ROOT'] . $destPath . '/' . $filePathInfo['fileName'] . '-' .  $destW . '_' . $destH  . '.' . $extension;
         }
 
         if (file_exists($destPath)) {
@@ -216,7 +233,7 @@ class Fotophire
         if ($localPathRes['sc'] == 'ok') {
             $localPath = $localPathRes['data']['localPath'];
         } else {
-            return Reply::To('err', $localPathRes['msg']);
+            return Reply::To('err', $localPathRes['msg'], ['$localPathRes' => $localPathRes, 'localPath' => $localPath]);
         }
         // 判断当前请求是否为HTTPS
         $isHttps = (
@@ -236,7 +253,7 @@ class Fotophire
             ]);
         } else {
             // 返回文件不存在时的数组（假设Reply::To是一个自定义类/结构，保持原样）
-            return Reply::To('err', '文件不存在', ['$localPathRes' => $localPathRes]);
+            return Reply::To('err', '文件不存在' . '22222', ['$localPathRes' => $localPathRes]);
         }
     }
     /**
@@ -283,9 +300,9 @@ class Fotophire
         $saveRes = $this->save($canvas, $savePath, $imgTypeCode);
 
         if ($saveRes['sc'] == 'ok') {
-            return Reply::To('ok', '图片生成成功', ['path' => $saveRes['data']['path']]);
+            return Reply::To('ok', '图片生成成功', ['path' => $saveRes['data']['path'], '$saveRes' => $saveRes]);
         } else {
-            return Reply::To('err', $saveRes['msg']);
+            return Reply::To('err', $saveRes['msg'], ['$saveRes' => $saveRes]);
         }
     }
 
@@ -387,30 +404,53 @@ class Fotophire
     private function save($file, string $savePath, int $imgTypeCode): array
     {
         try {
+
+            // 确保目录存在，如果不存在则创建
+            $dir = dirname($savePath);
+            if (!is_dir($dir)) {
+                // 创建目录，递归创建父目录
+                if (!mkdir($dir, 0777, true)) {
+                    return Reply::To('err', '创建目录失败：' . $dir, ['savePath' => $savePath]);
+                }
+            }
+
+
             switch ($imgTypeCode) {
                 case 1:
                     // GIF 文件保存
-                    imagegif($file, $savePath);
-                    return Reply::To('ok', '资源保存成功', ['path' => $savePath]);
+                    if (!imagegif($file, $savePath)) {
+                        return Reply::To('err', 'GIF 图像保存失败');
+                    }
                     break;
                 case 2:
                     // JPEG 文件保存
-                    imagejpeg($file, $savePath);
-                    return Reply::To('ok', '资源保存成功', ['path' => $savePath]);
+                    if (!imagejpeg($file, $savePath)) {
+                        return Reply::To('err', 'JPEG 图像保存失败');
+                    }
                     break;
                 case 3:
                     // PNG 文件保存
-                    imagepng($file, $savePath);
-                    return Reply::To('ok', '资源保存成功', ['path' => $savePath]);
+                    if (!imagepng($file, $savePath)) {
+                        return Reply::To('err', 'PNG 图像保存失败', [
+                            'File type' => get_resource_type($file),
+                            'savePath' => $savePath
+                        ]);
+                    }
                     break;
                 default:
                     return Reply::To('err', '未知的图片类型代码，资源保存失败');
             }
-        } catch (\Exception $e) {
 
+            // 验证文件是否保存成功
+            if (file_exists($savePath)) {
+                return Reply::To('ok', '资源保存成功', ['path' => $savePath]);
+            } else {
+                return Reply::To('err', '资源保存失败，文件不存在');
+            }
+        } catch (\Exception $e) {
             return Reply::To('err', '资源保存失败', ['err' => $e->getMessage()]);
         } finally {
-            //销毁资源
+            // 销毁资源
             imagedestroy($file);
         }
     }
@@ -702,7 +742,5 @@ class Fotophire
 
 
     //析构方法
-    public function __destruct()
-    {
-    }
+    public function __destruct() {}
 }
