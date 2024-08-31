@@ -46,9 +46,40 @@ class File
     }
 
     /**
-     * @description:解析路径
+     * 私有方法；保存文件
+     */
+    private function save(string $src, array $file): array
+    {
+        if (file_exists($src)) {
+            $this->res['sc'] = 'error';
+            $this->res['status'] = "error";
+            $this->res['msg'] = '文件名重复';
+            // $this->res['msg'] = $src;
+            // return "error:已经有这个文件了";
+        } else {
+            if (move_uploaded_file($file['tmp_name'], $src)) {
+                //储存完成合成路径返回
+                //
+                // $url = str_replace($_SERVER['DOCUMENT_ROOT'], $_SERVER['HTTP_HOST'], $src);
+                $url = str_replace($_SERVER['DOCUMENT_ROOT'], '', $src);
+
+                return Reply::To('ok', '上传成功', [
+                    'path' => $url,
+                    'src' => $src,
+                ]);
+            } else {
+                //储存失败
+                return Reply::To('err', '储存失败', [
+                    'src' => $src,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * @description:根据文件路径获取文件信息
      * @param {*} $path
-     * @return {*}
+     * @return {array}
      */
     private function parsePath(string $path): array
     {
@@ -432,66 +463,31 @@ class File
                 $fileName = $this->createFileName($file);
             }
 
-            //合成需要存放文件的路径
-            // $userDir = iconv('utf-8', 'gbk', $this->basicsPath . '/' . $folderName . '/' . $fileType);
-            if (substr($folderName, 0, 1) !== '/') {
-                $folderName = '/' . $folderName;
-            }
+            $srcRes = $this->absolutePath($folderName, $fileName);
 
-            $userDir = iconv('utf-8', 'gbk', $_SERVER['DOCUMENT_ROOT']  . $folderName);
-
-
-            if (!is_dir($userDir)) {
-
-                mkdir(iconv("UTF-8", "GBK", $userDir), 0777, true);
-            }
-
-            //如果路径最后一位写了 / ,拼接时就不加入 / ，否则加入
-            if (substr($userDir, -1) == '/') {
-                $src = $userDir . $fileName;
+            if ($srcRes['sc'] != 'ok') {
+                return Reply::To('err', $srcRes['msg']);
             } else {
-                $src = $userDir . '/' . $fileName;
+                $src = $srcRes['data']['src'];
             }
 
-            //开始储存
+            $saveRes = $this->save($src, $file);
 
-
-
-            if (file_exists($src)) {
-                $this->res['sc'] = 'error';
-                $this->res['status'] = "error";
-                $this->res['msg'] = '文件名重复';
-                // $this->res['msg'] = $src;
-                // return "error:已经有这个文件了";
+            if ($saveRes['sc'] != 'ok') {
+                return Reply::To('err', $saveRes['msg']);
             } else {
-                if (move_uploaded_file($file['tmp_name'], $src)) {
-                    //储存完成合成路径返回
-                    //
-                    // $url = str_replace($_SERVER['DOCUMENT_ROOT'], $_SERVER['HTTP_HOST'], $src);
-                    $url = str_replace($_SERVER['DOCUMENT_ROOT'], '', $src);
-
-
-                    $this->res['sc'] = 'ok';
-                    $this->res['status'] = "ok";
-                    $this->res['data'] =  $url;
-                    // return $url;
-                } else {
-                    //储存失败
-                    $this->res['sc'] = 'error';
-                    $this->res['status'] = "error";
-                    $this->res['msg'] = '储存失败：' . $src;
-                    // $data['src'] = $src;
-                    // return 3000;
-                    // return $src;
-                }
+                return  Reply::To('ok', '图片保存成功', [
+                    'src' => $src,
+                    'path' => $saveRes['data']['path'],
+                    'saveRes' => $saveRes
+                ]);
             }
         }
-        return $this->res;
     }
 
     /**
      * @description: 私有方法：创建文件名
-     * @return {*}
+     * @return {string}
      */
     private function createFileName($file)
     {
@@ -693,5 +689,116 @@ class File
             }
         }
         return rmdir($dir);
+    }
+    /**
+     * 检查文件大小是否符合要求
+     * @param array $file 文件信息数组[临时源文件信息]
+     * @param int $maxSize 最大允许大小，单位为MB
+     * @return array 返回操作结果
+     * @throws InvalidArgumentException 如果参数格式错误
+     */
+    public function checkFileSize(array $file, int $maxSize =  50): array
+    {
+        $unit = 1024 * 1024;
+        $maxSize = $maxSize * $unit;
+
+        $maxMNum = $maxSize / $unit;
+        if ($file['size'] > $maxSize) {
+            return Reply::To('error', "文件大小超出限制{$maxMNum}M({$maxSize})", [
+                'fileSize' => $file['size'],
+                'maxSize' => $maxSize
+            ]);
+        }
+        return Reply::To('ok', "文件大小符合要求{$maxMNum}M", [
+            'fileSize' => $file['size'],
+            'maxSize' => $maxSize
+        ]);
+    }
+    /**
+     * 保存文档文件到指定路径
+     * @param array $file 文件信息数组[临时源文件信息]
+     * @param string $path 保存路径
+     * @return array 返回操作结果
+     * @throws InvalidArgumentException 如果参数格式错误
+     */
+    public function saveDoc(array $file, string $path): array
+    {
+        $name = $this->createFileName($file);
+        if (!$name) {
+            return Reply::To('err', '生成文件系统储存名称失败');
+        }
+
+        $pathRes = $this->absolutePath($path, $name);
+
+        if ($pathRes['sc'] != 'ok') {
+            return Reply::To('err', $pathRes['msg']);
+        }
+
+        $src = $pathRes['data']['src'];
+
+        $saveRes = $this->save($src, $file);
+
+        if ($saveRes['sc'] != 'ok') {
+            return Reply::To('err', $saveRes['msg']);
+        }
+
+        $path = $saveRes['data']['path'];
+        $src = $saveRes['data']['src'];
+
+
+        return Reply::To('ok', '测试', [
+            'path' => $path,
+            'name' => $name,
+            'src' => $src,
+        ]);
+        // 'file' => $file,
+        // 'customName' => $customName,
+        // 'pathRes' => $pathRes,
+        // 'saveRes' => $saveRes,
+
+
+    }
+
+    /**
+     * 合成文件的绝对路径;
+     * @param string $path 文件路径
+     * @param string $fileName 文件名称
+     * @param bool $establish 是否自动创建目录
+     * @return array 返回操作结果
+     * @throws InvalidArgumentException 如果参数格式错误
+     */
+    public function absolutePath(string $path, string $fileName, bool $establish = true): array
+    {
+        //合成需要存放文件的路径
+        // $userDir = iconv('utf-8', 'gbk', $this->basicsPath . '/' . $folderName . '/' . $fileType);
+        if (substr($path, 0, 1) !== '/') {
+            $path = '/' . $path;
+        }
+
+        $userDir = iconv('utf-8', 'gbk', $_SERVER['DOCUMENT_ROOT']  . $path);
+
+
+        if (!is_dir($userDir) && $establish) {
+
+            mkdir(iconv("UTF-8", "GBK", $userDir), 0777, true);
+            //检查文件是否创建成功
+            if (!is_dir($userDir)) {
+                return Reply::To('err', '创建目录失败');
+            }
+        }
+
+        //如果路径最后一位写了 / ,拼接时就不加入 / ，否则加入
+        if (substr($userDir, -1) == '/') {
+            $src = $userDir . $fileName;
+        } else {
+            $src = $userDir . '/' . $fileName;
+        }
+
+        return Reply::To('ok', '测试', [
+            'path' => $path,
+            'fileName' => $fileName,
+            'userDir' => $userDir,
+            'src' => $src
+        ]);
     }
 }
