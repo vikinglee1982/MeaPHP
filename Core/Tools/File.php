@@ -81,7 +81,7 @@ class File
      * @param {*} $path
      * @return {array}
      */
-    private function parsePath(string $path): array
+    public function parsePath(string $path): array
     {
         //判断入参是绝对路径还是相对路径；输出绝对路径
 
@@ -94,7 +94,7 @@ class File
         }
 
         if (file_exists($localPath)) {
-            return Reply::To('ok', '返回参数', [
+            return Reply::To('ok', '文件存在', [
                 'localPath' => $localPath,
                 'fileFullName' => basename($localPath),
                 'fileName' => pathinfo($localPath, PATHINFO_FILENAME),
