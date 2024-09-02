@@ -67,7 +67,7 @@ class Fotophire
         string $type = 'extend'
     ) {
         // 确保路径以 '/' 开始
-        if (substr($destPath, 0, 1) !== '/') {
+        if ($destPath && substr($destPath, 0, 1) !== '/') {
             $destPath = '/' . $destPath;
         }
 
@@ -112,7 +112,7 @@ class Fotophire
                 if ($UrlRes['sc'] == 'ok') {
                     return Reply::To('ok', '预制图片生成链接成功', [
                         'url' => $UrlRes['data']['url'],
-                        'filePathInfo' => $filePathInfo,
+                        // 'filePathInfo' => $filePathInfo,
                     ]);
                 } else {
                     return Reply::To('error', '预制图片生成链接失败');
@@ -127,20 +127,29 @@ class Fotophire
                     if ($UrlRes['sc'] == 'ok') {
                         return Reply::To('ok', '图片保存成功', [
                             'url' => $UrlRes['data']['url'],
-                            'destFileRes' => $destFileRes
+                            // 'destFileRes' => $destFileRes
                         ]);
                     } else {
-                        return Reply::To('error', '图片保存成功', [
-                            'makeRes' => $makeRes,
-                            '$UrlRes' => $UrlRes,
-                            'destFileRes' => $destFileRes
+                        return Reply::To('error', '图片保存失败', [
+                            // 'makeRes' => $makeRes,
+                            // '$UrlRes' => $UrlRes,
+                            // 'destFileRes' => $destFileRes
                         ]);
                     }
                 } else {
                     return Reply::To('error', '图片保存失败', [
-                        'makeRes' => $makeRes,
-                        'destFileRes' => $destFileRes,
-                        'filePathInfo' => $filePathInfo
+                        // 'makeRes' => $makeRes,
+                        // 'destFileRes' => $destFileRes,
+                        // 'cs' => [
+                        //     'filePathInfo' =>  $filePathInfo,
+                        //     'destW' =>  $destW,
+                        //     'destH' =>  $destH,
+                        //     'destPath' =>  $destPath,
+                        //     'type' =>  $type
+                        // ]
+                        // 'filePathInfo' => $filePathInfo,
+                        // 'saveLocalPath' => $saveLocalPath,
+                        // 'filePathRes' => $filePathRes
                     ]);
                 }
             }
@@ -173,6 +182,7 @@ class Fotophire
         if (file_exists($localPath)) {
             return Reply::To('ok', '返回参数', [
                 'localPath' => $localPath,
+                'folderPath' => rtrim(dirname($localPath), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR,
                 'fileFullName' => basename($localPath),
                 'fileName' => pathinfo($localPath, PATHINFO_FILENAME),
                 'fileType' => pathinfo($localPath, PATHINFO_EXTENSION),
@@ -203,20 +213,23 @@ class Fotophire
     ): array {
 
         $extension = $type == 'extend' ? $filePathInfo['fileType'] : $type;
-        if (!$destPath) {
-
-            $destPath =  dirname($filePathInfo['localPath']) . '/' . $filePathInfo['fileName'] . '-' .  $destW . '_' . $destH  . '.' . $extension;
+        if ($destPath) {
+            $newDestPath = $_SERVER['DOCUMENT_ROOT']  . $destPath . '/' . $filePathInfo['fileName'] . '-' .  $destW . '_' . $destH  . '.' . $extension;
         } else {
-            $destPath = $_SERVER['DOCUMENT_ROOT'] . $destPath . '/' . $filePathInfo['fileName'] . '-' .  $destW . '_' . $destH  . '.' . $extension;
+            $newDestPath = $filePathInfo['folderPath'] . $filePathInfo['fileName'] . '-' .  $destW . '_' . $destH  . '.' . $extension;
         }
 
-        if (file_exists($destPath)) {
+        if (file_exists($newDestPath)) {
             return Reply::To('ok', '文件已经存在', [
-                'destPath' => $destPath,
+                'destPath' => $newDestPath,
             ]);
         } else {
             return Reply::To('err', '文件不存在',  [
-                'destPath' => $destPath,
+                'destPath' => $newDestPath,
+                'newDestPath' => $newDestPath,
+                'filePathInfo' => $filePathInfo,
+                'dirname' => $filePathInfo['folderPath'],
+                'filename' => $filePathInfo['fileName'],
             ]);
         }
     }
@@ -302,7 +315,7 @@ class Fotophire
         if ($saveRes['sc'] == 'ok') {
             return Reply::To('ok', '图片生成成功', ['path' => $saveRes['data']['path'], '$saveRes' => $saveRes]);
         } else {
-            return Reply::To('err', $saveRes['msg'], ['$saveRes' => $saveRes]);
+            return Reply::To('err', $saveRes['msg'], ['$saveRes' => $saveRes, 'savePath' => $savePath]);
         }
     }
 
@@ -425,7 +438,7 @@ class Fotophire
                 case 2:
                     // JPEG 文件保存
                     if (!imagejpeg($file, $savePath)) {
-                        return Reply::To('err', 'JPEG 图像保存失败');
+                        return Reply::To('err', 'JPEG 图像保存失败', ['dir' => $dir, 'savePath' => $savePath]);
                     }
                     break;
                 case 3:
