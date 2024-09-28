@@ -112,16 +112,9 @@ class File
      * @param {*} $localPath
      * @return {*}
      */
-    public function localFileToUrl(string $localPath): array
+    public function localFileToUrl(string $localPath, bool $exists = true): array
 
     {
-
-        $localPathRes = $this->parsePath($localPath);
-        if ($localPathRes['sc'] == 'ok') {
-            $localPath = $localPathRes['data']['localPath'];
-        } else {
-            return Reply::To('err', $localPathRes['msg']);
-        }
         // 判断当前请求是否为HTTPS
         $isHttps = (
             (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
@@ -130,17 +123,43 @@ class File
 
         // 使用当前域名拼接本地地址
         $protocol = $isHttps ? 'https://' : 'http://';
-        $url = $protocol . $_SERVER['SERVER_NAME'] . str_replace($_SERVER['DOCUMENT_ROOT'], '', $localPath);
 
-        if (file_exists($localPath)) {
+        //文件存在情况下返回url
+        if ($exists) {
+            $localPathRes = $this->parsePath($localPath);
+            if ($localPathRes['sc'] == 'ok') {
+                $localPath = $localPathRes['data']['localPath'];
+            } else {
+                return Reply::To('err', $localPathRes['msg'] . '1');
+            }
+            // // 判断当前请求是否为HTTPS
+            // $isHttps = (
+            //     (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+            //     (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+            // );
 
-            // 返回文件存在时的数组（假设Reply::To是一个自定义类/结构，保持原样）
-            return Reply::To('ok', '文件已经存在', [
-                'url' => $url,
-            ]);
+            // // 使用当前域名拼接本地地址
+            // $protocol = $isHttps ? 'https://' : 'http://';
+            $url = $protocol . $_SERVER['SERVER_NAME'] . str_replace($_SERVER['DOCUMENT_ROOT'], '', $localPath);
+
+            if (file_exists($localPath)) {
+
+                // 返回文件存在时的数组（假设Reply::To是一个自定义类/结构，保持原样）
+                return Reply::To('ok', '文件已经存在', [
+                    'url' => $url,
+                ]);
+            } else {
+                // 返回文件不存在时的数组（假设Reply::To是一个自定义类/结构，保持原样）
+                return Reply::To('err', '文件不存在2', ['$localPathRes' => $localPathRes, 'url' => $url]);
+            }
         } else {
-            // 返回文件不存在时的数组（假设Reply::To是一个自定义类/结构，保持原样）
-            return Reply::To('err', '文件不存在', ['$localPathRes' => $localPathRes]);
+            if (strpos($localPath, $_SERVER['DOCUMENT_ROOT']) === false) {
+                //入参是没有根目录的相对路径（不包含根目录）
+                $localPath =  $_SERVER['DOCUMENT_ROOT'] . $localPath;
+            }
+            $url = $protocol . $_SERVER['SERVER_NAME'] . str_replace($_SERVER['DOCUMENT_ROOT'], '', $localPath);
+
+            return Reply::To('ok', '文件不存在3', ['url' => $url]);
         }
     }
 

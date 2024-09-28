@@ -5,8 +5,8 @@
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-03-24 00:24:37
- * @LastEditors: Viking
- * @LastEditTime: 2023-04-16 10:16:11
+ * @LastEditors: vikinglee1982 87834084@qq.com
+ * @LastEditTime: 2024-09-28 10:51:22
  */
 
 namespace MeaPHP\Core\Tools;
@@ -23,14 +23,10 @@ class SecurityVerification
         //错误：返回错误原因
     );
     //阻止外部克隆书库工具类
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     //私有化构造方法初始化，禁止外部使用
-    private function __construct()
-    {
-    }
+    private function __construct() {}
     //内部产生静态对象
     public static function active()
     {
@@ -43,8 +39,11 @@ class SecurityVerification
     }
 
     //验证字符串方法
-    public function Risk($str)
+    public function Risk($str, bool $pass = false)
     {
+        if ($pass) {
+            return $str;
+        }
 
         //将用户数据的字母转换成小写字符，仅用于验证，如果没有风险，返回依然时原数据
 

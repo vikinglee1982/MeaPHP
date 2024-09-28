@@ -5,24 +5,24 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-05-23 15:32:38
+ * @LastEditTime: 2024-09-12 16:01:34
  */
 
 namespace MeaPHP\Bootstrap;
 
-use MeaPHP\Core\DataBase\DataBase;
+// use MeaPHP\Core\DataBase\DataBase;
 
-use MeaPHP\Core\Tools\MID;
-use MeaPHP\Core\Tools\Captcha;
-use MeaPHP\Core\Tools\Save;
+// use MeaPHP\Core\Tools\MID;
+// use MeaPHP\Core\Tools\Captcha;
+// use MeaPHP\Core\Tools\Save;
 use MeaPHP\Core\Tools\SecurityVerification;
-use MeaPHP\Core\Tools\FormatValidation;
-use MeaPHP\Core\Tools\MoveFile;
-use MeaPHP\Core\Tools\Token;
-use MeaPHP\Core\Tools\Client;
-use MeaPHP\Core\Tools\Encryption;
-use MeaPHP\Core\Tools\Error;
-use MeaPHP\Core\Tools\ImageFactory;
+// use MeaPHP\Core\Tools\FormatValidation;
+// use MeaPHP\Core\Tools\MoveFile;
+// use MeaPHP\Core\Tools\Token;
+// use MeaPHP\Core\Tools\Client;
+// use MeaPHP\Core\Tools\Encryption;
+// use MeaPHP\Core\Tools\Error;
+// use MeaPHP\Core\Tools\ImageFactory;
 // use MeaPHP\Mea;
 
 // use MeaPHP\Mea;
@@ -42,35 +42,43 @@ class Bootstrap
     {
         // $RC = new RequestControl($UserConfig);
 
+
         spl_autoload_register([new self(), 'classPath']);
     }
     public function classPath(string $class)
     {
-        $file = str_replace('\\', '/', $class) . '.php';
-        // $SingleSiteFile =  $_SERVER['DOCUMENT_ROOT'] . '/' . $file;
-        $CoreClassFile = dirname($_SERVER['DOCUMENT_ROOT']) . '/' . $file;
-        // echo $CoreClassFile . '<br>';
+        $data[] = $class;
+        try {
+            $file = str_replace('\\', '/', $class) . '.php';
+            // $SingleSiteFile =  $_SERVER['DOCUMENT_ROOT'] . '/' . $file;
+            $CoreClassFile = dirname($_SERVER['DOCUMENT_ROOT']) . '/' . $file;
+            // echo $CoreClassFile . '<br>';
 
-        //这里注册核心类的类名称；用户使用当前类名称时提示用户类名已被占用；不能使用(名称加上一个Mea前缀，减小对用户定义类的影响)
-        $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea', 'Token', 'Client', 'Encryption', 'Error', 'Fotophire', 'RequestControl', 'Export', 'CheckUserConfig', 'Header'];
+            //这里注册核心类的类名称；用户使用当前类名称时提示用户类名已被占用；不能使用(名称加上一个Mea前缀，减小对用户定义类的影响)
+            $coreClass = ['DataBase', 'MID', 'Captcha', 'Save', 'SecurityVerification', 'MoveFile', 'FormatValidation', 'Mea', 'Token', 'Client', 'Encryption', 'Error', 'Fotophire', 'RequestControl', 'Export', 'CheckUserConfig', 'Header'];
 
-        if (in_array($class, $coreClass)) {
-            var_dump([
-                'errorfile' => 'Bootsrtap.php',
-                'errorMessage' => "自动加载:[{$file}] 文件失败;当前类名称已经被MeaPHP占用;",
-            ]);
-            die;
-        }
+            if (in_array($class, $coreClass)) {
+                var_dump([
+                    'errorfile' => 'Bootsrtap.php',
+                    'errorMessage' => "自动加载:[{$file}] 文件失败;当前类名称已经被MeaPHP占用;",
+                ]);
+                die;
+            }
 
-        if (file_exists($CoreClassFile)) {
-            // echo "框架自己的核心工具类,第一个加载";
-            // echo $CoreClassFile . "<br>";
-            require $CoreClassFile;
-        } else {
-            var_dump([
-                'errorfile' => 'Bootsrtap.php',
-                'errorMessage' => "自动加载:[{$file}] 文件失败",
-            ]);
+            if (file_exists($CoreClassFile)) {
+                // echo "框架自己的核心工具类,第一个加载";
+                // echo $CoreClassFile . "<br>";
+                require $CoreClassFile;
+            } else {
+                var_dump([
+                    'errorfile' => 'Bootsrtap.php',
+                    'errorMessage' => "自动加载:[{$file}] 文件失败",
+                ]);
+            }
+        } catch (\Throwable $e) {
+            $recode = 4000;
+            $data[] = $e;
+            // var_dump($e);
         }
     }
 }
@@ -87,17 +95,18 @@ if ($UserConfig['errLog']['enabled']) {
 }
 
 
+try {
+    Bootstrap::autoLoad($UserConfig);
+    RequestControl::check($UserConfig);
+    Header::set();
+    $Export = Export::active();
+    CheckUserConfig::check($UserConfig);
+    //安全验证
+    $SV = SecurityVerification::active();
+} catch (\Throwable $e) {
+    echo $e->getMessage();
+}
 
-Bootstrap::autoLoad($UserConfig);
-RequestControl::check($UserConfig);
-Header::set();
-$Export = Export::active();
-CheckUserConfig::check($UserConfig);
-
-
-
-//安全验证
-$SV = SecurityVerification::active();
 
 // if (!$RC->checkUserConfig()) {
 // } elseif (!$RC->checkRequest()) {

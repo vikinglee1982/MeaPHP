@@ -1,11 +1,11 @@
 <?php
 /*
- * @描述:
- * @Author: Viking
- * @version: 1.0
- * @Date: 2023-03-29 00:02:52
+ * @Author: vikinglee1982 87834084@qq.com
+ * @Date: 2024-03-08 09:51:02
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-08-10 16:30:30
+ * @LastEditTime: 2024-09-17 15:30:08
+ * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Mea.php
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 namespace MeaPHP;
@@ -13,97 +13,83 @@ namespace MeaPHP;
 use MeaPHP\Core\DataBase\DataBase;
 use MeaPHP\Core\Tools\MID;
 use MeaPHP\Core\Tools\Captcha;
-// use MeaPHP\Core\Tools\Save;
 use MeaPHP\Core\Tools\SecurityVerification;
 use MeaPHP\Core\Tools\FormatValidation;
-// use MeaPHP\Core\Tools\MoveFile;
 use MeaPHP\Core\Tools\Token;
 use MeaPHP\Core\Tools\Client;
 use MeaPHP\Core\Tools\Encryption;
-
 use MeaPHP\Core\Tools\File;
 use MeaPHP\Core\Tools\Error;
-
-
 use MeaPHP\Bootstrap\CheckUserConfig;
-
 use MeaPHP\Core\Reply\Reply;
-
 use MeaPHP\Core\Tools\Fotophire;
-
 use MeaPHP\TspApi\TspApi;
+use MeaPHP\TspApps\ImagickApp;
+use MeaPHP\TspApps\LibreOfficeApp;
 
-// trait Mea
 class Mea
 {
     protected $UserConfig;
     protected $DB;
     protected $MID;
     protected $Captcha;
-    protected $Save;
-    protected $SV;
-
-    protected $MoveFile;
     protected $Token;
-
     protected $Encryption;
     protected $File;
-
-
-    protected $Fotophire;
-
-
-    protected $Client;
-    protected $TspApi;
-
+    protected $SV;
     protected $FV;
     protected $Error;
-
-
     protected $Reply;
-    /**
-     * @描述: final当前方法不能重写
-     * @param {*} $UserConfig
-     * @return {*}
-     * @Date: 2023-04-16 10:48:50
-     */
+    protected $Fotophire;
+    protected $Client;
+    protected $TspApi;
+    protected $ImagickApp;
+    protected $LibreOfficeApp;
+
     public final function __construct($UserConfig)
     {
-        // 检查用户配置；当脚本继承Mea类时，检查用户配置
         CheckUserConfig::check($UserConfig);
         $this->UserConfig = $UserConfig;
 
-        $this->DB = DataBase::active($UserConfig);
+        $this->initializeServices();
+    }
 
-        // 返回数据管理
-        $this->Reply = Reply::active();
-        //Token的管理
-        $this->Token = Token::active();
-        //客户端相关信息
-        $this->Client = Client::active();
-        //id管理
-        $this->MID = MID::active();
-        //图片验证码
-        $this->Captcha = Captcha::active();
-        //上传保存文件，移动文件等统一
-        $this->File = File::active();
-        //上传文件；保存到服务器
-        // $this->Save = Save::active();
-        //安全验证
-        $this->SV = SecurityVerification::active();
-        //格式验证
-        $this->FV = FormatValidation::active();
-        //文件移动工具
-        // $this->MoveFile = MoveFile::active();
-        //加密解密
-        $this->Encryption = Encryption::active();
-        //错误日志
-        $this->Error = Error::active($UserConfig);
-        //图片处理工厂：生成缩率图；手机海报
-        $this->Fotophire = Fotophire::active();
-        //第三方接口
-        $this->TspApi = TspApi::active();
+    private function initializeServices()
+    {
+        $services = [
+            'DB' => [DataBase::class, 'active'],
+            'Reply' => [Reply::class, 'active'],
+            'Token' => [Token::class, 'active'],
+            'Client' => [Client::class, 'active'],
+            'MID' => [MID::class, 'active'],
+            'Captcha' => [Captcha::class, 'active'],
+            'File' => [File::class, 'active'],
+            'SV' => [SecurityVerification::class, 'active'],
+            'FV' => [FormatValidation::class, 'active'],
+            'Encryption' => [Encryption::class, 'active'],
+            'Error' => [Error::class, 'active'],
+            'Fotophire' => [Fotophire::class, 'active'],
+            'TspApi' => [TspApi::class, 'active'],
+            'ImagickApp' => [ImagickApp::class, 'active'],
+            'LibreOfficeApp' => [LibreOfficeApp::class, 'active'],
+        ];
+        try {
+            $this->DB = DataBase::active($this->UserConfig);
+        } catch (\Throwable $e) {
+            $this->handleException($e);
+        }
+
+        foreach ($services as $property => [$class, $method]) {
+            try {
+                $this->$property = $class::$method($this->UserConfig ?? []);
+            } catch (\Throwable $e) {
+                $this->handleException($e);
+            }
+        }
+    }
+
+    private function handleException(\Throwable $e)
+    {
+        echo $e->getMessage(); // 更好的做法是记录日志而不是直接输出错误消息
     }
 }
-
-// new Mea($UserConfig);

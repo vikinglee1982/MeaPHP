@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-04-12 23:18:43
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-08-10 17:34:50
+ * @LastEditTime: 2024-09-13 09:08:09
  */
 
 namespace MeaPHP\Core\Tools;
@@ -40,14 +40,10 @@ class Client
         return self::$Obj;
     }
     //阻止外部克隆书库工具类
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     //构造方法初始化，属性赋值，准备连接
-    private function __construct()
-    {
-    }
+    private function __construct() {}
     /**
      * @描述:
      * @return {*}
@@ -90,47 +86,5 @@ class Client
             $this->res['msg'] = "获取访客代理信息失败！";
         }
         return $this->res;
-    }
-
-
-    /**
-     * @描述: 获取用户的地址信息
-     * @param {string} $ip
-     * @return {*}
-     * @Date: 2023-04-12 23:57:04
-     */
-    public function getLocation(string $ip, bool $showDoc = false): array
-    {
-
-
-        $TspApi = TspApi::active();
-        $locApi = $TspApi->ipToLoc($ip, $showDoc);
-
-        if ($showDoc) {
-            return Reply::To('ok', '获取访客地址信息成功', ['locApi' => json_decode($locApi, true)]);
-        }
-
-
-        // 发起HTTP GET请求
-        $response = file_get_contents($locApi);
-
-        if ($response === false) {
-            return Reply::To('error', '获取访客地址信息失败', ['response' => $response]);
-        }
-
-        // 解析JSON响应
-        $data = json_decode($response, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return Reply::To('error', 'Failed to decode JSON response');
-        }
-
-        if (!isset($data['ipdata'])) {
-            return Reply::To('error', 'Invalid response format');
-        }
-
-        // 返回位置信息
-
-        return Reply::To('ok', '获取访客地址信息成功', $data);
     }
 }
