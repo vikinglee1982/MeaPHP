@@ -131,9 +131,9 @@ class Fotophire
                         ]);
                     } else {
                         return Reply::To('error', '图片保存失败', [
-                            // 'makeRes' => $makeRes,
-                            // '$UrlRes' => $UrlRes,
-                            // 'destFileRes' => $destFileRes
+                            'makeRes' => $makeRes,
+                            '$UrlRes' => $UrlRes,
+                            'destFileRes' => $destFileRes
                         ]);
                     }
                 } else {

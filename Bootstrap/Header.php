@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-03-12 10:14:58
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-04-07 15:40:00
+ * @LastEditTime: 2024-10-05 11:14:17
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Bootstrap\SetHeader.php
  * @Description: 解决跨域问题设置报头
  */

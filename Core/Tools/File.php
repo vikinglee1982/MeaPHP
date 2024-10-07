@@ -454,6 +454,7 @@ class File
             $this->res['status'] = "error";
             $this->res['sc'] = 'error';
             $this->res['msg'] = '请缺少入参image文件';
+            return $this->res;
             // return "error:请缺少入参image文件";
         } elseif ($fileType != 'image/jpeg' && $fileType != 'image/png' && $fileType != 'image/webp' && $fileType != 'image/gif') {
             $this->res['sc'] = 'error';
@@ -461,18 +462,21 @@ class File
             $this->res['msg'] = '文件类型支持[gif/jpg/jpge/png/webp],或者文件数据不完整';
             $this->res['type'] = $fileType;
             $this->res['file'] = $file;
+            return $this->res;
             // return "error:文件类型支持[gif/jpg/jpge/png//webp]";
             //image/jpeg;image/png;image/webp;image/gif
             // return $file['type'];
         } elseif (!$folderName) {
             $this->res['sc'] = 'error';
             $this->res['status'] = "error";
-            $this->res['msg'] = '缺少文件夹目录（从项目根路径下开始的目录）';
+            $this->res['msg'] = '缺少储存文件夹目录（从项目根路径下开始的目录）';
+            return $this->res;
             // return "error:缺少文件夹目录（项目根路径下的目录）";
         } elseif (strpos($folderName, 'undefined') || strpos($folderName, 'null')) {
             $this->res['sc'] = 'error';
             $this->res['status'] = "error";
             $this->res['msg'] = '文件夹目录中不能存在undefined或者null等字段';
+            return $this->res;
             // return "error:缺少文件夹目录（项目根路径下的目录）";
         } else {
 
