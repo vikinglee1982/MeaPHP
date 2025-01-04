@@ -26,14 +26,10 @@ class FormatValidation
         //错误：返回错误原因
     );
     //阻止外部克隆书库工具类
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     //私有化构造方法初始化，禁止外部使用
-    private function __construct()
-    {
-    }
+    private function __construct() {}
     //内部产生静态对象
     public static function active()
     {
@@ -122,7 +118,7 @@ class FormatValidation
         // $this->res['data'] = strlen($idcard) != 18;
         return $this->res;
     }
-    public function phoneNumber($telnum)
+    public function phoneNumber(string $telnum, bool $privacy = false)
     {
 
         //@2017-11-25 14:25:45 https://zhidao.baidu.com/question/1822455991691849548.html
@@ -134,8 +130,14 @@ class FormatValidation
         $g3 = "/^166\d{8}$/";
         if (preg_match($g, $telnum) || preg_match($g2, $telnum) || preg_match($g3, $telnum)) {
             // return $telnum;
+            if ($privacy) {
+                $telnum = substr($telnum, 0, 3) . '****' . substr($telnum, -4);
+                return Reply::To('ok', '正确的手机号码', ['phone' => $telnum]);
+            } else {
+                return Reply::To('ok', '正确的手机号码', ['phone' => $telnum]);
+            }
 
-            return Reply::To('ok', '正确的手机号码', ['phone' => $telnum]);
+
             // $this->res['sc'] = 'ok';
             // $this->res['status'] = 'ok';
             // $this->res['data'] = $telnum;

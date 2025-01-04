@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-12-22 21:35:08
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-12-23 17:16:34
+ * @LastEditTime: 2025-01-04 10:56:41
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Core\Tools\WeChatPoster.php
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -55,11 +55,15 @@ class WeChatPoster
         string $weQRCodeUrl,
         string $logoPath = null,
         //客服信息及联系方式
-        array $serverInfo = [],
-        array $userInfo = [
-            'wx_avatar' => null,
-            'wx_name' => null,
-        ],
+
+        $serverAvatar = null,
+        $serverName = null,
+        $serverPhone = null,
+
+        //用户信息
+        $userAvatar = null,
+        $userName = null,
+        //以下默认
         string $sloganImg = null,
         string $title = null,
         string $titleFlex = 'left',
@@ -93,11 +97,12 @@ class WeChatPoster
         /**
          * 计算用户区域高度
          */
-        if ($userInfo['wx_avatar']) {
+        if ($userAvatar) {
             $userZoneHeight = 168;
         } else {
             $userZoneHeight = 0;
         }
+
 
         /**
          * 加载海报主要图片
@@ -173,8 +178,8 @@ class WeChatPoster
         /**
          * 绘制用户区域
          */
-        if ($userInfo['wx_avatar']) {
-            $userAvatarRes = $this->createImageResourceFromAny($userInfo['wx_avatar']);
+        if ($userAvatar) {
+            $userAvatarRes = $this->createImageResourceFromAny($userAvatar);
             if ($userAvatarRes['sc'] != 'ok') {
                 return Reply::To('err', '用户头像加载失败', ['err' => $userAvatarRes]);
             }
@@ -196,13 +201,12 @@ class WeChatPoster
             // // 将圆形头像复制到 $userZone 上
             imagecopy($userZone, $circleAvatar, $padding * 2, ($userZoneHeight - 128) / 2, 0, 0, 128, 128);
 
-            $userInfo['wx_name'] = $userInfo['wx_name'] ?? '微信好友';
+            $$userName = $$userName ?? '微信好友';
             //如果昵称大于6个字，截取一部分
-            $userInfo['wx_name'] = mb_strlen($userInfo['wx_name'], 'utf-8') > 6 ? mb_substr($userInfo['wx_name'], 0, 6, 'utf-8') . '...' : $userInfo['wx_name'];
-
+            $$userName = mb_strlen($$userName, 'utf-8') > 6 ? mb_substr($$userName, 0, 6, 'utf-8') . '...' : $$userName;
             $userNameColor = imagecolorallocate($userZone, 96, 98, 102);
             //将用户名写入头像右边20px
-            imagettftext($userZone, $userNameSize, 0, 168, 94, $userNameColor, $fontFile, $userInfo['wx_name']);
+            imagettftext($userZone, $userNameSize, 0, 168, 94, $userNameColor, $fontFile, $userName);
 
             if ($sloganImg) {
                 $sloganRes = $this->createImageResourceFromAny($sloganImg);
@@ -248,8 +252,6 @@ class WeChatPoster
         $qrcode_w = imagesx($qrcode);
         $qrcode_h = imagesy($qrcode);
 
-        // $qrcodeStartX = $posterWith - $qrcode_w;
-        // $qrCodeStartY = $titleZoneHeight + $userZoneHeight + $ImgScaleHeight;
 
         // 计算缩放比例以适应二维码区域高度，同时保持纵横比
         $ratio = min(1, $qrcodeZoneHeight / max($qrcode_w, $qrcode_h));
@@ -366,7 +368,9 @@ class WeChatPoster
         imagettftext($serverZone, $userNameSize, 0, $padding,  $userNameSize * 4, $serverTitleColor, $fontFile,  '预定');
 
         //加载客服头像
-        $serverAvaterRes = $this->createImageResourceFromAny($serverInfo['wx_avatar']);
+
+        $serverAvaterRes = $this->createImageResourceFromAny($serverAvatar);
+
         if ($serverAvaterRes['sc'] != 'ok') {
             return Reply::To('err', '客服头像加载失败', ['err' => $serverAvaterRes]);
         }
@@ -391,33 +395,25 @@ class WeChatPoster
         // 计算用户名绘制的起始位置
         $nameStartX = $serverAvaterStartX + $serverAvater_w + $padding * 2;
 
-        $serverName = $serverInfo['wx_name'] ? $serverInfo['wx_name'] : '旅游顾问';
+        $serverName = $serverName ? $serverName  : '旅游顾问';
+
 
         // 使用 imagettftext 绘制用户名，添加 angle 参数
         imagettftext($serverZone, $userNameSize, 0, $nameStartX, $padding * 2 + $userNameSize, $userNameColor, $fontFile,  $serverName);
 
 
         $phoneColor = imagecolorallocate($serverZone, 48, 49, 51);
-        $serverPhone = $serverInfo['phone'] ?? '暂未设置';
+
+        $serverPhone = $serverPhone ?? '暂未设置';
+
         $phoneStartY =  $padding * 2  + $titleSize * 3;
         imagettftext($serverZone, $titleSize, 0, $nameStartX, $phoneStartY, $phoneColor, $fontFile,   $serverPhone);
 
         // $nameStartX = $padding + $serverAvater_w + $padding;
 
-        // imagettftext($serverZone, $userNameSize, $nameStartX, $padding, $userNameColor, $fontFile, $serverInfo['wx_name']);
-
-
-
-
-
-
-
-
-
+     
         $serverZoneStartY = $qrcodeZoneStartY + $padding * 2 + $logoZoneHeight;
         imagecopy($poster, $serverZone, $padding, $serverZoneStartY, 0, 0, $logoZoneWidth, $serverZoneHeight);
-
-
 
 
 
@@ -478,7 +474,7 @@ class WeChatPoster
                 'imgHeight' => $imgHeight,
                 'logo_w' => $logo_w,
                 'logo_h' => $logo_h,
-                'serverInfo' => $serverInfo,
+                // 'serverInfo' => $serverInfo,
 
             ]
         ]);
@@ -691,368 +687,4 @@ class WeChatPoster
 
     //析构方法
     public function __destruct() {}
-    // public function draw(
-    //     string $imgUrl,
-    //     string $appletQrCodeUrl,
-    //     string $title = null,
-
-    //     // array $pathParams = [],
-    //     //是否显示旅游网或者旅行社的logo或徽章
-    //     //是否显示用户的用户名头像等相关信息
-    //     //如果这些都不显示，需要设置一个默认的宣传语
-    //     //需要设置一个图片加载失败的默认图片
-
-    //     string $logoPath = null,
-    //     //客服信息及联系方式
-    //     array $serverInfo = [],
-    //     array $userInfo = [
-    //         'wx_avatar' => null,
-    //         // 'wx_avatar' => 'https://xlt.huayunlvyou.com/Resource/User/1/Avatar/2c62ec7abdf4b4fcf04985f8ea2e7764-128_0.png',
-
-    //         'wx_name' => 'vikintg'
-    //     ],
-    //     string $sloganImg = null,
-
-    //     string $hint = '长按识别小程序码查看详情',
-    //     int $titleSize = 36,
-    //     int $textSize = 24,
-    //     int $userNameSize = 30,
-    //     int $padding = 16,
-    //     int $qrcodeZoneHeight = 300
-    // ): array {
-
-
-
-    //     $fontFile = $this->getFontFilePath();
-    //     if (!$fontFile) {
-    //         return [
-    //             'sc' => 'err',
-    //             'msg' => '字体文件加载失败',
-    //         ];
-    //     }
-    //     //  打开需要生成海报的背景图片文件
-    //     $bgImageRes = $this->createImageResourceFromAny($imgUrl);
-    //     if ($bgImageRes['sc'] != 'ok') {
-
-    //         $defaultBgImage = $this->createImageResourceFromAny($this->img404);
-    //         if ($defaultBgImage['sc'] != 'ok') {
-    //             return [
-    //                 'sc' => 'err',
-    //                 'msg' => '背景图片加载失败，缺省图片加载失败',
-    //                 'data' => $this->img404,
-    //             ];
-    //         }
-    //     }
-    //     $bgImage = $bgImageRes['data']['imageResource'];
-    //     // 海报图片的尺寸
-    //     $sw = imagesx($bgImage);
-    //     $sh = imagesy($bgImage);
-    //     // 设置图片新的宽度为1080
-    //     $w = 1080;
-
-    //     // 计算保持比例下的新高度
-    //     $h = round($w * ($sh / $sw));
-
-    //     // 计算标题区域高度
-    //     if ($title) {
-    //         $titleZoneHeight = $textSize * 4;
-    //     } else {
-    //         $titleZoneHeight = 0;
-    //     }
-    //     //头像高度
-    //     //  打开需要生成用户头像
-
-    //     if ($userInfo['wx_avatar']) {
-
-    //         $userZoneHeight = 168;
-    //         $userAvatarRes = $this->createImageResourceFromAny($userInfo['wx_avatar']);
-    //         if ($userAvatarRes['sc'] != 'ok') {
-    //             return Reply::To('err', '用户头像加载失败', ['err' => $userAvatarRes]);
-    //         }
-    //         $userAvatar = $userAvatarRes['data']['imageResource'];
-    //         $userAvatar_w = imagesx($userAvatar);
-    //         $userAvatar_h = imagesy($userAvatar);
-
-
-    //         // 创建一个新的图像资源
-    //         $userZone = imagecreatetruecolor($w, $userZoneHeight);
-
-    //         $userZoneBg = imagecolorallocate($userZone, 255, 255, 255);
-    //         imagefill($userZone, 0, 0, $userZoneBg);
-
-    //         $circleAvatarRes = $this->circleAvatar($userAvatar);
-
-    //         if ($circleAvatarRes['sc'] != 'ok') {
-    //             return Reply::To('err', '用户头像加载失败', ['err' => $circleAvatarRes]);
-    //         }
-    //         $circleAvatar = $circleAvatarRes['data']['imageResource'];
-
-    //         // 将圆形头像复制到 $userZone 上
-    //         imagecopy($userZone, $circleAvatar, 10, ($userZoneHeight - 128) / 2, 0, 0, 128, 128);
-
-
-    //         $userInfo['wx_name'] = $userInfo['wx_name'] ?? '微信好友';
-    //         //如果昵称大于6个字，截取一部分
-    //         $userInfo['wx_name'] = mb_strlen($userInfo['wx_name'], 'utf-8') > 6 ? mb_substr($userInfo['wx_name'], 0, 6, 'utf-8') . '...' : $userInfo['wx_name'];
-
-    //         // $userInfo['wx_name'] = mb_substr($userInfo['wx_name'], 0, 6, 'utf-8') . '...';
-
-    //         $userNameColor = imagecolorallocate($userZone, 96, 98, 102);
-    //         // rgb(115.2, 117.6, 122.4)
-    //         //将用户名写入头像右边20px
-    //         imagettftext($userZone, $userNameSize, 0, 168, 94, $userNameColor, $fontFile, $userInfo['wx_name']);
-
-    //         if ($sloganImg) {
-    //             $sloganRes = $this->createImageResourceFromAny($sloganImg);
-    //             if ($sloganRes['sc'] != 'ok') {
-    //                 return Reply::To('err', '用户头像加载失败', ['err' => $sloganRes]);
-    //             }
-    //             $slogan = $sloganRes['data']['imageResource'];
-    //             $slogan_w = imagesx($slogan);
-    //             $slogan_h = imagesy($slogan);
-    //             imagecopyresampled($userZone, $slogan, 500, 10, 0, 0, $slogan_w, 128, $slogan_w, $slogan_h);
-    //         }
-    //         // 清理不再需要的资源
-
-    //         imagedestroy($userAvatar);
-    //         imagedestroy($circleAvatar);
-    //         // imagedestroy($mask);
-    //         // 将头像写入
-
-    //     } else {
-    //         $userZoneHeight = 0;
-    //         $uesrZone = imagecreatetruecolor($w, $userZoneHeight);
-    //     }
-
-
-    //     // 计算整体海报图片的高度
-    //     $backgroundHeight = $h + $qrcodeZoneHeight + $textSize * 3 + $titleZoneHeight + $userZoneHeight;
-
-    //     // 创建一个新的图像资源
-    //     $background = imagecreatetruecolor($w, $backgroundHeight);
-
-    //     imagealphablending($background, false); // 关闭Alpha混合
-    //     imagesavealpha($background, true);      // 保存Alpha通道信息
-
-    //     // // 设置背景颜色
-    //     // 236, 245, 255//255, 223, 4
-    //     // 分配一个完全透明的颜色
-    //     $transparent = imagecolorallocatealpha($background, 0, 0, 0, 127);
-
-    //     // 填充背景为透明色
-    //     imagefill($background, 0, 0, $transparent);
-    //     // $backgroundColor1 = imagecolorallocate($background, 255, 255, 255);
-    //     // imagefill($background, 0, 0, $backgroundColor1);
-
-    //     //如果有用户头像将头像画到背景上
-    //     if ($userAvatar) {
-    //         imagecopyresampled($background, $userZone, 0, $titleZoneHeight, 0, 0, $w, $userZoneHeight, imagesx($userZone), imagesy($userZone));
-    //         // 将圆形头像复制到最终的背景图像中
-    //         // imagecopy($background, $circleImage, 10, $titleZoneHeight + 10, 0, 0, 128, 128);
-    //         imagedestroy($userZone);
-    //     }
-
-
-    //     // 复制海报图片到新创建的图片资源上
-    //     imagecopyresampled($background, $bgImage, 0, $titleZoneHeight + $userZoneHeight, 0, 0, $w, $h, imagesx($bgImage), imagesy($bgImage));
-    //     imagedestroy($bgImage);
-
-    //     //创建二维码区域的图片
-
-    //     $qrZoneBackground = imagecreatetruecolor($w, $qrcodeZoneHeight);
-    //     $backgroundColor2 = imagecolorallocate($qrZoneBackground, 244, 244, 245);
-    //     imagefill($qrZoneBackground, 0, 0, $backgroundColor2);
-
-    //     imagecopyresampled($background, $qrZoneBackground, 0, $h + $titleZoneHeight + $userZoneHeight, 0, 0, $w, $qrcodeZoneHeight, imagesx($qrZoneBackground), imagesy($qrZoneBackground));
-    //     imagedestroy($qrZoneBackground);
-
-
-
-
-    //     //创建底部提示文字区域的图片
-
-    //     $hintZoneBackground = imagecreatetruecolor($w, $textSize * 3);
-    //     $backgroundColor3 = imagecolorallocate($hintZoneBackground, 255, 223, 4);
-    //     imagefill($hintZoneBackground, 0, 0, $backgroundColor3);
-
-    //     $hintZoneY = $h + $titleZoneHeight + $userZoneHeight + $qrcodeZoneHeight;
-    //     $hintZoneHeight =  $textSize * 3;
-    //     imagecopyresampled($background, $hintZoneBackground, 0, $hintZoneY, 0, 0, $w, $hintZoneHeight, imagesx($hintZoneBackground), imagesy($hintZoneBackground));
-    //     imagedestroy($hintZoneBackground);
-    //     // 设置字体文件路径
-
-
-    //     /**
-    //      * @description: 添加底部提示文字
-    //      * @return {*}
-    //      */
-    //     //计算文字宽度
-    //     $textWidth =   $this->getTextWidth($hint, $fontFile, $textSize);
-
-    //     // 计算文字居中位置（水平方向）
-    //     $textX = ($w - $textWidth) / 2;
-
-    //     // 文字垂直居中在图片底部
-    //     $textY = $backgroundHeight  - $textSize;
-    //     //  textSize 是文字高度，可以适当增加一些间距以美观展示
-    //     //如果提示文字超过长度打点显示
-    //     $hint = $this->getFittedText($hint, $fontFile, $textSize, $w - $padding * 4);
-    //     // 使用指定的颜色、字体、字号和坐标写入文字到背景图片上
-    //     imagettftext($background, $textSize, 0, $textX, $textY, imagecolorallocate($background, 61, 60, 153), $fontFile, $hint);
-
-    //     /**
-    //      * @description: 添加标题
-    //      * @return {*}
-    //      */
-
-    //     if ($title) {
-    //         $titleMaxWidth = 1080 - $padding * 6; // 标题最大宽度
-
-    //         //如果标题长度超出图片宽度，打点显示
-    //         $title = $this->getFittedText($title, $fontFile, $titleSize, $titleMaxWidth);
-
-    //         // 计算标题文字居中位置（水平方向）
-    //         $titleTextX = $padding;
-    //         // 文字垂直居中在图片顶部
-    //         $titleTextY = $titleZoneHeight / 3 + $titleSize;
-    //         // 设置标题文字颜色
-    //         $titleTextColor = imagecolorallocate($background, 0, 0, 0);
-    //         // 使用指定的颜色、字体、字号和坐标写入文字到背景图片上
-    //         imagettftext($background, $titleSize, 0, $titleTextX, $titleTextY, $titleTextColor, $fontFile, $title);
-    //     }
-
-
-    //     //添加二维码
-
-    //     $qrCodeImageRes = $this->createImageResourceFromAny($appletQrCodeUrl);
-    //     if ($qrCodeImageRes['sc'] != 'ok') {
-    //         return Reply::To('err', '二维码加载失败', [
-    //             'data' => $qrCodeImageRes
-    //         ]);
-    //     }
-
-
-    //     $qrCodeImage = $qrCodeImageRes['data']['imageResource'];
-    //     $padding = 16;
-    //     // 打开并添加二维码图片
-    //     // 二维码在背景图片中的y轴开始位置
-    //     $qrCodeStartY = $h + $padding + $titleZoneHeight + $userZoneHeight;
-
-    //     //获取二维码原尺寸
-    //     $qrCodeWidth = imagesx($qrCodeImage);
-    //     $qrCodeHeight = imagesy($qrCodeImage);
-
-    //     $qh = $qrcodeZoneHeight - ($padding * 2);
-    //     // 计算保持比例下的新宽度
-    //     $qw = round($qh * ($qrCodeWidth / $qrCodeHeight));
-
-    //     //计算二维码在背景图片中的x轴开始位置
-    //     $qrCodeStartX = $w - $qw - $padding;
-
-    //     imagecopyresampled($background, $qrCodeImage, $qrCodeStartX, $qrCodeStartY, 0, 0, $qw, $qh, imagesx($qrCodeImage), imagesy($qrCodeImage));
-    //     imagedestroy($qrCodeImage);
-
-    //     //二维码区域内添加文字
-    //     // $qrCodeTextX = $qrCodeStartX + ($qw / 2) - (strlen($qrCodeText) * $qrCodeTextSize / 2);
-
-    //     //添加公司logo
-    //     $logoRes = $this->createImageResourceFromAny($logoPath);
-
-    //     if ($logoRes['sc'] != 'ok') {
-    //         return Reply::To('err', '公司logo加载失败', ['err' => $logoRes]);
-    //     }
-
-    //     $logo = $logoRes['data']['imageResource'];
-
-    //     $logo_w = imagesx($logo);
-    //     $logo_h = imagesy($logo);
-
-    //     // // 确保背景图像支持Alpha通道
-    //     // imagealphablending($background, false); // 关闭Alpha混合
-    //     // imagesavealpha($background, true);      // 保存Alpha通道信息
-
-    //     // 确保Logo图像支持Alpha通道
-    //     imagealphablending($logo, false);       // 关闭Alpha混合
-    //     imagesavealpha($logo, true);            // 保存Alpha通道信息
-
-    //     // 创建一个透明背景的图像资源
-    //     // $transparentColor = imagecolorallocatealpha($background, 0, 0, 0, 127);
-    //     // imagefill($background, 0, 0, $transparentColor);
-    //     // 如果背景图像是使用 imagecreatetruecolor() 创建的，请确保它也支持Alpha通道
-    //     if (function_exists('imagecreatetruecolor')) {
-    //         imagealphablending($background, false);
-    //         imagesavealpha($background, true);
-    //     }
-
-    //     // 计算缩放比例，保持原始宽高比
-    //     $ratio = min(
-    //         $qrCodeStartX / $logo_w,
-    //         ($qrcodeZoneHeight / 3) / $logo_h
-    //     );
-    //     $new_width = $logo_w * $ratio;
-    //     $new_height = $logo_h * $ratio;
-    //     // 将Logo复制到背景图像上，并保持透明度
-    //     imagecopyresampled(
-    //         $background, // 目标图像
-    //         $logo,       // 源图像
-    //         0,           // 目标X坐标
-    //         $h + $titleZoneHeight + $userZoneHeight, // 目标Y坐标
-    //         0,           // 源X坐标
-    //         0,           // 源Y坐标
-    //         $new_width,  // 新宽度
-    //         $new_height, // 新高度
-    //         $logo_w,     // 原始宽度
-    //         $logo_h      // 原始高度
-    //     );
-
-    //     imagedestroy($logo);
-
-
-
-
-
-
-
-    //     // 生成最终的海报图片文件
-    //     ob_start();
-    //     imagejpeg($background); // 第二个参数NULL表示直接输出到浏览器，这里我们可以将其改为文件路径
-    //     $posterData = ob_get_clean(); // 清空并获取缓冲区内容，但在我们直接写入文件的情况下，这部分不需要了
-
-    //     // 直接保存为jpg文件
-    //     // $file_path = $_SERVER['DOCUMENT_ROOT'] . 'Resource/poseter/'; // 指定要保存的文件路径
-    //     // file_put_contents($file_path, $posterData); // 将图片数据写入到指定路径的文件中
-    //     // $res = $this->severImage($posterData, $file_path);
-
-    //     // 释放图片资源
-    //     imagedestroy($background);
-
-    //     return [
-    //         'sc' => 'ok',
-    //         'imgUrl' => $imgUrl,
-    //         '$w' => $w,
-    //         '$h' => $h,
-    //         'textX' => $textX,
-    //         'textY' => $textY,
-    //         '$title' => $title,
-    //         '$textWidth' => $textWidth,
-    //         'qrCodeStartY' => $qrCodeStartY,
-    //         // 'posterData' => $posterData,
-    //         '$fontFile ' =>  $fontFile,
-    //         'appletQrCodeUrl' => $appletQrCodeUrl,
-    //         'sloganImg' => $sloganImg,
-    //         'userInfo' => $userInfo,
-    //         // 'userAvatar' => $userAvatar,
-    //         'userAvatar_w' => $userAvatar_w,
-    //         'userAvatar_h' => $userAvatar_h,
-    //         'logoPath' => $logoPath,
-    //         'new_width' => $new_width,
-    //         'new_height' => $new_height,
-
-    //         // 'logo' => $logo,
-
-
-    //         'data' => 'data:image/jpeg;base64,' . base64_encode($posterData),
-    //     ];
-    // }
-
 }
