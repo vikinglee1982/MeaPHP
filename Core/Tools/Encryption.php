@@ -4,8 +4,8 @@
  * @Author: Viking
  * @version: 1.0
  * @Date: 2023-05-04 23:18:04
- * @LastEditors: Viking
- * @LastEditTime: 2023-05-04 23:31:40
+ * @LastEditors: vikinglee1982 87834084@qq.com
+ * @LastEditTime: 2025-04-29 15:46:54
  */
 
 namespace  MeaPHP\Core\Tools;
@@ -29,35 +29,39 @@ class Encryption
         return self::$Obj;
     }
     //阻止外部克隆书库工具类
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     //构造方法初始化，属性赋值，准备连接
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
 
     /**
      * 加密
      * @param string $str    要加密的数据
+     * @param string $key     自定义秘钥
      * @return bool|string   加密后的数据
      */
-    public static function AESEncrypt($str)
+    public static function AESEncrypt($str, $key = null)
     {
-
-        return base64_encode(openssl_encrypt($str, "AES-128-ECB", self::$aes_key, OPENSSL_RAW_DATA));
+        if ($key) {
+            return base64_encode(openssl_encrypt($str, "AES-128-ECB", $key, OPENSSL_RAW_DATA));
+        } else {
+            return base64_encode(openssl_encrypt($str, "AES-128-ECB", self::$aes_key, OPENSSL_RAW_DATA));
+        }
     }
 
     /**
      * 解密
      * @param string $str    要解密的数据
+     * @param string $key     自定义秘钥
      * @return string        解密后的数据
      */
-    public static function  AESDecrypt($str)
+    public static function  AESDecrypt($str, $key = null)
     {
-
-        return openssl_decrypt(base64_decode($str), "AES-128-ECB", self::$aes_key, OPENSSL_RAW_DATA);
+        if ($key) {
+            return openssl_decrypt(base64_decode($str), "AES-128-ECB", $key, OPENSSL_RAW_DATA);
+        } else {
+            return openssl_decrypt(base64_decode($str), "AES-128-ECB", self::$aes_key, OPENSSL_RAW_DATA);
+        }
     }
 }

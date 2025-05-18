@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-03-11 15:47:57
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-04-05 16:08:41
+ * @LastEditTime: 2025-03-05 21:53:41
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Export\Export.php
  * @Description: 输出类，所有用户的请求返回的数据都在这里返回;考虑是否使用静态，简便使用方法
  * 
@@ -36,14 +36,10 @@ class Export
 
 
     //阻止外部克隆书库工具类
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     //私有化构造方法初始化，禁止外部使用
-    private function __construct()
-    {
-    }
+    private function __construct() {}
     //内部产生静态对象
     public static function active()
     {
@@ -56,19 +52,27 @@ class Export
         }
         return self::$obj;
     }
-    public static function send($responseBody = [], $recode = 3000, $data = [])
+    public static function send(
+        $responseBody = [],
+        $recode = 3000,
+        $msg,
+        $data = [],
+        $api
+    ) {
 
-    {
-      
         // // $data['err1'] = '每次执行了操作1212';
         if (count($responseBody) > 0) {
 
             echo json_encode($responseBody);
         } else {
             // $data['HTTP_ORIGIN'] =  $_SERVER['HTTP_ORIGIN'];
-            $data['ms'] = date('Y-m-d h:i:s', time());
+            // $data['ms'] = date('Y-m-d h:i:s', time());
             $responseBody['recode'] = $recode;
+            $responseBody['msg'] = $msg;
             $responseBody['data'] = $data;
+            $responseBody['ms'] = date('Y-m-d h:i:s', time());
+            $responseBody['trs'] =   round(microtime(true) * 1000);;
+            $responseBody['api'] = $api;
             echo json_encode($responseBody);
         }
         return;

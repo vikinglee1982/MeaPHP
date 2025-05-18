@@ -154,4 +154,45 @@ class FormatValidation
         // // "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
 
     }
+    public function color(string $color): array
+    {
+        // 检查 #fff 或 #ffffff 格式的颜色
+        $hexPattern = '/^#([A-Fa-f0-9]{3}){1,2}$/';
+
+        // 检查 rgb(r, g, b) 格式的颜色
+        $rgbPattern = '/^rgb$\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*$$/';
+
+        // 检查 rgba(r, g, b, a) 格式的颜色
+        $rgbaPattern = '/^rgba$\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*([01]|0?\.\d+)\s*$$/';
+
+        if (preg_match($hexPattern, $color)) {
+            return Reply::To('ok', '验证成功', ['color' => $color]);
+        } elseif (preg_match($rgbPattern, $color, $matches)) {
+            // 验证 RGB 值是否在 0-255 范围内
+            foreach ($matches as $match) {
+                if ($match !== 'rgb' && !is_numeric($match) || $match < 0 || $match > 255) {
+                    return Reply::To('err', '验证失败', ['color' => $color]);
+                }
+            }
+            return Reply::To('ok', '验证成功', ['color' => $color]);
+        } elseif (preg_match($rgbaPattern, $color, $matches)) {
+            // 验证 RGBA 值是否在 0-255 范围内，且 alpha 在 0-1 之间
+            foreach ($matches as $key => $match) {
+                if ($key > 0) { // 忽略第一个匹配项，它是整个字符串
+                    if ($key <= 4) { // r, g, b
+                        if (!is_numeric($match) || $match < 0 || $match > 255) {
+                            return Reply::To('err', '验证失败', ['color' => $color]);
+                        }
+                    } else { // a
+                        if (!is_numeric($match) || $match < 0 || $match > 1) {
+                            return Reply::To('err', '验证失败', ['color' => $color]);
+                        }
+                    }
+                }
+            }
+            return Reply::To('ok', '验证成功', ['color' => $color]);
+        } else {
+            return Reply::To('err', '验证失败', ['color' => $color]);
+        }
+    }
 }

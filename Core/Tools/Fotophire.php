@@ -77,7 +77,10 @@ class Fotophire
             if ($filePathRes['sc'] == 'ok') {
                 $filePathInfo = $filePathRes['data'];
             } else {
-                return Reply::To('error', '图片地址解析失败');
+                return Reply::To('error', '图片地址解析失败', [
+                    'filePathRes' => $filePathRes,
+                    'originalImgPath' => $originalImgPath
+                ]);
             }
         } catch (\Exception $e) {
             return Reply::To('error', '错误信息', [
