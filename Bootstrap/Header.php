@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-03-12 10:14:58
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-10-05 11:14:17
+ * @LastEditTime: 2025-05-19 08:53:56
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Bootstrap\SetHeader.php
  * @Description: 解决跨域问题设置报头
  */
@@ -20,7 +20,7 @@ class Header
         header("Access-Control-Allow-Origin: {$origin}");
 
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, euid,token");
+        header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, euid,Euid,token");
         // 添加'euid'到允许的请求头列表
         header("Access-Control-Allow-Credentials: true"); // 必须明确设置为true
 

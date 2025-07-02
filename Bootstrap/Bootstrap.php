@@ -5,7 +5,7 @@
  * @version: 1.0
  * @Date: 2023-03-05 17:53:22
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-09-12 16:01:34
+ * @LastEditTime: 2025-05-19 16:05:49
  */
 
 namespace MeaPHP\Bootstrap;
@@ -72,7 +72,7 @@ class Bootstrap
             } else {
                 var_dump([
                     'errorfile' => 'Bootsrtap.php',
-                    'errorMessage' => "自动加载:[{$file}] 文件失败",
+                    'errorMessage' => "自动加载:[{$CoreClassFile}] 文件失败",
                 ]);
             }
         } catch (\Throwable $e) {

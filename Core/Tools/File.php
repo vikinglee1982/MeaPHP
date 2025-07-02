@@ -56,6 +56,9 @@ class File
             $this->res['msg'] = '文件名重复';
             // $this->res['msg'] = $src;
             // return "error:已经有这个文件了";
+            return Reply::To('err', '已经有这个文件了', [
+                'src' => $src,
+            ]);
         } else {
             if (move_uploaded_file($file['tmp_name'], $src)) {
                 //储存完成合成路径返回
