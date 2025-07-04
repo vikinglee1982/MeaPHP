@@ -827,4 +827,27 @@ class File
             'src' => $src
         ]);
     }
+    /**
+     * 获取目录下的所有文件名
+     * @param string $path
+     * @return array
+     */
+    public function readDirFilesName($path): array
+    {
+
+        if (!is_dir($path)) {
+            $path = $_SERVER['DOCUMENT_ROOT'] . $path;
+        }
+        if (!is_dir($path)) {
+            return Reply::To('error', '当前文件夹不存在');
+        }
+        $files = scandir($path);
+        $files = array_diff($files, ['.', '..']);
+        $files = array_values($files);
+        $files = array_map(function ($files) {
+            return  $files;
+        }, $files);
+
+        return Reply::To('ok', '获取成功', $files);
+    }
 }
