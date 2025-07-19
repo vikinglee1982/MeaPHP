@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-12-22 21:35:08
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2025-01-04 10:56:41
+ * @LastEditTime: 2025-07-19 16:30:52
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Core\Tools\WeChatPoster.php
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -53,7 +53,7 @@ class WeChatPoster
     public function draw(
         string $imgUrl,
         string $weQRCodeUrl,
-        string $logoPath = null,
+        string $logoPath = '',
         //客服信息及联系方式
 
         $serverAvatar = null,
@@ -64,14 +64,14 @@ class WeChatPoster
         $userAvatar = null,
         $userName = null,
         //以下默认
-        string $sloganImg = null,
-        string $title = null,
+        string $sloganImg = '',
+        string $title = '',
         string $titleFlex = 'left',
         string $hint = '长按识别小程序码查看详情',
         int $posterWith = 1080,
         int $titleSize = 36,
         int $textSize = 24,
-        int $userNameSize = 30,
+        int $userNameSize = 36,
         int $padding = 16,
         int $qrcodeZoneHeight = 300
     ): array {
@@ -317,7 +317,8 @@ class WeChatPoster
         $logo_h = imagesy($logo);
 
         $logoZoneWidth = $posterWith - $new_qrcode_w - 4 * $padding;
-        $logoZoneHeight = $qrcodeZoneHeight / 3;
+        // $logoZoneHeight = $qrcodeZoneHeight / 3;
+        $logoZoneHeight = $qrcodeZoneHeight / 2;
         $logoZone = imagecreatetruecolor($logoZoneWidth, $logoZoneHeight);
 
         //填充背景白色
@@ -344,74 +345,87 @@ class WeChatPoster
          * 绘制客服信息
          */
         //创建客服内容区域
-        $serverZoneHeight = $qrcodeZoneHeight / 3 * 2 - $padding * 3;
+        // $serverZoneHeight = $qrcodeZoneHeight / 3 * 2 - $padding * 3;
+        $serverZoneHeight = $qrcodeZoneHeight / 2  - $padding * 3;
         $serverZone = imagecreatetruecolor($logoZoneWidth, $serverZoneHeight);
-        $serverZoneBg = imagecolorallocate($serverZone, 235.9, 245.3, 255);
+        // $serverZoneBg = imagecolorallocate($serverZone, 235.9, 245.3, 255);
+        $serverZoneBg = imagecolorallocate($serverZone, 255, 255, 255);
         imagefill($serverZone, 0, 0, $serverZoneBg);
 
         //创建客服标题区域
 
 
-        $serverTitleZoneWidth = $userNameSize * 4;
+        $serverTitleZoneWidth = $userNameSize * 6.2;
         $serverTitleZoneHeight = $serverZoneHeight;
 
-        $serverTitleColor = imagecolorallocate($serverZone, 255, 255, 255);
+
+        $serverTitleColor = imagecolorallocate($serverZone, 51, 126, 204);
         $serverTitleZone = imagecreatetruecolor($serverTitleZoneWidth, $serverTitleZoneHeight);
-        $serverTitleZoneBg = imagecolorallocate($serverTitleZone, 64, 158, 255);
+        // $serverTitleZoneBg = imagecolorallocate($serverTitleZone, 64, 158, 255);
+        $serverTitleZoneBg = imagecolorallocate($serverTitleZone, 255, 255, 255);
+        // RGB(235,245,255)
         imagefill($serverTitleZone, 0, 0, $serverTitleZoneBg);
 
 
         imagecopy($serverZone, $serverTitleZone, 0, 0, 0, 0, $serverTitleZoneWidth, $serverTitleZoneHeight);
         imagedestroy($serverTitleZone);
         // 将咨询预定写入客服区域
-        imagettftext($serverZone, $userNameSize, 0, $padding, $padding * 2 + $userNameSize, $serverTitleColor, $fontFile,  '咨询');
-        imagettftext($serverZone, $userNameSize, 0, $padding,  $userNameSize * 4, $serverTitleColor, $fontFile,  '预定');
+        imagettftext($serverZone, $userNameSize, 0, $padding, $padding * 2 + $userNameSize, $serverTitleColor, $fontFile,  '咨询预定');
+        // imagettftext($serverZone, $userNameSize, 0, $padding,  $userNameSize * 4, $serverTitleColor, $fontFile,  '预定');
 
         //加载客服头像
 
-        $serverAvaterRes = $this->createImageResourceFromAny($serverAvatar);
+        // $serverAvaterRes = $this->createImageResourceFromAny($serverAvatar);
 
-        if ($serverAvaterRes['sc'] != 'ok') {
-            return Reply::To('err', '客服头像加载失败', ['err' => $serverAvaterRes]);
-        }
-        $serverAvater = $serverAvaterRes['data']['imageResource'];
-        $serverAvater_w = imagesx($serverAvater);
-        $serverAvater_h = imagesy($serverAvater);
+        // if ($serverAvaterRes['sc'] != 'ok') {
+        //     return Reply::To('err', '客服头像加载失败', ['err' => $serverAvaterRes]);
+        // }
+        // $serverAvater = $serverAvaterRes['data']['imageResource'];
+        // $serverAvater_w = imagesx($serverAvater);
+        // $serverAvater_h = imagesy($serverAvater);
         //将头像剪裁为圆形
-        $serverAvaterRes = $this->circleAvatar($serverAvater);
-        if ($serverAvaterRes['sc'] != 'ok') {
-            return Reply::To('err', '客服头像加载失败', ['err' => $serverAvaterRes]);
-        }
-        $serverAvater = $serverAvaterRes['data']['imageResource'];
-        $serverAvater_w = imagesx($serverAvater);
-        $serverAvater_h = imagesy($serverAvater);
+        // $serverAvaterRes = $this->circleAvatar($serverAvater);
+        // if ($serverAvaterRes['sc'] != 'ok') {
+        //     return Reply::To('err', '客服头像加载失败', ['err' => $serverAvaterRes]);
+        // }
+        // $serverAvater = $serverAvaterRes['data']['imageResource'];
+        // $serverAvater_w = imagesx($serverAvater);
+        // $serverAvater_h = imagesy($serverAvater);
 
         // 将头像绘制到客服内容区域
         // imagecopy($serverZone, $serverAvater, $userNameSize * 4, $padding, 0, 0, $serverAvater_w, $serverAvater_h);
 
-        $serverAvaterStartX = $serverTitleZoneWidth + $padding * 2;
+        // $serverAvaterStartX = $serverTitleZoneWidth + $padding * 2;
 
-        imagecopy($serverZone, $serverAvater, $serverAvaterStartX, $padding, 0, 0, $serverAvater_w, $serverAvater_h);
+        // imagecopy($serverZone, $serverAvater, $serverAvaterStartX, $padding, 0, 0, $serverAvater_w, $serverAvater_h);
         // 计算用户名绘制的起始位置
-        $nameStartX = $serverAvaterStartX + $serverAvater_w + $padding * 2;
+        // $nameStartX = $serverAvaterStartX + $serverAvater_w + $padding * 2;
+        $nameStartX =  $serverTitleZoneWidth + $padding * 2;
+        $nameStartY = $padding * 2 + $userNameSize;
 
         $serverName = $serverName ? $serverName  : '旅游顾问';
 
 
         // 使用 imagettftext 绘制用户名，添加 angle 参数
-        imagettftext($serverZone, $userNameSize, 0, $nameStartX, $padding * 2 + $userNameSize, $userNameColor, $fontFile,  $serverName);
+        imagettftext($serverZone, $userNameSize, 0, $nameStartX, $nameStartY, $userNameColor, $fontFile,  $serverName);
 
+        // 截取 serverName 为最多4个字符
+        $serverName = mb_substr($serverName, 0, 4, 'utf-8');
+        // 计算截取后的 serverName 的宽度
+        $serverNameWidth = $this->getTextWidth($serverName, $fontFile, $userNameSize);
 
-        $phoneColor = imagecolorallocate($serverZone, 48, 49, 51);
+        $phoneColor = imagecolorallocate($serverZone, 136, 86, 31);
 
         $serverPhone = $serverPhone ?? '暂未设置';
 
-        $phoneStartY =  $padding * 2  + $titleSize * 3;
-        imagettftext($serverZone, $titleSize, 0, $nameStartX, $phoneStartY, $phoneColor, $fontFile,   $serverPhone);
+        // 将电话号码绘制在 serverName 的后面，并在同一基线上对齐
+        $phoneStartX = $nameStartX + $serverNameWidth + $padding;
+        $phoneStartY = $padding * 2 + $userNameSize;
+        imagettftext($serverZone, $userNameSize, 0, $phoneStartX, $phoneStartY, $phoneColor, $fontFile, $serverPhone);
 
         // $nameStartX = $padding + $serverAvater_w + $padding;
 
-     
+
         $serverZoneStartY = $qrcodeZoneStartY + $padding * 2 + $logoZoneHeight;
         imagecopy($poster, $serverZone, $padding, $serverZoneStartY, 0, 0, $logoZoneWidth, $serverZoneHeight);
 
