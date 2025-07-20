@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-03-08 09:51:02
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2024-12-22 21:45:18
+ * @LastEditTime: 2025-07-20 17:21:01
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Mea.php
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -27,6 +27,7 @@ use MeaPHP\TspApi\TspApi;
 use MeaPHP\TspApps\ImagickApp;
 use MeaPHP\TspApps\LibreOfficeApp;
 use MeaPHP\Core\Tools\WeChatPoster;
+use MeaPHP\Core\Tools\WeChatApi;
 
 class Mea
 {
@@ -47,6 +48,7 @@ class Mea
     protected $ImagickApp;
     protected $LibreOfficeApp;
     protected $WeChatPoster;
+    protected $WeChatApi;
 
     public final function __construct($UserConfig)
     {
@@ -75,6 +77,7 @@ class Mea
             'ImagickApp' => [ImagickApp::class, 'active'],
             'LibreOfficeApp' => [LibreOfficeApp::class, 'active'],
             'WeChatPoster' => [WeChatPoster::class, 'active'],
+            'WeChatApi' => [WeChatApi::class, 'active'],
         ];
         try {
             $this->DB = DataBase::active($this->UserConfig);
