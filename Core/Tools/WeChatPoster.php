@@ -3,7 +3,7 @@
  * @Author: vikinglee1982 87834084@qq.com
  * @Date: 2024-12-22 21:35:08
  * @LastEditors: vikinglee1982 87834084@qq.com
- * @LastEditTime: 2025-07-19 16:35:50
+ * @LastEditTime: 2025-07-24 11:22:35
  * @FilePath: \工作台\Servers\huayun_server\MeaPHP\Core\Tools\WeChatPoster.php
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -550,8 +550,16 @@ class WeChatPoster
     private function createImageResourceFromAny($filename): array
     {
         try {
-            // 尝试从远程 URL 加载图片
-            if (filter_var($filename, FILTER_VALIDATE_URL)) {
+            // 判断是否是 Base64 数据
+            if (preg_match('/^data:image\/(\w+);base64,/', $filename, $matches)) {
+                // 是 Base64 数据
+                $base64Data = substr($filename, strpos($filename, ',') + 1);
+                $imageData = base64_decode($base64Data);
+                if ($imageData === false) {
+                    throw new \Exception("Base64 解码失败");
+                }
+            } elseif (filter_var($filename, FILTER_VALIDATE_URL)) {
+                // 尝试从远程 URL 加载图片
                 $imageData = $this->fetchRemoteImageData($filename);
             } else {
                 // 对于本地文件路径
