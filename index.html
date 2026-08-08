@@ -1,0 +1,231 @@
+<!--
+    /**
+ * 当前文件用于生成站点的目录结构;
+ * 这个文件应该是个html网页，
+ * 可以用户输入一些数据，比如网站英文简写，比如配置信息，数据库，什么之类的（就是userConfig的对应内容）
+ * 然后自动生成站点的目录
+ */
+-->
+
+
+
+
+<!--文档声明：告诉浏览器以下文件用html哪个版本解析-->
+<!DOCTYPE html>
+<!--告诉浏览器以下文件为超文本标记语言-->
+<!--lang="en"告诉浏览器 这个网站是一个英文站,zh是中文站-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--head是html文件的头部-->
+
+<head>
+    <!-- meta 元信息-->
+    <!-- charset="UTF-8" 网站的编码格式,utf-8 国际通用编码格式-->
+    <!-- Set render engine for 360 browser -->
+    <!-- 设置页面编码 -->
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <!--设置页面语言 -->
+    <meta content="zh-CN" http-equiv="Content-Language" />
+    <!-- 在IE使用时，强制使用当前IE浏览器的最新版本模式渲染，在非ＩＥ使用时，强制使用Chrome的模式渲染 -->
+    <meta content="chrome=1,IE=edge" http-equiv="X-UA-Compatible" />
+    <!-- 向搜索引擎说明你的网页的关键词 -->
+    <meta content="关键词,关键词,关键词" name="keywords" />
+    <!-- 告诉搜索引擎你的站点的主要内容 -->
+    <meta content="站点的主要内容" name="description" />
+    <!--为当前页面指定默认路径【路径开始位置，一般指定根目录】-->
+    <!--  <base href="http://www.mayizhuanzhuan.com"/> -->
+    <!--pc和移动端自适应-->
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <!--<title>网站的标题</title>-->
+    <!-- 引入css，js文件 -->
+    <!-- <link charset="UTF-8" rel="stylesheet" type="text/css" href="style.css" />
+
+  <script type="text/javascript" src=""></script> -->
+</head>
+<!--head结束标签-->
+<!--html主体内容-->
+
+<body>
+    <!--只要显示页面的内容都放在body标签里-->
+    <!--所有的代码和符号都是英文状态下的-->
+    <div class="loadingSeven">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div class="text">
+        <div class="welcome-page">
+            <div class="welcome">
+                欢迎使用 MeaPHP 服务框架！
+            </div>
+            <div class="welcome-note">
+                一个简单、快速的只提供Api服务的PHP框架
+            </div>
+            <div class="next-button" onclick="openSetting()">
+                <span>开始使用</span>
+                <svg t="1687166610400" class="next-icon" viewBox="0 0 1024 1024" version="1.1"
+                    xmlns="http://www.w3.org/2000/svg" p-id="3285">
+                    <path
+                        d="M939.880137 487.72513l-782.215258 0 358.804922-318.92975c12.389168-11.011798 13.505595-29.980825 2.492774-42.369993-11.011798-12.386098-29.977755-13.505595-42.367947-2.492774L64.602344 490.13911c-6.407943 5.693676-10.073426 13.858636-10.073426 22.430872s3.665483 16.737196 10.073426 22.430872l411.993309 366.204449c5.717212 5.083785 12.83533 7.580652 19.925818 7.580652 8.274454 0 16.514115-3.403516 22.442128-10.07445 11.011798-12.387122 9.896394-31.357172-2.492774-42.367947L169.687704 548.100196 939.880137 548.100196c16.57449 0 30.011524-13.613042 30.011524-30.187533S956.454628 487.72513 939.880137 487.72513z"
+                        p-id="3286"></path>
+                </svg>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    function openSetting() {
+        console.log("跳转设置")
+        window.location.href = "./SetupFile/index.html";
+    }
+</script>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .text {
+        margin: 2rem;
+        /* border: 1px solid darkblue; */
+        text-align: center;
+        color: #CDD0D6;
+    }
+
+    .loadingSeven {
+        /* width: 80px; */
+        height: 10px;
+        margin: 0 auto;
+        margin-top: 5rem;
+        text-align: center;
+        background-color: #f2f2f2;
+        /* border: 1px solid darkblue; */
+    }
+
+    .loadingSeven span {
+        display: inline-block;
+        width: 8px;
+        height: 100%;
+        border-radius: 4px;
+        background: lightgreen;
+        margin: 0 6px;
+        /* border: 1px solid chocolate; */
+        animation: loadsaven 1.04s ease infinite;
+        -webkit-animation: loadsaven 1.04s ease infinite;
+    }
+
+    /* @keyframes loadsaven{} */
+    @keyframes loadsaven {
+
+        0%,
+        100% {
+            height: 10px;
+
+            background: lightgreen;
+        }
+
+        50% {
+            height: 60px;
+            margin-top: -70px;
+            background: lightblue;
+        }
+    }
+
+    .loadingSeven span:nth-child(2) {
+        animation-delay: 0.13s;
+        -webkit-animation-delay: 0.13s;
+    }
+
+    .loadingSeven span:nth-child(3) {
+        animation-delay: 0.26s;
+        -webkit-animation-delay: 0.26s;
+    }
+
+    .loadingSeven span:nth-child(4) {
+        animation-delay: 0.39s;
+        -webkit-animation-delay: 0.39s;
+    }
+
+    .loadingSeven span:nth-child(5) {
+        animation-delay: 0.52s;
+        -webkit-animation-delay: 0.52s;
+    }
+
+    .loadingSeven span:nth-child(6) {
+        animation-delay: 0.65s;
+        -webkit-animation-delay: 0.65s;
+    }
+
+    .loadingSeven span:nth-child(7) {
+        animation-delay: 0.78s;
+        -webkit-animation-delay: 0.78s;
+    }
+
+    .loadingSeven span:nth-child(8) {
+        animation-delay: 0.91s;
+        -webkit-animation-delay: 0.91s;
+    }
+
+    .loadingSeven span:nth-child(9) {
+        animation-delay: 1.04s;
+        -webkit-animation-delay: 1.04s;
+    }
+
+    .welcome-page {
+        margin: 48px;
+        /* border: 1px solid chartreuse; */
+    }
+
+    .welcome {
+        font-weight: bold;
+        color: #303133;
+        font-size: 24px;
+    }
+
+    .welcome-note {
+        margin: 1rem 0 5rem 0;
+        font-size: 14px;
+    }
+
+    .next-button {
+        display: flex;
+        margin: 12px auto;
+        width: 128px;
+        border: 1px solid #409EFF;
+        padding: 8px;
+        font-size: 16px;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        color: #409EFF;
+        transition: all 0.3s;
+        border-radius: 2px;
+        font-weight: bold;
+    }
+
+    .next-button:hover {
+        background-color: #409EFF;
+        color: #fff;
+    }
+
+    .next-button:hover .next-icon {
+        fill: #fff;
+    }
+
+    .next-icon {
+        margin-left: 1rem;
+        width: 16px;
+        transform: rotate(180deg);
+
+        fill: #409EFF;
+    }
+</style>
+
+</html>
